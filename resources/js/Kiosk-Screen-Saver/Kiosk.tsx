@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from 'react-dom/client';
 import "../../css/app.css";
-import KioskApp from './KioskApp';
+import KioskApp from '@/Kiosk-Screen-Saver/KioskApp';
 
 const rootElement = document.getElementById('app');
 

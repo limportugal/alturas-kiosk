@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Screensaver from './components/Screensaver';
-import MainPage from './components/MainPage';
+import MainPage from '@/Kiosk-Screen-Saver/components/MainPage';
 
 export default function KioskApp() {
     const [started, setStarted] = useState(false);
