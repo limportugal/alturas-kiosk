@@ -34,34 +34,49 @@ export default function SubCategoryScreen({
       <PurpleBanner small>{sub?.label.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
 
       {/* Tabs */}
-      {category.subCategoryTabs.length > 0 && (
-        <div style={{ display: "flex", gap: 0, padding: "24px 48px", overflowX: "auto", flexShrink: 0, background: "#fff", borderBottom: "1px solid #e0dbd5" }}>
-          {category.subCategoryTabs.map((tab, i) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(i)}
-              style={{
-                flexShrink: 0,
-                background: activeTab === i ? "#5a2d82" : "#fff",
-                border: "2px solid #5a2d82",
-                borderRadius: 8,
-                padding: "16px 28px",
-                marginRight: 16,
-                fontSize: 22,
-                fontWeight: 600,
-                color: activeTab === i ? "#fff" : "#5a2d82",
-                cursor: "pointer",
-                fontFamily: "Arial, sans-serif",
-                transition: "all 0.2s ease",
-              }}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-      )}
+      <div style={{ display: "flex", flexDirection: "row", gap:16, padding:"24px 48px", overflowX: "auto", flexShrink: 0, background: "#fff", borderBottom: "1px solid #e0dbd5"}}>
+        {category.subCategoryTabs.map((tab, i) => (
+          <button
+            key={tab.label}
+            onClick={() => setActiveTab(i)}
+            style={{
+              flexShrink: 0,
+              border: activeTab === i ? "3px solid #5a2d82" : "2px solid #e0dbd5",
+              borderRadius: 12,
+              overflow: "hidden",
+              cursor: "pointer",
+              background: "#fff",
+              padding: 0,
+              marginRight: 16,
+              width: 180,
+              display: "flex",
+              flexDirection: "column",
+              boxShadow: activeTab === i ? "0 4px 16px rgba(90,45,130,0.3)" : "none",
+              transition: "all 0.2s ease",
+            }}
+          >
+            <img
+              src={tab.image}
+              alt={tab.label}
+              style={{ width: "100%", height: 120, objectFit: "cover", display: "block" }}
+            />
+            <div style={{
+              background: activeTab === i ? "#5a2d82" : "#f5f2ee",
+              padding: "10px 8px",
+              fontSize: 18,
+              fontWeight: 600,
+              color: activeTab === i ? "#fff" : "#5a2d82",
+              fontFamily: "Arial, sans-serif",
+              textAlign: "center",
+            }}>
+              {tab.label}
+            </div>
+          </button>
+        ))}
+      </div>
 
-      <PurpleBanner small>{category.subCategoryTabs[activeTab]?.toUpperCase() ?? ""}</PurpleBanner>
+
+      <PurpleBanner small>{category.subCategoryTabs[activeTab]?.label.toUpperCase() ?? ""}</PurpleBanner>
 
       {/* Product grid */}
       <div style={{ flex: 1, overflowY: "auto", padding: "32px 48px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, alignContent: "start", boxSizing: "border-box" }}>

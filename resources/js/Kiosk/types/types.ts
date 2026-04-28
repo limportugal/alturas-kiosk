@@ -34,6 +34,6 @@ export interface CategoryData {
   image: string;
   description: string;
   subCategories: SubCategory[];
-  subCategoryTabs: string[];
+  subCategoryTabs: {label:string; image:string}[];
   products: Record<string, Product[]>;
 }

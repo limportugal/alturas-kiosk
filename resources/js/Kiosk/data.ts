@@ -17,9 +17,9 @@ export const IMG = {
   subSideTable:  "/images/sub-product/side-tables.avif",
   subCushions:   "/images/sub-product/cushions.avif",
   prod1a: "/images/product/glostad.jpg",
-  prod1b: "/images/prod-glostad-2.jpg",
-  prod1c: "/images/prod-glostad-3.jpg",
-  prod1d: "/images/prod-glostad-dim.jpg",
+  prod1b: "/images/product/glostad-2.png",
+  prod1c: "/images/product/glostad-3.png",
+  prod1d: "/images/product/glostad-blue.png",
   prod2a: "/images/product/klippan.jpg",
   prod3a: "/images/product/vimle.jpg",
 };
@@ -42,11 +42,11 @@ export const CATEGORIES: CategoryData[] = [
       { id: "cushions",   label: "Cushions",   image: IMG.subCushions,  column: 2, row: 2 },
     ],
     subCategoryTabs: [
-      "Two-seat fabric sofas",
-      "Three-seat fabric sofas",
-      "Fabric sofas and chaise longues",
-      "Corner sofas",
-      "Modular sofas",
+      { label: "Two-seat fabric sofas",               image: "/images/tab/two-seat-fabric-sofas.jpg"},
+      { label:"Three-seat fabric sofas",              image: "/images/tab/three-seat-fabric-sofas.jpg"},
+      { label:"Fabric sofas and chaise longues",      image: "/images/tab/fabric-sofas-and-chaise-lounges.jpg"},
+      { label:  "Corner sofas",                       image: "/images/tab/corner-sofas.jpg"},
+      { label: "Modular sofas",                       image: "/images/tab/modular-sofas.jpg"},
     ],
     products: {
       sofas: [

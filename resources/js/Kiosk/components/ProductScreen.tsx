@@ -37,7 +37,6 @@ export default function ProductScreen({
       <HFHeader small />
       <PurpleBanner>{category.label}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
-      <PurpleBanner small>SOFA</PurpleBanner>
       <div style={{ background: "#5a2d82", opacity: 0.85, padding: "14px 0", textAlign: "center", flexShrink: 0 }}>
         <span style={{ fontSize: 24, fontWeight: 600, color: "#fff", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}>
           {sub?.label.toUpperCase() ?? ""}
