@@ -34,7 +34,19 @@ export default function SubCategoryScreen({
       <PurpleBanner small>{sub?.label.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
 
       {/* Tabs */}
-      <div style={{ display: "flex", flexDirection: "row", gap:16, padding:"24px 48px", overflowX: "auto", flexShrink: 0, background: "#fff", borderBottom: "1px solid #e0dbd5"}}>
+      <div style={{ 
+        display: "flex", 
+        flexDirection: "row", 
+        gap:22, 
+        padding:"24px 48px", 
+        overflowX: "auto", 
+        flexShrink: 0, 
+        background: "#fff", 
+        borderBottom: "1px solid #e0dbd5",
+        scrollBehavior: "smooth",
+        WebkitOverflowScrolling: "touch",
+        }}
+        >
         {category.subCategoryTabs.map((tab, i) => (
           <button
             key={tab.label}
@@ -47,7 +59,6 @@ export default function SubCategoryScreen({
               cursor: "pointer",
               background: "#fff",
               padding: 0,
-              marginRight: 16,
               width: 180,
               display: "flex",
               flexDirection: "column",

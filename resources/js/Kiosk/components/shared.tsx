@@ -43,7 +43,7 @@ export function PurpleBanner({ children, small }: { children: React.ReactNode; s
 
 export function MainMenuBtn({ onClick }: { onClick: () => void }) {
   return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "20px 48px 0", flexShrink: 0 }}>
+    <div style={{ display: "flex", justifyContent: "center", padding: "15px 48px 10px", marginTop:"-8px", flexShrink: 0 }}>
       <button
         onClick={onClick}
         style={{
