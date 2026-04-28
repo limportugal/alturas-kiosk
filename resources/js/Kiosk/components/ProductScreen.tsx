@@ -2,6 +2,8 @@ import { useState } from "react";
 import { CategoryData, Product } from "@/Kiosk/types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
 
+import { typography } from "@/Kiosk/utils/typography";
+
 export default function ProductScreen({
   product,
   category,
@@ -37,8 +39,19 @@ export default function ProductScreen({
       <HFHeader small />
       <PurpleBanner>{category.label}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
-      <div style={{ background: "#5a2d82", opacity: 0.85, padding: "14px 0", textAlign: "center", flexShrink: 0 }}>
-        <span style={{ fontSize: 24, fontWeight: 600, color: "#fff", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}>
+      <div style={{ 
+          background: "#5a2d82", 
+          padding: "16px 48px", 
+          textAlign: "center", 
+          flexShrink: 0 
+          }}
+          >
+        <span style={{ 
+            ...typography.heading,
+            color: "#fff", 
+            letterSpacing: 3,
+           }}
+           >
           {sub?.label.toUpperCase() ?? ""}
         </span>
       </div>
@@ -70,7 +83,7 @@ export default function ProductScreen({
 
       {/* Product name strip */}
       <div style={{ background: "#5a2d82", margin: "20px 48px 0", borderRadius: 8, padding: "14px 24px", flexShrink: 0 }}>
-        <span style={{ color: "#fff", fontSize: 24, fontWeight: 700, fontFamily: "Arial, sans-serif", letterSpacing: 1 }}>
+        <span style={{ color: "#fff", ...typography.productNameStri}}>
           {product.name} &nbsp; {product.subtitle}
         </span>
       </div>
@@ -80,18 +93,18 @@ export default function ProductScreen({
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
           {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${product.stock}`]].map(([label, value], i) => (
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
-              <span style={{ fontSize: 26, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif" }}>{label} </span>
-              <span style={{ fontSize: 26, color: "#111", fontFamily: "Arial, sans-serif" }}>{value}</span>
+              <span style={{ ...typography.productDetailsLabel }}>{label} </span>
+              <span style={{ ...typography.productDetailsSubLabel }}>{value}</span>
             </div>
           ))}
         </div>
         <div style={{ background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
-          <span style={{ fontSize: 26, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif" }}>SKU: </span>
-          <span style={{ fontSize: 26, color: "#111", fontFamily: "Arial, sans-serif" }}>{product.sku}</span>
+          <span style={{ ...typography.productDetailsLabel }}>SKU: </span>
+          <span style={{ ...typography.productDetailsSubLabel }}>{product.sku}</span>
         </div>
         <div style={{ background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
-          <span style={{ fontSize: 26, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif" }}>COLOR VARIANTS: </span>
-          <span style={{ fontSize: 26, color: "#111", fontFamily: "Arial, sans-serif" }}>{product.colorVariants.map((v) => v.label).join(" and ")}</span>
+          <span style={{ ...typography.productDetailsLabel }}>COLOR VARIANTS: </span>
+          <span style={{ ...typography.productDetailsSubLabel }}>{product.colorVariants.map((v) => v.label).join(" and ")}</span>
           <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
             {product.colorVariants.map((variant, i) => (
               <button
@@ -115,12 +128,12 @@ export default function ProductScreen({
 
       {/* Bottom buttons */}
       <div style={{ background: "#fff", borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
-        <button onClick={onBack} style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", fontSize: 28, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}>
+        <button onClick={onBack} style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", color: "#fff", cursor: "pointer", ...typography.button}}>
           BACK
         </button>
         <button
           onClick={() => onOrder(product, product.colorVariants[activeColor]?.label ?? "", 1)}
-          style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", fontSize: 28, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}
+          style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", color: "#fff", cursor: "pointer", ...typography.button }}
         >
           ORDER ITEM
         </button>

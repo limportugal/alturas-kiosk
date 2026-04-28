@@ -9,6 +9,9 @@ import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
 import { KIOSK_STYLE } from "@/Kiosk/components/shared";
 
+import { typography } from "@/Kiosk/utils/typography";
+
+
 // ── HOME SCREEN ────────────────────────────────────
 function HomeScreen({ onSelect }: { onSelect: (id: string) => void }) {
   const [mounted, setMounted] = useState(false);
@@ -27,7 +30,17 @@ function HomeScreen({ onSelect }: { onSelect: (id: string) => void }) {
   return (
     <div style={KIOSK_STYLE}>
       {/* Header */}
-      <div style={{ background: "#fff", padding: "16px 0", display: "flex", alignItems: "center", justifyContent: "center", borderBottom: "1px solid #e0dbd5", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", flexShrink: 0 }}>
+      <div style={{ 
+        background: "#fff", 
+        padding: "16px 0", 
+        display: "flex", 
+        alignItems: "center", 
+        justifyContent: "center", 
+        borderBottom: "1px solid #e0dbd5", 
+        boxShadow: "0 4px 24px rgba(0,0,0,0.06)", 
+        flexShrink: 0 
+        }}
+        >
         <a href="/" style={{ display: "inline-block" }}>
           <img src="/images/H&F-Logo.png" alt="H&F Department Store" style={{ width: 420, height: "auto" }} />
         </a>
@@ -35,13 +48,21 @@ function HomeScreen({ onSelect }: { onSelect: (id: string) => void }) {
 
       {/* Banner */}
       <div style={{ background: "#5a2d82", padding: "28px 0", textAlign: "center", flexShrink: 0 }}>
-        <span style={{ fontSize: 28, fontWeight: 700, color: "#fff", letterSpacing: 5, fontFamily: "Arial, sans-serif" }}>
+        <span style={{ ...typography.heading, color: "#fff", letterSpacing: 5 }}>
           PLEASE CHOOSE A CATEGORY BELOW
         </span>
       </div>
 
       {/* Grid */}
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr 1fr", gap: 32, padding: "56px 60px", boxSizing: "border-box" }}>
+      <div style={{ 
+        flex: 1, display: "grid", 
+        gridTemplateColumns: "1fr 1fr", 
+        gridTemplateRows: "1fr 1fr 1fr", 
+        gap: 32, 
+        padding: "56px 60px", 
+        boxSizing: "border-box" 
+        }}
+        >
         {HOME_CATEGORIES.map((cat) => {
           const isPressed = pressed === cat.id;
           const slideFrom = cat.column === 0 ? "-120%" : "120%";
@@ -72,7 +93,7 @@ function HomeScreen({ onSelect }: { onSelect: (id: string) => void }) {
                 <img src={cat.image} alt={cat.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
               <div style={{ background: "#5a2d82", padding: "22px 24px 20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 34, fontWeight: 800, color: "#fff", letterSpacing: 4, fontFamily: "Arial, sans-serif" }}>{cat.label}</span>
+                <span style={{ ...typography.title, color: "#fff"}}>{cat.label}</span>
               </div>
             </button>
           );

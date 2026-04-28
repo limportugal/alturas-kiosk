@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { CategoryData } from "../types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "./shared";
 
+
+import { typography } from "@/Kiosk/utils/typography";
+
 export default function CategoryScreen({
   category,
   onBack,
@@ -39,14 +42,14 @@ export default function CategoryScreen({
         <div style={{ width: 320, flexShrink: 0, position: "relative" }}>
           <img src={category.image} alt={category.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(90,45,130,0.85)", padding: "14px 18px" }}>
-            <span style={{ color: "#fff", fontWeight: 800, fontSize: 26, letterSpacing: 2, fontFamily: "Arial, sans-serif" }}>{category.label}</span>
+            <span style={{ color: "#fff", ...typography.title, letterSpacing: 2 }}>{category.label}</span>
           </div>
         </div>
         <div style={{ flex: 1, padding: "32px 32px 32px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <p style={{ color: "#fff", fontSize: 28, fontWeight: 700, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
+          <p style={{ color: "#fff", ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
             Welcome to the {category.label.toLowerCase()} category!
           </p>
-          <p style={{ color: "rgba(255,255,255,0.88)", fontSize: 24, lineHeight: 1.6, margin: 0, fontFamily: "Georgia, serif" }}>
+          <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0,  }}>
             {category.description}
           </p>
         </div>
@@ -83,7 +86,7 @@ export default function CategoryScreen({
                 <img src={sub.image} alt={sub.label} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
               </div>
               <div style={{ background: "#fff", padding: "14px 8px 12px", textAlign: "center", borderTop: "1px solid #e0d8f0" }}>
-                <span style={{ fontSize: 22, fontWeight: 600, color: "#222", fontFamily: "Arial, sans-serif" }}>{sub.label}</span>
+                <span style={{ ...typography.label, color: "#222",  }}>{sub.label}</span>
               </div>
             </button>
           );
