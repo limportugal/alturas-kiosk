@@ -3,7 +3,7 @@ import { CategoryData, Product } from "@/Kiosk/types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
 
 import { typography } from "@/Kiosk/utils/typography";
-
+import { colors } from "@/Kiosk/utils/colors"
 export default function ProductScreen({
   product,
   category,
@@ -48,7 +48,7 @@ export default function ProductScreen({
           >
         <span style={{ 
             ...typography.heading,
-            color: "#fff", 
+            color:colors.surface, 
             letterSpacing: 3,
            }}
            >
@@ -67,7 +67,7 @@ export default function ProductScreen({
               style={{
                 width: 120, height: 120,
                 border: activeImg === i ? "3px solid #5a2d82" : "2px solid #ddd",
-                borderRadius: 8, overflow: "hidden", background: "#f0ede8",
+                borderRadius: 8, overflow: "hidden", background: colors.background,
                 cursor: "pointer", padding: 0, flexShrink: 0, boxSizing: "border-box",
               }}
             >
@@ -76,33 +76,33 @@ export default function ProductScreen({
           ))}
         </div>
         {/* Main image */}
-        <div style={{ flex: 1, background: "#f0ede8", borderRadius: 12, overflow: "hidden", aspectRatio: "1/1" }}>
+        <div style={{ flex: 1, background: colors.background, borderRadius: 12, overflow: "hidden", aspectRatio: "1/1" }}>
           <img src={currentImage} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 24, boxSizing: "border-box", transition: "opacity 0.25s ease" }} />
         </div>
       </div>
 
       {/* Product name strip */}
-      <div style={{ background: "#5a2d82", margin: "20px 48px 0", borderRadius: 8, padding: "14px 24px", flexShrink: 0 }}>
-        <span style={{ color: "#fff", ...typography.productNameStri}}>
+      <div style={{ background: colors.primary, margin: "20px 48px 0", borderRadius: 8, padding: "14px 24px", flexShrink: 0 }}>
+        <span style={{ color: colors.surface, ...typography.productNameStri}}>
           {product.name} &nbsp; {product.subtitle}
         </span>
       </div>
 
       {/* Details */}
       <div style={{ padding: "24px 48px 0", flexShrink: 0 }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
           {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${product.stock}`]].map(([label, value], i) => (
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
-              <span style={{ ...typography.productDetailsLabel }}>{label} </span>
-              <span style={{ ...typography.productDetailsSubLabel }}>{value}</span>
+              <span style={{ ...typography.productDetailsLabel, color:colors.heading }}>{label} </span>
+              <span style={{ ...typography.productDetailsSubLabel, color:colors.heading }}>{value}</span>
             </div>
           ))}
         </div>
-        <div style={{ background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
+        <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
           <span style={{ ...typography.productDetailsLabel }}>SKU: </span>
           <span style={{ ...typography.productDetailsSubLabel }}>{product.sku}</span>
         </div>
-        <div style={{ background: "#fff", border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
+        <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
           <span style={{ ...typography.productDetailsLabel }}>COLOR VARIANTS: </span>
           <span style={{ ...typography.productDetailsSubLabel }}>{product.colorVariants.map((v) => v.label).join(" and ")}</span>
           <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
@@ -113,7 +113,7 @@ export default function ProductScreen({
                 style={{
                   width: 100, height: 80,
                   border: activeColor === i ? "4px solid #5a2d82" : "2px solid #ccc",
-                  borderRadius: 8, overflow: "hidden", background: "#f0ede8",
+                  borderRadius: 8, overflow: "hidden", background:colors.background,
                   cursor: "pointer", padding: 0, boxSizing: "border-box",
                 }}
               >
@@ -127,13 +127,13 @@ export default function ProductScreen({
       <div style={{ flex: 1 }} />
 
       {/* Bottom buttons */}
-      <div style={{ background: "#fff", borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
-        <button onClick={onBack} style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", color: "#fff", cursor: "pointer", ...typography.button}}>
+      <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
+        <button onClick={onBack} style={{ flex: 1, background: colors.primary, border: "none", borderRadius: 8, padding: "26px 0", color: colors.surface, cursor: "pointer", ...typography.button}}>
           BACK
         </button>
         <button
           onClick={() => onOrder(product, product.colorVariants[activeColor]?.label ?? "", 1)}
-          style={{ flex: 1, background: "#5a2d82", border: "none", borderRadius: 8, padding: "26px 0", color: "#fff", cursor: "pointer", ...typography.button }}
+          style={{ flex: 1, background: colors.primary, border: "none", borderRadius: 8, padding: "26px 0", color: colors.surface, cursor: "pointer", ...typography.button }}
         >
           ORDER ITEM
         </button>

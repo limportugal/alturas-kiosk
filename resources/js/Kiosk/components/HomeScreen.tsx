@@ -3,6 +3,7 @@ import { KIOSK_STYLE } from "@/Kiosk/components/shared";
 import { HOME_CATEGORIES } from "@/Kiosk/data";
 
 import { typography } from "@/Kiosk/utils/typography";
+import { colors } from "@/Kiosk/utils/colors";
 
 
 export default function HomeScreen({ onSelect }: { onSelect: (id: string) => void }) {
@@ -23,7 +24,7 @@ export default function HomeScreen({ onSelect }: { onSelect: (id: string) => voi
     <div style={KIOSK_STYLE}>
       {/* Header */}
       <div style={{ 
-        background: "#fff", 
+        background: colors.surface, 
         padding: "16px 0", 
         display: "flex", 
         alignItems: "center", 
@@ -39,8 +40,8 @@ export default function HomeScreen({ onSelect }: { onSelect: (id: string) => voi
       </div>
 
       {/* Banner */}
-      <div style={{ background: "#5a2d82", padding: "28px 0", textAlign: "center", flexShrink: 0 }}>
-        <span style={{ ...typography.heading, color: "#fff", letterSpacing: 5 }}>
+      <div style={{ background: colors.primary, padding: "28px 0", textAlign: "center", flexShrink: 0 }}>
+        <span style={{ ...typography.heading, color: colors.surface, letterSpacing: 5 }}>
           PLEASE CHOOSE A CATEGORY BELOW
         </span>
       </div>
@@ -81,11 +82,11 @@ export default function HomeScreen({ onSelect }: { onSelect: (id: string) => voi
                 boxShadow: "0 6px 24px rgba(0,0,0,0.12)",
               }}
             >
-              <div style={{ width: "100%", aspectRatio: "460 / 280", overflow: "hidden", background: "#ddd" }}>
+              <div style={{ width: "100%", aspectRatio: "460 / 280", overflow: "hidden", background: colors.background }}>
                 <img src={cat.image} alt={cat.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               </div>
-              <div style={{ background: "#5a2d82", padding: "22px 24px 20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ ...typography.title, color: "#fff"}}>{cat.label}</span>
+              <div style={{ background: colors.primary, padding: "22px 24px 20px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <span style={{ ...typography.title, color: colors.surface}}>{cat.label}</span>
               </div>
             </button>
           );

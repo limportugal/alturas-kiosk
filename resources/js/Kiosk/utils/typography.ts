@@ -10,6 +10,6 @@ export const typography = {
 
   // TO PRODUCT SCREEN
   productNameStri: { fontSize: 24, fontWeight: 600, letterSpacing: 1, fontFamily: "Arial, sans-serif" },
-  productDetailsLabel: { fontSize: 26, fontWeight: 700, fontFamily: "Arial, sans-serif", color:"#111"},
-  productDetailsSubLabel: { fontSize: 26, color:"#111", fontFamily:"Arial, sans-serif"},
+  productDetailsLabel: { fontSize: 26, fontWeight: 700, fontFamily: "Arial, sans-serif"},
+  productDetailsSubLabel: { fontSize: 26, fontFamily:"Arial, sans-serif"},
 };

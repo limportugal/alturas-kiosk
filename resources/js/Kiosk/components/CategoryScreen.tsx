@@ -4,6 +4,7 @@ import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "./shared";
 
 
 import { typography } from "@/Kiosk/utils/typography";
+import { colors } from "@/Kiosk/utils/colors";
 
 export default function CategoryScreen({
   category,
@@ -38,15 +39,15 @@ export default function CategoryScreen({
       <MainMenuBtn onClick={onBack} />
 
       {/* Hero card */}
-      <div style={{ margin: "32px 48px 0", display: "flex", gap: 32, background: "#5a2d82", borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+      <div style={{ margin: "32px 48px 0", display: "flex", gap: 32, background: colors.primary, borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
         <div style={{ width: 320, flexShrink: 0, position: "relative" }}>
           <img src={category.image} alt={category.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(90,45,130,0.85)", padding: "14px 18px" }}>
-            <span style={{ color: "#fff", ...typography.title, letterSpacing: 2 }}>{category.label}</span>
+            <span style={{ color: colors.surface, ...typography.title, letterSpacing: 2 }}>{category.label}</span>
           </div>
         </div>
         <div style={{ flex: 1, padding: "32px 32px 32px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <p style={{ color: "#fff", ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
+          <p style={{ color: colors.surface, ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
             Welcome to the {category.label.toLowerCase()} category!
           </p>
           <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0,  }}>
@@ -72,7 +73,7 @@ export default function CategoryScreen({
                 borderRadius: 12,
                 overflow: "hidden",
                 cursor: "pointer",
-                background: "#fff",
+                background: colors.surface,
                 padding: 0,
                 display: "flex",
                 flexDirection: "column",
@@ -82,10 +83,10 @@ export default function CategoryScreen({
                 boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
               }}
             >
-              <div style={{ flex: 1, overflow: "hidden", background: "#eee", minHeight: 160 }}>
+              <div style={{ flex: 1, overflow: "hidden", background: colors.background, minHeight: 160 }}>
                 <img src={sub.image} alt={sub.label} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
               </div>
-              <div style={{ background: "#fff", padding: "14px 8px 12px", textAlign: "center", borderTop: "1px solid #e0d8f0" }}>
+              <div style={{ background: colors.surface, padding: "14px 8px 12px", textAlign: "center", borderTop: "1px solid #e0d8f0" }}>
                 <span style={{ ...typography.label, color: "#222",  }}>{sub.label}</span>
               </div>
             </button>
