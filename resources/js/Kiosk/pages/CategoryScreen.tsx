@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CategoryData } from "../types/types";
-import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "./shared";
+import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "../components/shared";
+import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 
 
 import { typography } from "@/Kiosk/utils/typography";
@@ -57,7 +58,7 @@ export default function CategoryScreen({
       </div>
 
       {/* Sub-category grid */}
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, padding: "36px 48px", boxSizing: "border-box", overflow: "hidden" }}>
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, padding: "36px 48px", boxSizing: "border-box", overflow: "auto", alignItems: "start", alignContent: "start" }}>
         {category.subCategories.map((sub) => {
           const isPressed = pressed === sub.id;
           const delay = stagger(sub.column, sub.row);
@@ -65,31 +66,14 @@ export default function CategoryScreen({
           const tr = !mounted ? "none" : `transform ${isPressed ? "0.12s" : "0.5s"} cubic-bezier(0.22,1,0.36,1) ${!isPressed ? delay : 0}ms, opacity 0.4s ease ${delay}ms`;
 
           return (
-            <button
+            <ImageCardButton
               key={sub.id}
+              image={sub.image}
+              label={sub.label}
+              active={pressed === sub.id}
               onClick={() => handlePress(sub.id)}
-              style={{
-                border: "2px solid #5a2d82",
-                borderRadius: 12,
-                overflow: "hidden",
-                cursor: "pointer",
-                background: colors.surface,
-                padding: 0,
-                display: "flex",
-                flexDirection: "column",
-                opacity: mounted ? 1 : 0,
-                transform: tx,
-                transition: tr,
-                boxShadow: "0 4px 16px rgba(0,0,0,0.10)",
-              }}
-            >
-              <div style={{ flex: 1, overflow: "hidden", background: colors.background, minHeight: 160 }}>
-                <img src={sub.image} alt={sub.label} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
-              </div>
-              <div style={{ background: colors.surface, padding: "14px 8px 12px", textAlign: "center", borderTop: "1px solid #e0d8f0" }}>
-                <span style={{ ...typography.label, color: "#222",  }}>{sub.label}</span>
-              </div>
-            </button>
+              imageHeight={300}
+            />
           );
         })}
       </div>

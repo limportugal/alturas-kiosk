@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Product } from "../types";
+import { Product } from "@/Kiosk/types/types";
 
 export default function OrderModal({
   product,

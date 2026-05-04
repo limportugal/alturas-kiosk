@@ -2,6 +2,9 @@ import { useState } from "react";
 import { CategoryData, Product } from "@/Kiosk/types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
 
+import { ThumbnailButton } from "@/Kiosk/components/buttons/ThumbnailButton";
+import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
+
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors"
 export default function ProductScreen({
@@ -61,18 +64,14 @@ export default function ProductScreen({
         {/* Thumbnails */}
         <div style={{ display: "flex", flexDirection: "column", gap: 16, flexShrink: 0 }}>
           {product.images.map((img, i) => (
-            <button
+            <ThumbnailButton
               key={i}
+              image={img}
+              active={activeImg === i}
               onClick={() => setActiveImg(i)}
-              style={{
-                width: 120, height: 120,
-                border: activeImg === i ? "3px solid #5a2d82" : "2px solid #ddd",
-                borderRadius: 8, overflow: "hidden", background: colors.background,
-                cursor: "pointer", padding: 0, flexShrink: 0, boxSizing: "border-box",
-              }}
-            >
-              <img src={img} alt="" style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 6, boxSizing: "border-box" }} />
-            </button>
+              width={120}
+              height={120}
+            />
           ))}
         </div>
         {/* Main image */}
@@ -107,18 +106,15 @@ export default function ProductScreen({
           <span style={{ ...typography.productDetailsSubLabel }}>{product.colorVariants.map((v) => v.label).join(" and ")}</span>
           <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
             {product.colorVariants.map((variant, i) => (
-              <button
+              <ThumbnailButton
                 key={i}
+                image={variant.image}
+                alt={variant.label}
+                active={activeColor === i}
                 onClick={() => handleColorSelect(i)}
-                style={{
-                  width: 100, height: 80,
-                  border: activeColor === i ? "4px solid #5a2d82" : "2px solid #ccc",
-                  borderRadius: 8, overflow: "hidden", background:colors.background,
-                  cursor: "pointer", padding: 0, boxSizing: "border-box",
-                }}
-              >
-                <img src={variant.image} alt={variant.label} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 4, boxSizing: "border-box" }} />
-              </button>
+                width={100}
+                height={80}
+              />
             ))}
           </div>
         </div>
@@ -128,15 +124,8 @@ export default function ProductScreen({
 
       {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
-        <button onClick={onBack} style={{ flex: 1, background: colors.primary, border: "none", borderRadius: 8, padding: "26px 0", color: colors.surface, cursor: "pointer", ...typography.button}}>
-          BACK
-        </button>
-        <button
-          onClick={() => onOrder(product, product.colorVariants[activeColor]?.label ?? "", 1)}
-          style={{ flex: 1, background: colors.primary, border: "none", borderRadius: 8, padding: "26px 0", color: colors.surface, cursor: "pointer", ...typography.button }}
-        >
-          ORDER ITEM
-        </button>
+        <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton>
+        <KioskButton onClick={() => onOrder(product, product.colorVariants[activeColor]?.label ?? "", 1)} style={{ flex: 1 }}>ORDER ITEM</KioskButton>
       </div>
     </div>
   );

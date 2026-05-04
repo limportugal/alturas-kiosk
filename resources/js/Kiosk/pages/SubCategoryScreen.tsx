@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { CategoryData, Product } from "../types/types";
-import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "./shared";
+import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "@/Kiosk/components/shared";
+import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
+import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 
 export default function SubCategoryScreen({
   category,
@@ -48,41 +50,15 @@ export default function SubCategoryScreen({
         }}
         >
         {category.subCategoryTabs.map((tab, i) => (
-          <button
+          <ImageCardButton
             key={tab.label}
+            image={tab.image}
+            label={tab.label}
+            active={activeTab === i}
             onClick={() => setActiveTab(i)}
-            style={{
-              flexShrink: 0,
-              border: activeTab === i ? "3px solid #5a2d82" : "2px solid #e0dbd5",
-              borderRadius: 12,
-              overflow: "hidden",
-              cursor: "pointer",
-              background: "#fff",
-              padding: 0,
-              width: 180,
-              display: "flex",
-              flexDirection: "column",
-              boxShadow: activeTab === i ? "0 4px 16px rgba(90,45,130,0.3)" : "none",
-              transition: "all 0.2s ease",
-            }}
-          >
-            <img
-              src={tab.image}
-              alt={tab.label}
-              style={{ width: "100%", height: 120, objectFit: "cover", display: "block" }}
-            />
-            <div style={{
-              background: activeTab === i ? "#5a2d82" : "#f5f2ee",
-              padding: "10px 8px",
-              fontSize: 18,
-              fontWeight: 600,
-              color: activeTab === i ? "#fff" : "#5a2d82",
-              fontFamily: "Arial, sans-serif",
-              textAlign: "center",
-            }}>
-              {tab.label}
-            </div>
-          </button>
+            width={180}
+            imageHeight={120}
+          />
         ))}
       </div>
 
@@ -148,9 +124,7 @@ export default function SubCategoryScreen({
 
       {/* Back */}
       <div style={{ background: "#fff", borderTop: "1px solid #e0dbd5", padding: "24px 48px", flexShrink: 0 }}>
-        <button onClick={onBack} style={{ background: "#5a2d82", border: "none", borderRadius: 8, padding: "20px 60px", fontSize: 26, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}>
-          ← BACK
-        </button>
+        <KioskButton onClick={onBack}>← BACK</KioskButton>
       </div>
     </div>
   );

@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import { Screen, Product } from "@/Kiosk/types/types";
 import { CATEGORIES } from "@/Kiosk/data";
-import CategoryScreen from "@/Kiosk/components/CategoryScreen";
-import SubCategoryScreen from "@/Kiosk/components/SubCategoryScreen";
-import ProductScreen from "@/Kiosk/components/ProductScreen";
-import HomeScreen from "@/Kiosk/components/HomeScreen";
+import CategoryScreen from "@/Kiosk/pages/CategoryScreen";
+import SubCategoryScreen from "@/Kiosk/pages/SubCategoryScreen";
+import ProductScreen from "@/Kiosk/pages/ProductScreen";
+import HomeScreen from "@/Kiosk/pages/HomeScreen";
 
 import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
