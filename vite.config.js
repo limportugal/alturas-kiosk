@@ -3,6 +3,10 @@ import laravel from 'laravel-vite-plugin';
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
+    server:{
+         host: '192.168.0.137',
+         cors: true,
+    },
     plugins: [
         laravel({
             input: [
