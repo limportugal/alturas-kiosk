@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-import SideNavDrawer from '@/Kiosk-Admin/components/Nav';
+import SideNavDrawer from '@/Kiosk-Admin/components/nav';
 
 export default function Admin() {
     return (

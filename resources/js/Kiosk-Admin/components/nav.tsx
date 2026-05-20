@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ItemCategory from '@/Kiosk-Admin/pages/ItemCategory';
+import ProductItemPage from '@/Kiosk-Admin/pages/ProductItemPage';
 
 const NAV_SECTIONS = [
   {
@@ -576,7 +576,7 @@ export default function SideNavDrawer() {
           </table>
         </div> */}
         <div className="w-full">
-            <ItemCategory/>
+            <ProductItemPage/>
             </div>
       </main>
     </div>
