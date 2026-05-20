@@ -15,8 +15,9 @@ const users = [
 
 export default function ItemCategory() {
   return (
-    <div className="m-4">
+    <div className="m-0">
       <DataTable 
+        title={'Item Category'}
         rows={users}
         columns={itemCat}
       />

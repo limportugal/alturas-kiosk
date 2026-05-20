@@ -10,12 +10,14 @@ import {
   TableRow,
   TableSortLabel,
 } from '@mui/material';
+import { Box } from  '@mui/material';
 
 import { Column, Order } from './types';
 
 interface Props<T> {
   rows: T[];
   columns: Column<T>[];
+  title: string;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -36,6 +38,7 @@ function getComparator<Key extends keyof any>(
 export default function DataTable<T extends { id: number }>({
   rows,
   columns,
+  title,
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof T>(
@@ -62,9 +65,34 @@ export default function DataTable<T extends { id: number }>({
   }, [rows, order, orderBy, page, rowsPerPage]);
 
   return (
-    <Paper>
-      <TableContainer>
-        <Table>
+    <Paper sx={{ width: '100%' }}>
+        {title && (
+        <Box
+          sx={{
+            px: 2,
+            py: 2,
+            borderBottom: '1px solid #e0e0e0',
+            fontWeight: 600,
+            fontSize: 16,
+          }}
+        >
+          {title}
+        </Box>
+      )}
+      <TableContainer
+         sx={{
+            width: '100%',
+            overflowX: 'auto',
+          }}
+
+          
+          
+          >
+        <Table
+           sx={{
+            width: '100%',
+          }}
+        >
           <TableHead>
             <TableRow>
               {columns.map((column) => (
