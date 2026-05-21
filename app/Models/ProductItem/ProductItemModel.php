@@ -18,5 +18,7 @@ class ProductItemModel extends Model
         'price',
         'item_description'
     ];
+
+    public $timestamps = false;
 }
 

@@ -4,7 +4,7 @@ namespace App\Services\ProductItemServices;
 
 use App\Models\ProductItem\ProductItemModel;
 
-class ProductItemService{
+class ProductIndexService{
     
     public function index()
     {

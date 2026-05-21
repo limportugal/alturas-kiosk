@@ -56,6 +56,7 @@ export default function DataTable<T extends { id: number }>({
   };
 
   const visibleRows = React.useMemo(() => {
+    
     return [...rows]
       .sort(getComparator(order, orderBy))
       .slice(
@@ -68,13 +69,15 @@ export default function DataTable<T extends { id: number }>({
     <Paper sx={{ width: '100%' }}>
         {title && (
         <Box
-          sx={{
-            px: 2,
-            py: 2,
-            borderBottom: '1px solid #e0e0e0',
-            fontWeight: 600,
-            fontSize: 16,
-          }}
+           sx={{
+              px: 3,
+              py: 2,
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+            }}
         >
           {title}
         </Box>
@@ -85,10 +88,9 @@ export default function DataTable<T extends { id: number }>({
             overflowX: 'auto',
           }}
 
-          
-          
           >
         <Table
+            // size="small"
            sx={{
             width: '100%',
           }}

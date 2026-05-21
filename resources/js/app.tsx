@@ -3,7 +3,16 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { createRoot } from 'react-dom/client';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+import { ToastProvider } from '@/Kiosk-Admin/components/provider/ToastProvider';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+import api from './lib/axios';
+import SessionGuard from '@/Components/SessionGuard';
+
+const appName = import.meta.env.VITE_APP_NAME || 'Alturas';
+
+const queryClient = new QueryClient();
 
 const pages = {
     ...import.meta.glob('./Pages/**/*.jsx'),
@@ -23,8 +32,17 @@ createInertiaApp({
         return page();
     },
     setup({ el, App, props }: { el: Element; App: any; props: any }) {
+           // Fetch CSRF once on app boot
+          api.get('/sanctum/csrf-cookie').catch(() => {});
+
         const root = createRoot(el);
-        root.render(<App {...props} />);
+         return root.render(
+            <ToastProvider>
+                <QueryClientProvider client={queryClient}>
+                    <SessionGuard App ={App} props={props} />
+                </QueryClientProvider>
+            </ToastProvider>
+        );
     },
     progress: {
         color: '#4B5563',

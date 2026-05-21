@@ -6,15 +6,21 @@ use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 
 // Services
-use App\Services\ProductItemServices\ProductItemService;
+use App\Services\ProductItemServices\ProductIndexService;
+use App\Services\ProductItemServices\ProductListServices;
 
 class ProductController extends Controller {
 
-    public function index(ProductItemService $service) {
+    public function index(ProductIndexService $service) {
         $products = $service->index(); 
-
-        return Inertia::render('Admin', [
+        //dd($products->toArray());
+        return Inertia::render('Admin/Product-Item', [
             'products' => $products,
         ]);
+    }
+
+    public function list(ProductListServices $service){
+        $products = $service->showProductList();
+        return response()->json($products);
     }
 }

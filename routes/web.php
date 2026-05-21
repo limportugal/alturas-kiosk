@@ -34,6 +34,7 @@ Route::middleware('auth')->group(function () {
     //Product
     Route::prefix('product')->controller(ProductController::class)->group(function () {
         Route::get('/product-item','index')->name('products');
+        Route::get('/product-list','list')->name('product-list');
         Route::post('/store','store');
         Route::get('/{id}/edit','edit');
         Route::put('/{id}','update');
