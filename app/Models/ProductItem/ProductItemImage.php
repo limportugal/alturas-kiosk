@@ -1,0 +1,36 @@
+<?php
+
+namespace App\Models\ProductItem;
+
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Category\ProductItemModel;
+
+
+class ProductItemImage extends Model
+{
+    protected $table = 'product_item_images';
+
+    
+    protected $fillable = [
+        'id',
+        'product_item_id',
+        'item_category_id',
+        'image_path',
+        'is_primary',
+        'sort_order'
+
+    ];
+
+    public $timestamps = false;
+
+    public function images()
+    {
+        return $this->belongsTo(ProductItemModel::class, 'product_item_id');
+    }
+
+    // public function category()
+    // {
+    //     return $this->belongsTo(ItemCategory::class, 'item_category_id');
+    // }
+}
+

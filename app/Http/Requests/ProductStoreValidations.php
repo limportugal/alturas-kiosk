@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Validations;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -19,11 +19,11 @@ class ProductStoreValidations extends FormRequest{
         'item_code' => '|required|string',
         'name' => 'required|string|max:255',
         'price' => 'required|numeric|min:0',
-        'sku' =>  'required|string|unique:products,sku',
+        'sku' =>  'required|string|unique:product_items,sku',
         'item_description' => ['nullable', 'string'],
         'status' => ['required', 'string', 'max:50'],
-        
-
+        'item_category_id' => ['required', 'exists:item_categories,id'],
+        'quantity' => ['required', 'integer', 'min:0'],
         
         'images' => ['nullable', 'array', 'max:5'],
         'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],

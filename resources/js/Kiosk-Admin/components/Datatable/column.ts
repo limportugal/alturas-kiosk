@@ -27,7 +27,7 @@ export const userColumns: Column<User>[] = [
 
 export const Proditem: Column<ProductItem>[] = [
     {
-        id: 'categoryId',
+        id: 'item_category_id',
         label: 'Category',
     },
 

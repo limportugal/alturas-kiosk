@@ -20,7 +20,7 @@ export const useCreateProduct = () => {
     item_code,
     name,
     sku,
-    categoryId,
+    item_category_id,
     price,
     quantity,
     item_description,
@@ -67,7 +67,7 @@ export const useCreateProduct = () => {
         quantity: String(quantity ?? ""),
         item_description: item_description ?? "",
         price: Number(price ?? 0),
-        categoryId: String(categoryId ?? ""),
+        item_category_id: String(item_category_id ?? ""),
         images: images.length > 0 ? "has-image" : "",
       });
 
@@ -99,7 +99,7 @@ export const useCreateProduct = () => {
       item_code: item_code ?? "",
       name: name ?? "",
       sku: sku ?? "",
-      categoryId: String(categoryId ?? ""),
+      item_category_id: String(item_category_id ?? ""),
       price: String(price ?? ""),
       quantity: String(quantity ?? ""),
       item_description: item_description ?? "",

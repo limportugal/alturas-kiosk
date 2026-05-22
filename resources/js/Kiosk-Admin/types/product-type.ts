@@ -12,7 +12,7 @@ export interface ProductItem {
   item_code: string;
   name: string;
   sku: string;
-  categoryId: string;
+  item_category_id: string;
   price: number;
   quantity: number;
   item_description?: string;
@@ -23,7 +23,7 @@ export interface CreateProductPayload {
   item_code: string;
   name: string;
   sku: string;
-  categoryId: string;
+  item_category_id: string;
   price: string;
   quantity: string;
   item_description: string;

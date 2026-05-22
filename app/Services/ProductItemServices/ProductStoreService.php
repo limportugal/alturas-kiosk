@@ -2,6 +2,9 @@
 
 namespace App\Services\ProductItemServices;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+
 use App\Models\ProductItem\ProductItemModel;
 use App\Models\ProductItem\ProductItemImage;
 
@@ -18,7 +21,7 @@ class ProductStoreService
 
         $images = $data['images'] ?? [];
         unset($data['images']);
-        
+    
         $product = ProductItemModel::create($data);
         
         foreach($images as $index => $image) {
@@ -33,7 +36,7 @@ class ProductStoreService
         }
         return [
             'message' => 'product saved successfully',
-            'data' => $product->load(images),
+            'data' => $product->load('images'),
         ];
     });
 }

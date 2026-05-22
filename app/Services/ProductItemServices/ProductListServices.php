@@ -8,7 +8,7 @@ class ProductListServices{
 
     public function showProductList(){
          return ProductItemModel::query()
-        ->select('id' , 'item_code', 'name', 'sku', 'categoryId', 'price', 'quantity', 'item_description', 'status',)
+        ->select('id' , 'item_code', 'name', 'sku', 'item_category_id', 'price', 'quantity', 'item_description', 'status',)
         ->latest()
         ->paginate(10);
     }

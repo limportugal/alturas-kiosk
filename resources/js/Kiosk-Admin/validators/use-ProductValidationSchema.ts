@@ -17,7 +17,7 @@ export const ProductValidationSchema = z.object({
 
   item_description: z.string().min(1, 'Description is required'),
   price: z.number().min(0, 'Price must be positive'),
-  categoryId: z.string().min(1, 'Category is required'),
+  item_category_id: z.string().min(1, 'Category is required'),
   images: z.string().min(1, 'Image is required'),
 
 });

@@ -1,25 +1,56 @@
 import { useState } from 'react';
-import { Button, TextField, Stack } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 import BaseModal from '@/Kiosk-Admin/components/modals/BaseModal';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
+import { useCreateProduct } from '@/Kiosk-Admin/hooks/products/useCreateProduct';
+import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
+
 export default function AddProduct() {
   const [open, setOpen] = useState(false);
 
+  const {
+    handleSubmit,
+    handleImageChange,
+    images,
+    errors,
+    fileInputRef,
+    isPending,
+  } = useCreateProduct();
+
+  const {
+    item_code,
+    name,
+    sku,
+    item_category_id,
+    price,
+    quantity,
+    item_description,
+    status,
+    setItemCode,
+    setName,
+    setSku,
+    setItemCategoryId,
+    setPrice,
+    setQuantity,
+    setItemDescriptions,
+    setStatus,
+  } = useProductStore();
+
   return (
     <>
-      <Button 
-              variant="contained"
-              onClick={() => setOpen(true)}
-              sx={{
-                  backgroundColor : '#7e22ce', 
-                  '&:hover': {
-                      backgroundColor : '#6d28d9',
-                  },
-              }}
-              startIcon={<AddBoxOutlinedIcon />}
-              >
+      <Button
+        variant="contained"
+        onClick={() => setOpen(true)}
+        sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': {
+            backgroundColor: '#6d28d9',
+          },
+        }}
+        startIcon={<AddBoxOutlinedIcon />}
+      >
         Product Item
       </Button>
 
@@ -30,24 +61,114 @@ export default function AddProduct() {
         width={600}
       >
         <Stack spacing={2}>
-          <TextField label="Item Name" fullWidth />
-          <TextField label="Category" fullWidth />
-          <TextField label="SKU" fullWidth />
-          <TextField label="Price" type="number" fullWidth />
+          <TextField
+            label="Item Code"
+            fullWidth
+            value={item_code ?? ''}
+            onChange={(e) => setItemCode(e.target.value)}
+            error={!!errors.item_code}
+            helperText={errors.item_code}
+          />
 
-          <Button 
-              variant="contained"
-              sx={{
-                  backgroundColor : '#7e22ce', 
-                  '&:hover': {
-                      backgroundColor : '#6d28d9',
-                  },
-                  width: 150,
-              }}
-           
-              startIcon={<SaveOutlinedIcon/>}
-              >
-            Save Item
+          <TextField
+            label="Item Name"
+            fullWidth
+            value={name ?? ''}
+            onChange={(e) => setName(e.target.value)}
+            error={!!errors.name}
+            helperText={errors.name}
+          />
+
+          <TextField
+            label="Category"
+            fullWidth
+            value={item_category_id ?? ''}
+            onChange={(e) => setItemCategoryId(Number(e.target.value))}
+            error={!!errors.item_category_id}
+            helperText={errors.item_category_id}
+          />
+
+          <TextField
+            label="SKU"
+            fullWidth
+            value={sku ?? ''}
+            onChange={(e) => setSku(e.target.value)}
+            error={!!errors.sku}
+            helperText={errors.sku}
+          />
+
+          <TextField
+            label="Price"
+            type="number"
+            fullWidth
+            value={price ?? 0}
+            onChange={(e) => setPrice(Number(e.target.value))}
+            error={!!errors.price}
+            helperText={errors.price}
+          />
+
+          <TextField
+            label="Quantity"
+            type="number"
+            fullWidth
+            value={quantity ?? 0}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            error={!!errors.quantity}
+            helperText={errors.quantity}
+          />
+
+          <TextField
+            label="Description"
+            fullWidth
+            multiline
+            minRows={3}
+            value={item_description}
+            onChange={(e) => setItemDescriptions(e.target.value)}
+            error={!!errors.item_description}
+            helperText={errors.item_description}
+          />
+
+          <TextField
+            label="Status"
+            fullWidth
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept="image/png,image/jpeg,image/jpg,image/webp"
+            onChange={(e) => handleImageChange(e.target.files)}
+          />
+
+          {errors.images && (
+            <Typography color="error" sx={{ fontSize: 14 }}>
+              {errors.images}
+            </Typography>
+          )}
+
+          {images.length > 0 && (
+            <Typography color="text.secondary" sx={{ fontSize: 14 }}>
+              {images.length} image(s) selected
+            </Typography>
+          )}
+
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: '#7e22ce',
+              '&:hover': {
+                backgroundColor: '#6d28d9',
+              },
+              width: 150,
+            }}
+            startIcon={<SaveOutlinedIcon />}
+            onClick={handleSubmit}
+            disabled={isPending}
+          >
+            {isPending ? 'Saving...' : 'Save Item'}
           </Button>
         </Stack>
       </BaseModal>

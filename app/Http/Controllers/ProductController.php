@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 
 //Validations 
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductStoreValidations;
 
 // Services
 use App\Services\ProductItemServices\ProductIndexService;
@@ -28,8 +28,9 @@ class ProductController extends Controller {
         return response()->json($products);
     }
 
-    public function storeProduct(ProductRequest $request, ProductStoreService $service ){
+    public function storeProduct(ProductStoreValidations $request, ProductStoreService $service ){
         $products = $service->store($request->validated());
-        return response()->json($products);
+        return response()->json([
+            'created' => $products]);
     }
 }
