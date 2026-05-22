@@ -25,7 +25,7 @@ export default function ProductItemPage() {
     <AddProduct />
   </div>
       <DataTable 
-        title={'Item Category'}
+        title={'Products'}
         rows={product_data?.data ?? []}
         // loading= {isPending_product_data}
         columns={Proditem}

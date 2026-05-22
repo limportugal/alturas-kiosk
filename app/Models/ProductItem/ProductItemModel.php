@@ -11,14 +11,23 @@ class ProductItemModel extends Model
 
     
     protected $fillable = [
-        'id', 
+        'id',
+        'item_code', 
         'name',
         'sku',
         'categoryId', 
         'price',
-        'item_description'
+        'quantity',
+        'item_description',
+        'status'
+
     ];
 
     public $timestamps = false;
+
+     public function images()
+    {
+        return $this->hasMany(ProductItemImage::class, 'product_item_id');
+    }
 }
 

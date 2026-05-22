@@ -23,7 +23,7 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Admin');
+    return Inertia::render('Admin/Product-Item');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('product')->controller(ProductController::class)->group(function () {
         Route::get('/product-item','index')->name('products');
         Route::get('/product-list','list')->name('product-list');
-        Route::post('/store','store');
+        Route::post('/store','storeProduct')->name('product.store');
         Route::get('/{id}/edit','edit');
         Route::put('/{id}','update');
         Route::delete('/{id}','destroy');

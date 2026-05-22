@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
 
+//Validations 
+use App\Http\Requests\ProductRequest;
+
 // Services
 use App\Services\ProductItemServices\ProductIndexService;
 use App\Services\ProductItemServices\ProductListServices;
+use App\Services\ProductItemServices\ProductStoreService;
 
 class ProductController extends Controller {
 
@@ -21,6 +25,11 @@ class ProductController extends Controller {
 
     public function list(ProductListServices $service){
         $products = $service->showProductList();
+        return response()->json($products);
+    }
+
+    public function storeProduct(ProductRequest $request, ProductStoreService $service ){
+        $products = $service->store($request->validated());
         return response()->json($products);
     }
 }

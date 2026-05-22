@@ -27,28 +27,39 @@ export const userColumns: Column<User>[] = [
 
 export const Proditem: Column<ProductItem>[] = [
     {
-        id: 'id',
-        label: 'Item_ID',
+        id: 'categoryId',
+        label: 'Category',
+    },
+
+    {
+        id: 'item_code',
+        label: 'Item Code',
     },
     {
         id: 'name',
         label: 'Item Name',
     },
     {
+        id: 'item_description',
+        label: 'Description',
+    },
+    {
         id: 'sku',
         label: 'SKU',
     },
-    {
-        id: 'categoryId',
-        label: 'Category',
-    },
+  
     {
         id: 'price',
         label: 'Item Price',
     },
-        {
-        id: 'item_description',
-        label: 'Description',
+    {
+        id: 'quantity',
+        label: 'Quantity',
     },
+     {
+        id: 'status',
+        label: 'Status',
+    },
+   
 
 ];

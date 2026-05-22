@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
+import { route } from "ziggy-js";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface NavItem {
@@ -93,6 +94,10 @@ export default function SideNavDrawer({ children, auth }: Props) {
   // Active check — supports exact and prefix match
   const isActive = (href: string) =>
     href === "/dashboard" ? url === href : url.startsWith(href);
+
+  const handleLogout = () => {
+    router.post(route("logout"));
+  };
 
   return (
     <div
@@ -474,11 +479,45 @@ export default function SideNavDrawer({ children, auth }: Props) {
               overflow: "hidden",
               transition: "opacity 0.2s, max-width 0.28s",
               whiteSpace: "nowrap",
+              flex: 1,
             }}
           >
             <div style={{ fontSize: 13, fontWeight: 600, color: "#ddd" }}>{userName}</div>
             <div style={{ fontSize: 11, color: "#555" }}>{userRole}</div>
           </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Log Out"
+            style={{
+              border: "1px solid #2a2a35",
+              background: "#1a1a22",
+              color: "#ddd",
+              borderRadius: 8,
+              padding: open ? "8px 12px" : "8px",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minWidth: open ? 88 : 36,
+              flexShrink: 0,
+              transition: "background 0.15s, border-color 0.15s, color 0.15s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#252535";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "#6c63ff55";
+              (e.currentTarget as HTMLButtonElement).style.color = "#fff";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = "#1a1a22";
+              (e.currentTarget as HTMLButtonElement).style.borderColor = "#2a2a35";
+              (e.currentTarget as HTMLButtonElement).style.color = "#ddd";
+            }}
+          >
+            {open ? "Log Out" : "↪"}
+          </button>
         </div>
       </aside>
 

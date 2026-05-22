@@ -1,10 +1,34 @@
+export interface ProductImage {
+  id: number;
+  product_item_id: number;
+  image_path: string;
+  is_primary: boolean;
+  sort_order: number;
+}
+
+
 export interface ProductItem {
   id: number;
+  item_code: string;
   name: string;
   sku: string;
   categoryId: string;
   price: number;
+  quantity: number;
   item_description?: string;
+  status:string;
+}
+
+export interface CreateProductPayload {
+  item_code: string;
+  name: string;
+  sku: string;
+  categoryId: string;
+  price: string;
+  quantity: string;
+  item_description: string;
+  status: string;
+  images: File[];
 }
 
 
