@@ -12,6 +12,7 @@ use App\Http\Requests\ProductStoreValidations;
 use App\Services\ProductItemServices\ProductIndexService;
 use App\Services\ProductItemServices\ProductListServices;
 use App\Services\ProductItemServices\ProductStoreService;
+use App\Services\ProductItemServices\ProductToggleStatusService;
 
 class ProductController extends Controller {
 
@@ -32,5 +33,11 @@ class ProductController extends Controller {
         $products = $service->store($request->validated());
         return response()->json([
             'created' => $products]);
+    }
+
+    public function toggleStatus(ProductToggleStatusService $service,$id){
+        $toggle = $service->toggleStatus($id);
+        return response()->json([
+            'toggle' => $toggle]);
     }
 }
