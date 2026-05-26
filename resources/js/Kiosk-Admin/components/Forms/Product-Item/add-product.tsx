@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import BaseModal from '@/Kiosk-Admin/components/modals/BaseModal';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
+import useDynamicQuery from '@/hooks/useDynamicQuery';
 
+//from hooks to create
 import { useCreateProduct } from '@/Kiosk-Admin/hooks/products/useCreateProduct';
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
+
+//to get categories use in dropdown
+import { getCategories } from '@/Kiosk-Admin/services/category/dropdownCategoryServices';
+
+//buttons
+import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown'; 
 
 export default function AddProduct() {
   const [open, setOpen] = useState(false);
@@ -38,6 +46,25 @@ export default function AddProduct() {
     setStatus,
   } = useProductStore();
 
+  const { data: categories,
+  }= useDynamicQuery(
+    ['categories'], 
+    getCategories
+  );
+
+  useEffect(() => {
+    if(categories?.length) {
+      setItemCategoryId(Number(categories[0].id));
+    }
+  }, [categories]);
+
+  const options = 
+      categories?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })) ?? [];
+
+
   return (
     <>
       <Button
@@ -65,7 +92,7 @@ export default function AddProduct() {
             label="Item Code"
             fullWidth
             value={item_code ?? ''}
-            onChange={(e) => setItemCode(e.target.value)}
+            onChange={(e) => setItemCode(e.target.value.toUpperCase())}
             error={!!errors.item_code}
             helperText={errors.item_code}
           />
@@ -79,13 +106,12 @@ export default function AddProduct() {
             helperText={errors.name}
           />
 
-          <TextField
+  
+          <ReusableSelect
             label="Category"
-            fullWidth
             value={item_category_id ?? ''}
-            onChange={(e) => setItemCategoryId(Number(e.target.value))}
-            error={!!errors.item_category_id}
-            helperText={errors.item_category_id}
+            onChange={(value) => setItemCategoryId(Number(value))}
+            options={options}
           />
 
           <TextField
@@ -128,12 +154,12 @@ export default function AddProduct() {
             helperText={errors.item_description}
           />
 
-          <TextField
+          {/* <TextField
             label="Status"
             fullWidth
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-          />
+          /> */}
 
           <input
             ref={fileInputRef}

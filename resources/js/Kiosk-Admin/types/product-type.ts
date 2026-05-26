@@ -13,6 +13,7 @@ export interface ProductItem {
   name: string;
   sku: string;
   item_category_id: string;
+  category_name?: string;
   price: number;
   quantity: number;
   item_description?: string;

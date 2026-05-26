@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
 
 
 use Illuminate\Foundation\Application;
@@ -39,6 +40,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/edit','edit');
         Route::put('/{id}','update');
         Route::delete('/{id}','destroy');
+    });
+
+    Route::prefix('category')->controller(CategoryController::class)->group(function () {
+        Route::get('/category-item', 'dropdown')->name('category');
+        Route::post('/store', 'storeCategory')->name('category.store');
+        Route::get('/{id}/edit', 'edit');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
     });
 
 });
