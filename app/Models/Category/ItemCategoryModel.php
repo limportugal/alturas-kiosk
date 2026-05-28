@@ -5,12 +5,14 @@ namespace App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductItem\ProductItemModel;
 
-class ItemCategory extends Model
+class ItemCategoryModel extends Model
 {
     protected $table = 'item_categories';
 
     protected $fillable = [
         'name',
+        'image_path',
+        'status',  
     ];
 
     public function products()

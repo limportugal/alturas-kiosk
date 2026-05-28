@@ -9,7 +9,7 @@ export const buildCreateProductPayload = (
     item_code: state.item_code ?? "",
     name: state.name ?? "",
     sku: state.sku ?? "",
-    item_category_id: String(state.item_category_id ?? ""),
+    item_category_id: Number(state.item_category_id ?? ""),
     price: String(state.price ?? ""),
     quantity: String(state.quantity ?? ""),
     item_description: state.item_description ?? "",

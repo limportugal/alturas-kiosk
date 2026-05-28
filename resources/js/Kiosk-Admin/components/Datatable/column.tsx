@@ -1,5 +1,8 @@
 import { Column } from './types';
 import { ProductItem } from '@/Kiosk-Admin/types/product-type';
+import { CategoryList } from '@/Kiosk-Admin/types/category-types';
+
+
 import ProductToggleStatus from '@/Kiosk-Admin/components/ProductToggleStatus';
 import EditProduct from '@/Kiosk-Admin/components/Forms/Product-Item/edit-product';
 
@@ -50,4 +53,11 @@ export const Proditem: Column<ProductItem>[] = [
       </div>
     ),
   },
+];
+
+export const CatItem: Column<CategoryList>[] = [
+  {id: 'name', label: 'Category Name'},
+  {id: 'status', label: 'Status'},
+  // {id: 'image_path', label: 'image'}
+  // {id: 'action', label: 'Action'},
 ];

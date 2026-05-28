@@ -3,7 +3,7 @@
 namespace App\Models\ProductItem;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category\ItemCategory;
+use App\Models\Category\ItemCategoryModel;
 use App\Models\ProductItem\ProductItemImage;
 
 class ProductItemModel extends Model
@@ -31,7 +31,7 @@ class ProductItemModel extends Model
 
     public function category()
     {
-        return $this->belongsTo(ItemCategory::class, 'item_category_id');
+        return $this->belongsTo(ItemCategoryModel::class, 'item_category_id');
     }
 }
 

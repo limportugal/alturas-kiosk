@@ -2,12 +2,12 @@
 
 namespace App\Services\CategoryItemServices;
 
-use App\Models\Category\ItemCategory;
+use App\Models\Category\ItemCategoryModel;
 
 class CategoryDropDownServices{
 	
     public function getCategoryDropDown()
     {
-        return ItemCategory::select('id','name')->get();
+        return ItemCategoryModel::select('id','name')->get();
     }
 }

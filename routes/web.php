@@ -44,6 +44,8 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('category')->controller(CategoryController::class)->group(function () {
+        Route::get('/categories', 'index')->name('categories');
+        Route::get('/category-list', 'CategoriesList')->name('category-list');
         Route::get('/category-item', 'dropdown')->name('category');
         Route::post('/store', 'storeCategory')->name('category.store');
         Route::get('/{id}/edit', 'edit');

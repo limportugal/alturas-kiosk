@@ -11,7 +11,7 @@ export const CreateProductServices = async (
   formData.append('item_code', payload.item_code);
   formData.append('name', payload.name);
   formData.append('sku', payload.sku);
-  formData.append('item_category_id', payload.item_category_id);
+  formData.append('item_category_id', String(payload.item_category_id));
   formData.append('price', payload.price);
   formData.append('quantity', payload.quantity);
   formData.append('item_description', payload.item_description);

@@ -30,7 +30,7 @@ class ProductItemImage extends Model
 
     // public function category()
     // {
-    //     return $this->belongsTo(ItemCategory::class, 'item_category_id');
+    //     return $this->belongsTo(ItemCategoryModel::class, 'item_category_id');
     // }
 }
 
