@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { ZodError } from "zod";
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
 import { ProductValidationSchema, ProductTypeForm } from "@/Kiosk-Admin/validators/use-ProductValidationSchema";
-import { useCreateProductMutation } from "@/Kiosk-Admin/hooks/mutation-hooks/useCreateProductMutation";
+import { useCreateProductMutation } from "@/Kiosk-Admin/hooks/mutation-hooks/productMutation/useCreateProductMutation";
 import { buildCreateProductPayload } from '@/Kiosk-Admin/utils/buildProductPayload';
 
 type FormErrors = Partial<Record<keyof ProductTypeForm | "images", string>>;

@@ -1,5 +1,5 @@
 import Toggle from "@/Kiosk-Admin/components/Buttons/toggle";
-import {useToggleProductStatus} from '@/Kiosk-Admin/hooks/products/useToggleStatus';
+import {useToggleProductStatus} from '@/Kiosk-Admin/hooks/mutation-hooks/productMutation/useToggleStatus';
 
 interface Props {
     id: number;

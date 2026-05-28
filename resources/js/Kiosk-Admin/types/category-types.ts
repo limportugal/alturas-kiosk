@@ -9,6 +9,7 @@ export interface CategoryList {
     name: string;
     image_path?: string;
     status: string;
+    actions: string;
 }
 
 export interface PaginatedResponse<T> {

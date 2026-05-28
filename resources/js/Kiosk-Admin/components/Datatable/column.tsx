@@ -2,7 +2,7 @@ import { Column } from './types';
 import { ProductItem } from '@/Kiosk-Admin/types/product-type';
 import { CategoryList } from '@/Kiosk-Admin/types/category-types';
 
-
+import CategoryToggleStatus from '@/Kiosk-Admin/components/CategoryToggleStatus';
 import ProductToggleStatus from '@/Kiosk-Admin/components/ProductToggleStatus';
 import EditProduct from '@/Kiosk-Admin/components/Forms/Product-Item/edit-product';
 
@@ -57,7 +57,18 @@ export const Proditem: Column<ProductItem>[] = [
 
 export const CatItem: Column<CategoryList>[] = [
   {id: 'name', label: 'Category Name'},
-  {id: 'status', label: 'Status'},
+  
+  {id: 'actions', label: 'Actions',
+  render: (row) => (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      {/* Status toggle */}
+      <CategoryToggleStatus
+        id={row.id}
+        status={row.status === 'Active'}
+      />
+    </div>
+  ),
+}
   // {id: 'image_path', label: 'image'}
   // {id: 'action', label: 'Action'},
 ];

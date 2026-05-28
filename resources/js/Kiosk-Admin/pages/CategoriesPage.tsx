@@ -3,6 +3,7 @@ import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { CategoriesServices } from '@/Kiosk-Admin/services/category/GetCategoriesListServices';
 import { CatItem } from '@/Kiosk-Admin/components/Datatable/column';
 
+
 export default function CategoriesPage() {
 
     const {

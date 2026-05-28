@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { ZodError } from "zod";
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
 import { ProductValidationSchema, ProductTypeForm } from "@/Kiosk-Admin/validators/use-ProductValidationSchema";
-import { useEditProductMutation } from "@/Kiosk-Admin/hooks/mutation-hooks/useEditProductMutation";
+import { useEditProductMutation } from "@/Kiosk-Admin/hooks/mutation-hooks/productMutation/useEditProductMutation";
 
 import { buildUpdateProductPayload } from "@/Kiosk-Admin/utils/updateBuildProductPayload";
 import { ProductItem, ProductImage } from "@/Kiosk-Admin/types/product-type";
