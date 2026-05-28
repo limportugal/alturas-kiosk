@@ -4,6 +4,7 @@ namespace App\Models\ProductItem;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category\ItemCategory;
+use App\Models\ProductItem\ProductItemImage;
 
 class ProductItemModel extends Model
 {
@@ -11,7 +12,6 @@ class ProductItemModel extends Model
 
     
     protected $fillable = [
-        'id',
         'item_code', 
         'name',
         'sku',
@@ -23,7 +23,6 @@ class ProductItemModel extends Model
 
     ];
 
-    public $timestamps = true;
 
     public function images()
     {

@@ -12,24 +12,35 @@ export interface ProductItem {
   item_code: string;
   name: string;
   sku: string;
-  item_category_id: string;
+  item_category_id: number;
   category_name?: string;
   price: number;
   quantity: number;
   item_description?: string;
   status:string;
+  action: string;
+  images?: ProductImage[];
 }
 
-export interface CreateProductPayload {
+export interface ProductPayload {
   item_code: string;
   name: string;
   sku: string;
-  item_category_id: string;
+  item_category_id: number;
   price: string;
   quantity: string;
   item_description: string;
   status: string;
   images: File[];
+}
+
+
+export interface CreateProductPayload
+  extends ProductPayload {}
+
+export interface UpdateProductPayload
+extends ProductPayload {
+  id: number;
 }
 
 

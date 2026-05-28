@@ -1,5 +1,10 @@
 import { create } from 'zustand';
 
+interface ProductImage {
+  id?: number;
+  image_path: string;
+}
+
 //Storing Datas
 
 interface ProductTypeStore {
@@ -12,6 +17,8 @@ interface ProductTypeStore {
     item_description: string;
     status : string;
     image_path: string;
+    existingImages: ProductImage[];
+    removedImageIds: number[]; 
     
     setItemCode: (item_code: string) => void;
     setName: (name: string) => void;
@@ -21,7 +28,8 @@ interface ProductTypeStore {
     setItemCategoryId: (item_category_id: number) => void;
     setItemDescriptions: (item_description: string) => void;
     setStatus: (status: string) => void;
-    setImagePath: (image_path: string) => void;
+    setExistingImages: (images: ProductImage[]) => void;
+    removeExistingImage: (id: number) => void;
     resetForm: () => void;
 }
 
@@ -35,6 +43,9 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
     item_description: '',
     status: '',
     image_path: '',
+    existingImages: [],
+    removedImageIds: [],
+    
 
     setItemCode: (item_code) => set(() => ({ item_code })),
     setName: (name) => set(() => ({ name })),
@@ -44,16 +55,23 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
     setItemCategoryId: (item_category_id) => set(() => ({ item_category_id })),
     setItemDescriptions: (item_description) => set(() => ({ item_description })),
     setStatus: (status) => set(() => ({ status })),
-    setImagePath: (image_path) => set(() => ({ image_path })),
+    setExistingImages: (existingImages) => set({ existingImages }),
+    removeExistingImage: (id) =>
+    set((state) => ({
+      existingImages:  state.existingImages.filter((img) => img.id !== id),
+      removedImageIds: [...state.removedImageIds, id],
+    })),
     resetForm: () => set(() => ({ 
         item_code: null,
         name: '',
         sku: '',
         price: 0,
         quantity: 0,
-        item_category_id: 0,
+        item_category_id: 1,
         item_description: '',
         status: '',
         image_path: '',
+        existingImages: [],
+        removedImageIds: [],
      })),
 }));

@@ -7,12 +7,14 @@ use Inertia\Inertia;
 
 //Validations 
 use App\Http\Requests\ProductStoreValidations;
+use App\Http\Requests\ProductUpdateValidations;
 
 // Services
 use App\Services\ProductItemServices\ProductIndexService;
 use App\Services\ProductItemServices\ProductListServices;
 use App\Services\ProductItemServices\ProductStoreService;
 use App\Services\ProductItemServices\ProductToggleStatusService;
+use App\Services\ProductItemServices\ProductUpdateService;
 
 class ProductController extends Controller {
 
@@ -39,5 +41,11 @@ class ProductController extends Controller {
         $toggle = $service->toggleStatus($id);
         return response()->json([
             'toggle' => $toggle]);
+    }
+
+    public function updateProduct(ProductUpdateValidations $request, ProductUpdateService $service, $id){
+        $updated = $service->update($request->validated(), $id);
+        return response()->json([
+            'updated' => $updated]);
     }
 }

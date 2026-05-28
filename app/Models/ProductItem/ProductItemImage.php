@@ -3,7 +3,7 @@
 namespace App\Models\ProductItem;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Category\ProductItemModel;
+use App\Models\ProductItem\ProductItemModel;
 
 
 class ProductItemImage extends Model
@@ -21,9 +21,9 @@ class ProductItemImage extends Model
 
     ];
 
-    public $timestamps = false;
+    public $timestamps = true;
 
-    public function images()
+    public function product()
     {
         return $this->belongsTo(ProductItemModel::class, 'product_item_id');
     }

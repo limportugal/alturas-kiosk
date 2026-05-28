@@ -9,6 +9,7 @@ class ProductListServices
     public function showProductList()
     {
         return ProductItemModel::query()
+            ->with('images')
             ->join('item_categories', 'product_items.item_category_id', '=', 'item_categories.id')
             ->select(
                 'product_items.id',

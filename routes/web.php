@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/product-list','list')->name('product-list');
         Route::post('/store','storeProduct')->name('products.store');
         Route::put('/{productItemModel}/toggle-status', 'toggleStatus')->name('products.toggle-status');
-        Route::get('/{id}/edit','edit');
+        Route::put('/{id}/update-product','updateProduct')->name('product.update-item');
         Route::put('/{id}','update');
         Route::delete('/{id}','destroy');
     });

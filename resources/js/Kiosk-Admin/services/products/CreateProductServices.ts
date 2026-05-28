@@ -1,10 +1,10 @@
 import api from '@/lib/axios';
 import { route } from 'ziggy-js';
-import { CreateProductPayload, ProductItem} from '@/Kiosk-Admin/types/product-type';
+import { ProductPayload, ProductItem} from '@/Kiosk-Admin/types/product-type';
 
 
 export const CreateProductServices = async (
-  payload: CreateProductPayload
+  payload: ProductPayload
 ): Promise<{ message: string; data: ProductItem }> => {
   const formData = new FormData();
 

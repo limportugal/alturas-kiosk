@@ -21,7 +21,6 @@ class ProductStoreValidations extends FormRequest{
         'price' => 'required|numeric|min:0',
         'sku' =>  'required|string|unique:product_items,sku',
         'item_description' => ['nullable', 'string'],
-        // 'status' => ['required', 'string', 'max:50'],
         'item_category_id' => ['required', 'exists:item_categories,id'],
         'quantity' => ['required', 'integer', 'min:0'],
         
