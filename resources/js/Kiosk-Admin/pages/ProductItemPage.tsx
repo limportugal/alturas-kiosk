@@ -20,18 +20,20 @@ export default function ProductItemPage() {
  
   return (
     
-    <div className="m-0">
-       <div className="mb-4 flex justify-end">
+<div className="m-0">
+       {/* <div className="mb-4 flex justify-end">
     <AddProduct />
-  </div>
+      </div> */}
       <DataTable 
         title={'Products'}
         rows={product_data?.data ?? []}
         // loading= {isPending_product_data}
         columns={Proditem}
+        searchable ={true}
+        actions={<AddProduct />}
       />
      
-    </div>
+  </div>
    
   );
 }

@@ -12,12 +12,16 @@ import {
 } from '@mui/material';
 import { Box } from  '@mui/material';
 
+import TableSearch from '@/Kiosk-Admin/components/Datatable/TableSearch';
+
 import { Column, Order } from './types';
 
 interface Props<T> {
   rows: T[];
   columns: Column<T>[];
   title: string;
+  searchable?: boolean;
+  actions?: React.ReactNode;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -39,12 +43,14 @@ export default function DataTable<T extends { id: number }>({
   rows,
   columns,
   title,
+  searchable = false,
+  actions,
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>('asc');
   const [orderBy, setOrderBy] = React.useState<keyof T>(
     columns[0].id,
   );
-
+  const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -55,15 +61,26 @@ export default function DataTable<T extends { id: number }>({
     setOrderBy(property);
   };
 
+  const fillterRows = React.useMemo(() => {
+    if (!search) return rows;
+
+    return rows.filter((row) =>
+    columns.some((column) => 
+      String(row[column.id])
+        .toLowerCase()
+        .includes(search.toLowerCase()),
+      ),
+    );
+  }, [rows, columns, search]);
+
   const visibleRows = React.useMemo(() => {
-    
-    return [...rows]
+    return [...fillterRows]
       .sort(getComparator(order, orderBy))
       .slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       );
-  }, [rows, order, orderBy, page, rowsPerPage]);
+  }, [fillterRows, order, orderBy, page, rowsPerPage]);
 
   return (
     <Paper sx={{ width: '100%' }}>
@@ -80,8 +97,28 @@ export default function DataTable<T extends { id: number }>({
             }}
         >
           {title}
+        <Box
+          sx={{
+              display: 'flex',
+              gap: 1,
+              alignItems: 'center',
+            }}
+        >
+        {searchable && (
+            <TableSearch
+              value={search}
+              onChange={(value) => {
+                setSearch(value);
+                setPage(0);
+              }}
+            />
+ 
+          )}
+          {actions}
+          </Box>
         </Box>
-      )}
+        )}
+     
       <TableContainer
          sx={{
             width: '100%',
@@ -141,7 +178,7 @@ export default function DataTable<T extends { id: number }>({
 
       <TablePagination
         component="div"
-        count={rows.length}
+        count={fillterRows.length}
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}

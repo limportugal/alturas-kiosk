@@ -28,7 +28,7 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
 
 
 useEffect(() => {
-     console.log('effect fired, product:', product); // ← nag-fire ba?
+    //  console.log('effect fired, product:', product); // ← nag-fire ba?
     if (!product) return;
 
     productState.setItemCode(product.item_code);
