@@ -9,7 +9,7 @@ export interface CategoryList {
     name: string;
     image_path?: string;
     status: string;
-    actions: string;
+    actions?: string;
 }
 
 export interface CategoryPayload {
@@ -20,6 +20,12 @@ export interface CategoryPayload {
 
 export interface CreateCategoryPayload
   extends CategoryPayload {}
+
+export interface UpdateCategoryPayload
+  extends CategoryPayload{
+  id: number;
+  remove_image?: boolean;
+}
 
 export interface PaginatedResponse<T> {
   data: T[];

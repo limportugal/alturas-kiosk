@@ -13,7 +13,7 @@ export const useCreateCategory = () => {
       const CategoryState = useCategoryStore();
      const [image, setImage] = useState<File | null>(null);
       const [errors, setErrors] = useState<FormErrors>({});
-
+ 
         const createCategory = useCreateCategoryMutation({
           onSuccess: () => {
             CategoryState.resetForm();

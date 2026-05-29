@@ -7,4 +7,10 @@ export const CategoryValidationSchema = z.object({
   }),
 });
 
+export const CategoryUpdateValidationSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  image_path: z.instanceof(File).optional().nullable(),
+});
+
 export type  CategoryTypeForm = z.infer<typeof CategoryValidationSchema>;
+export type CategoryUpdateTypeForm = z.infer<typeof CategoryUpdateValidationSchema>;

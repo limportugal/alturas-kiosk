@@ -7,6 +7,7 @@ use Inertia\Inertia;
 
 //Validations
 use App\Http\Requests\CategoryStoreValidations;
+use App\Http\Requests\CategoryUpdateValidations;
 
 // Services
 use App\Services\CategoryItemServices\CategoryIndexServices;
@@ -14,6 +15,7 @@ use App\Services\CategoryItemServices\CategoryListServices;
 use App\Services\CategoryItemServices\CategoryDropDownServices;
 use App\Services\CategoryItemServices\CategoryToggleStatusServices;
 use App\Services\CategoryItemServices\CategoryStoreServices;
+use App\Services\CategoryItemServices\CategoryUpdateServices;
 
 
 
@@ -44,6 +46,11 @@ class CategoryController extends Controller{
 
     public function saveCategory(CategoryStoreValidations $request, CategoryStoreServices $service){
         $category = $service->store($request->validated());
+        return response()->json($category);
+    }
+
+    public function updateCategory(CategoryUpdateValidations $request, CategoryUpdateServices $service, $id ){
+        $category = $service->update($request->validated(), $id);
         return response()->json($category);
     }
 }

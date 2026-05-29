@@ -33,6 +33,12 @@ export default function AddCategory() {
     <div>
       <Button
         variant="contained"
+         sx={{
+          backgroundColor: '#7e22ce',
+          '&:hover': {
+            backgroundColor: '#6d28d9',
+          },
+        }}
         startIcon={<AddBoxOutlinedIcon />}
         onClick={() => setOpen(true)}
       >

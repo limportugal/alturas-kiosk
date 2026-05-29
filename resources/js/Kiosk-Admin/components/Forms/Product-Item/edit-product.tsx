@@ -184,7 +184,11 @@ export default function EditProduct({ product }: Props) {
             onRemoveExisting={removeExistingImage}
             previews={previews}
             onRemoveNew={removeNewImage}
-            onAdd={handleImageChange}
+            onAdd={(files) =>
+              handleImageChange({
+                target: { files },
+              } as React.ChangeEvent<HTMLInputElement>)
+            }
             error={errors.images}
             label='Product Images'
           />

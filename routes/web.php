@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/category-list', 'CategoriesList')->name('category-list');
         Route::get('/category-item', 'dropdown')->name('category');
         Route::post('/category-store', 'saveCategory')->name('category-store');
+        Route::put('/{id}/category-update', 'updateCategory')->name('category-update');
         Route::put('/{id}/category-status', 'CatToggleStatus')->name('category-status');
         Route::post('/store', 'storeCategory')->name('category.store');
         Route::get('/{id}/edit', 'edit');
