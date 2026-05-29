@@ -12,6 +12,15 @@ export interface CategoryList {
     actions: string;
 }
 
+export interface CategoryPayload {
+  name: string;
+  image_path?: File; // or File | null
+  status: string;
+}
+
+export interface CreateCategoryPayload
+  extends CategoryPayload {}
+
 export interface PaginatedResponse<T> {
   data: T[];
   current_page: number;

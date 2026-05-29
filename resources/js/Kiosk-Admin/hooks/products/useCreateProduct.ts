@@ -34,7 +34,7 @@ export const useCreateProduct = () => {
         quantity: String(productState.quantity ?? ""),
         item_description: productState.item_description ?? "",
         price: Number(productState.price ?? 0),
-        item_category_id: String(productState.item_category_id ?? ""),
+        item_category_id:productState.item_category_id ?? "",
         images: images.length > 0 ? "has-image" : "",
       });
 

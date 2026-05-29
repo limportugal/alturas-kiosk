@@ -14,11 +14,10 @@ export const ProductValidationSchema = z.object({
   quantity: z.string()
     .min(1, 'Quantity is required')
     .regex(/^\d+$/, 'Quantity must be a positive number'),
-  // category_name: z.string().min(0, 'Category is required'),
   item_description: z.string().min(1, 'Description is required'),
   price: z.number().min(0, 'Price must be positive'),
   item_category_id: z.number().min(1, 'Category is required'),
-  images: z.string().min(1, 'Image is required'),
+  images: z.string().min(1, "Image is required"),
 
 });
 

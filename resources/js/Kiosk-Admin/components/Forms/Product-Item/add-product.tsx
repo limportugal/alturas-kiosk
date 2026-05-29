@@ -118,7 +118,7 @@ export default function AddProduct() {
             label="SKU"
             fullWidth
             value={sku ?? ''}
-            onChange={(e) => setSku(e.target.value)}
+            onChange={(e) => setSku(e.target.value.toUpperCase())}
             error={!!errors.sku}
             helperText={errors.sku}
           />
@@ -153,13 +153,6 @@ export default function AddProduct() {
             error={!!errors.item_description}
             helperText={errors.item_description}
           />
-
-          {/* <TextField
-            label="Status"
-            fullWidth
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          /> */}
 
           <input
             ref={fileInputRef}

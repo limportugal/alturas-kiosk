@@ -23,7 +23,9 @@ interface ImageUploaderProps {
   // New image previews
   previews?: ImagePreview[];
   onRemoveNew?: (index: number) => void;
-  onAdd?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // onAdd?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+  onAdd?: (files: FileList | null) => void;
 
   // Config
   multiple?: boolean;
@@ -137,7 +139,7 @@ export default function ImageUploader({
           multiple={multiple}
           hidden
           onChange={(e) => {
-            onAdd?.(e);
+            onAdd?.(e.target.files);
             if (fileInputRef.current) fileInputRef.current.value = '';
           }}
         />

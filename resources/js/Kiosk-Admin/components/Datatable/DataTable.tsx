@@ -22,6 +22,8 @@ interface Props<T> {
   title: string;
   searchable?: boolean;
   actions?: React.ReactNode;
+  defaultOrder?: Order,
+  defaultOrderBy?: keyof T;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -45,11 +47,11 @@ export default function DataTable<T extends { id: number }>({
   title,
   searchable = false,
   actions,
+  defaultOrder = 'desc',
+  defaultOrderBy = 'id' as keyof T,
 }: Props<T>) {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof T>(
-    columns[0].id,
-  );
+  const [order, setOrder] = React.useState<Order>(defaultOrder);
+  const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);

@@ -6,19 +6,40 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 
+use App\Services\Shared\DuplicateCheckerService;
+
+
 use App\Models\ProductItem\ProductItemModel;
 use App\Models\ProductItem\ProductItemImage;
 
 
-class ProductStoreService
-{
+class ProductStoreService {
+    protected DuplicateCheckerService $duplicateCheckerService;
+
+    public function __construct(
+        DuplicateCheckerService $duplicateCheckerService
+    ) {
+        $this->duplicateCheckerService = $duplicateCheckerService;
+    }
+
+
     public function store(array $data){
 
         return DB::transaction(function () use ($data){
-        $this->checkDuplicate(
-            $data['sku'],
-            $data['item_code']
-        );
+
+        $this->duplicateCheckerService->check([
+            'sku' => [
+                'model' => ProductItemModel::class,
+                'value' => $data['sku'],
+                'message' => 'SKU already exists'
+            ],
+            
+            'item_code' => [
+                'model' => ProductItemModel::class,
+                'value' => $data['item_code'],
+                'message' => ' Item code already exists'
+            ],
+        ]);
 
         $images = $data['images'] ?? [];
         unset($data['images']);
@@ -43,23 +64,5 @@ class ProductStoreService
 }
 
 
-
-
-    public function checkDuplicate($sku, $itemCode):void{
-
-        $errors = [];
-
-        if(ProductItemModel::where('sku', $sku)->exists()) {
-            $errors['sku'] = 'SKU already exists';
-        }
-
-        if(ProductItemModel::where('item_code', $itemCode)->exists()) {
-            $errors['item_code'] = 'Item Code already exists';
-        }
-
-        if(!empty($errors)) {
-            throw ValidationException::withMessages($errors);
-        }
-    }
 
 }

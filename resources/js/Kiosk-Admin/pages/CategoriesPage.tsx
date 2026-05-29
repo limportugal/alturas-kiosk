@@ -2,6 +2,7 @@ import  useDynamicQuery  from "@/hooks/useDynamicQuery";
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { CategoriesServices } from '@/Kiosk-Admin/services/category/GetCategoriesListServices';
 import { CatItem } from '@/Kiosk-Admin/components/Datatable/column';
+import AddCategory from "../components/Forms/CatergoryItem/add-category";
 
 
 export default function CategoriesPage() {
@@ -22,6 +23,7 @@ export default function CategoriesPage() {
                 title='Categories'
                 rows={categories_data?.data ?? []}
                 columns={CatItem}
+                actions={<AddCategory/>}
                 // isPending={isPending_categories_data}
                 // isError={isError_categories_data}
                 // addItemLink='/kiosk-admin/categories/add'

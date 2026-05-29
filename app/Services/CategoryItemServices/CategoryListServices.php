@@ -12,6 +12,7 @@ class CategoryListServices{
                 'image_path',
                 'status'
         ])
+            
             ->latest('id')
             ->paginate(10);
     }
