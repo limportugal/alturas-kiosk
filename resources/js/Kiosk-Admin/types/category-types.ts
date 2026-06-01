@@ -14,7 +14,7 @@ export interface CategoryList {
 
 export interface CategoryPayload {
   name: string;
-  image_path?: File; // or File | null
+  image_path?: File | null; // or File | null
   status: string;
 }
 

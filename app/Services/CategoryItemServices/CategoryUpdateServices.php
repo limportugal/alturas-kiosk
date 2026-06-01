@@ -14,7 +14,11 @@ class CategoryUpdateServices{
             $category = ItemCategoryModel::findOrFail($id);
 
             $imagePath = $category->image_path;
-            $removeImage = !empty($data['remove_image']);
+            
+            $removeImage = filter_var(
+                $data['remove_image'] ?? false,
+                FILTER_VALIDATE_BOOLEAN
+            );
 
              // remove image
              if($removeImage && $category->image_path) {

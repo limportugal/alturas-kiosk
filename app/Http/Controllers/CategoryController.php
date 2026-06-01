@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 
 //Validations
 use App\Http\Requests\CategoryStoreValidations;
@@ -50,6 +51,12 @@ class CategoryController extends Controller{
     }
 
     public function updateCategory(CategoryUpdateValidations $request, CategoryUpdateServices $service, $id ){
+    //      dd([
+    //     'all' => $request->all(),
+    //     'hasFile' => $request->hasFile('image_path'),
+    //     'file' => $request->file('image_path'),
+    // ]);
+
         $category = $service->update($request->validated(), $id);
         return response()->json($category);
     }
