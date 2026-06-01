@@ -1,6 +1,6 @@
 import { useDynamicMutation } from "@/hooks/useDynamicMutation";
 import { useToast } from "@/hooks/use-toast";
-import { UpdateProductServices } from "@/Kiosk-Admin/services/products/UpdateProductServices";
+import { UpdateProductServices } from "@/Kiosk-Admin/services/private/products/UpdateProductServices";
 
 export const useEditProductMutation = () => {
   const { showToast } = useToast();

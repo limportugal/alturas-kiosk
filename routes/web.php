@@ -14,6 +14,9 @@ Route::get('/', function () {
     return view('kiosk_screen_saver');
 });
 
+// Public kiosk routes (no auth required)
+Route::get('/kiosk/categories', [CategoryController::class, 'CategoriesList'])->name('category-public-list');
+
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),

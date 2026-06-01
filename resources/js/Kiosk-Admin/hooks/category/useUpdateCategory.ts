@@ -5,6 +5,7 @@ import { useEditCategoryMutation } from "@/Kiosk-Admin/hooks/mutation-hooks/cate
 import { CategoryUpdateValidationSchema, CategoryUpdateTypeForm, } from "@/Kiosk-Admin/validators/use-CategoryValidationSchema";
 import { buildUpdateCategoryPayload } from "@/Kiosk-Admin/utils/updateBuildCategoryPayload";
 import { CategoryList } from "@/Kiosk-Admin/types/category-types";
+import { compressionImage } from "@/Kiosk-Admin/utils/compressImage";
 
 type FormErrors = Partial<Record<keyof CategoryUpdateTypeForm | "image_path", string>>;
 
@@ -57,16 +58,33 @@ export const useUpdateCategory = (category: CategoryList | null) => {
     }
   };
 
-  const handleImageChange = (files: FileList | null) => {
+  const handleImageChange = async (files: FileList | null) => {
     const selected = files?.[0];
 
     if (!selected) return;
 
-    setImage(selected);
+  try {
+    const compressed = await compressionImage(selected, {
+      maxWidthOrHeight: 500,
+      maxSizeMB: 0.3,
+      fileType: 'image/webp',
+    });
+
+    setImage(compressed);
     setRemoveImage(false);
     categoryState.setImage_path("");
-    setErrors((prev) => ({ ...prev, image_path: undefined }));
-  };
+
+    setErrors((prev) => ({ 
+      ...prev, 
+      image_path: undefined 
+    })); 
+  } catch {
+    setErrors((prev) => ({
+       ...prev, 
+       image_path: "Failed to compress image" 
+      }));
+  }
+};
 
   const handleRemoveImage = () => {
     setImage(null);
@@ -77,6 +95,8 @@ export const useUpdateCategory = (category: CategoryList | null) => {
       fileInputRef.current.value = "";
     }
   };
+
+
 
   const handleSubmit = () => {
     if (!category) return;

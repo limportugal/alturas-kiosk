@@ -16,17 +16,21 @@ import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
 export default function MainPage() {
   const [screen, setScreen]                   = useState<Screen>("home");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
+  const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
   const [activeSubId, setActiveSubId]           = useState<string | null>(null);
   const [activeProduct, setActiveProduct]       = useState<Product | null>(null);
   const [orderProduct, setOrderProduct]         = useState<Product | null>(null);
   const [orderColor, setOrderColor]             = useState<string>("");
   const [showConfirm, setShowConfirm]           = useState(false);
 
-  const activeCategory = CATEGORIES.find((c) => c.id === activeCategoryId) ?? null;
+  const activeCategory = CATEGORIES.find(
+    (c) => c.label.toLowerCase() === (activeCategoryName ?? "").toLowerCase()
+  ) ?? null;
 
   const goHome = () => {
     setScreen("home");
     setActiveCategoryId(null);
+    setActiveCategoryName(null);
     setActiveSubId(null);
     setActiveProduct(null);
     setOrderProduct(null);
@@ -36,7 +40,7 @@ export default function MainPage() {
   return (
     <div style={{ position: "relative", width: 1080, height: 1920, overflow: "hidden" }}>
       {screen === "home" && (
-        <HomeScreen onSelect={(id) => { setActiveCategoryId(id); setScreen("category"); }} />
+        <HomeScreen onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }} />
       )}
       {screen === "category" && activeCategory && (
         <CategoryScreen

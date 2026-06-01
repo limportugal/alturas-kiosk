@@ -1,6 +1,6 @@
 import { useDynamicMutation } from "@/hooks/useDynamicMutation";
 import { useToast } from "@/hooks/use-toast";
-import { CreateProductServices } from "@/Kiosk-Admin/services/products/CreateProductServices";
+import { CreateProductServices } from "@/Kiosk-Admin/services/private/products/CreateProductServices";
 
 interface UseCreateProductMutationOptions {
   onSuccess?: () => void;

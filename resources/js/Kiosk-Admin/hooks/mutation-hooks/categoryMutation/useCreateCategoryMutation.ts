@@ -1,6 +1,6 @@
 import { useDynamicMutation } from "@/hooks/useDynamicMutation";
 import { useToast } from "@/hooks/use-toast";
-import { CreateCategortServices } from '@/Kiosk-Admin/services/category/CreateCategoryServices';
+import { CreateCategortServices } from '@/Kiosk-Admin/services/private/category/CreateCategoryServices';
 
 interface UseCreateCategoryMutationOptions {
   onSuccess?: () => void;

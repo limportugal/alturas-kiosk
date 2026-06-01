@@ -16,7 +16,7 @@ import { useUpdateProduct } from '@/Kiosk-Admin/hooks/products/useUpdateProduct'
 import { ProductItem, ProductImage } from '@/Kiosk-Admin/types/product-type';
 
 //to get categories use in dropdown
-import { getCategories } from '@/Kiosk-Admin/services/category/dropdownCategoryServices';
+import { getCategories } from '@/Kiosk-Admin/services/private/category/dropdownCategoryServices';
 
 import  ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 

@@ -1,5 +1,5 @@
 import { useDynamicMutation } from "@/hooks/useDynamicMutation";
-import { updateCatStatus } from '@/Kiosk-Admin/services/category/UpdateCatStatusServices';
+import { updateCatStatus } from '@/Kiosk-Admin/services/private/category/UpdateCatStatusServices';
 
 import { useToast } from "@/hooks/use-toast";
 

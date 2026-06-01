@@ -1,6 +1,6 @@
 import { useDynamicMutation } from "@/hooks/useDynamicMutation";
 import { useToast } from "@/hooks/use-toast";
-import { UpdateCategoryServices } from '@/Kiosk-Admin/services/category/UpdateCategoryServices';
+import { UpdateCategoryServices } from '@/Kiosk-Admin/services/private/category/UpdateCategoryServices';
 
 export const useEditCategoryMutation = () => {
     const { showToast } = useToast();

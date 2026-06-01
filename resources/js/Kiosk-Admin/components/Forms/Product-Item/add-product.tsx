@@ -10,7 +10,7 @@ import { useCreateProduct } from '@/Kiosk-Admin/hooks/products/useCreateProduct'
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
 
 //to get categories use in dropdown
-import { getCategories } from '@/Kiosk-Admin/services/category/dropdownCategoryServices';
+import { getCategories } from '@/Kiosk-Admin/services/private/category/dropdownCategoryServices';
 
 //buttons
 import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown'; 

@@ -3,7 +3,6 @@ import { CategoryData } from "../types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "../components/shared";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 
-
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 
@@ -51,7 +50,7 @@ export default function CategoryScreen({
           <p style={{ color: colors.surface, ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
             Welcome to the {category.label.toLowerCase()} category!
           </p>
-          <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0,  }}>
+          <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0 }}>
             {category.description}
           </p>
         </div>
@@ -66,14 +65,22 @@ export default function CategoryScreen({
           const tr = !mounted ? "none" : `transform ${isPressed ? "0.12s" : "0.5s"} cubic-bezier(0.22,1,0.36,1) ${!isPressed ? delay : 0}ms, opacity 0.4s ease ${delay}ms`;
 
           return (
-            <ImageCardButton
+            <div
               key={sub.id}
-              image={sub.image}
-              label={sub.label}
-              active={pressed === sub.id}
-              onClick={() => handlePress(sub.id)}
-              imageHeight={300}
-            />
+              style={{
+                opacity: mounted ? 1 : 0,
+                transform: tx,
+                transition: tr,
+              }}
+            >
+              <ImageCardButton
+                image={sub.image}
+                label={sub.label}
+                active={isPressed}
+                onClick={() => handlePress(sub.id)}
+                imageHeight={200}
+              />
+            </div>
           );
         })}
       </div>

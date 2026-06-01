@@ -35,12 +35,21 @@ const triggerSessionExpiredModal = () => {
     window.dispatchEvent(new CustomEvent('session-expired'));
 };
 
+const PUBLIC_ROUTES = ['/kiosk/categories'];
+
+const isPublicRoute = (url: string = '') =>
+  PUBLIC_ROUTES.some((r) => url.includes(r));
+
 const attachInterceptors = (client: typeof api) => {
   client.interceptors.response.use(
     response => response,
     async (error) => {
       const status = error.response?.status;
       const config = error.config;
+
+      if (isPublicRoute(config?.url)) {
+        return Promise.reject(error);
+      }
 
       if (status === 419 && config && !config._retry) {
         config._retry = true;
