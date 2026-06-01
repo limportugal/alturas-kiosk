@@ -21,6 +21,7 @@ export default function SubCategoriesPage() {
                 rows={subcategories_data?.data ?? []}
                 columns={SubCatItem}
                 actions={<AddSubCategory />}
+                searchable ={true}
             />
         </div>
     );
