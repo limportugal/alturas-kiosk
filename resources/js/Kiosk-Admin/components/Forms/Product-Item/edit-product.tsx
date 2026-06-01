@@ -17,11 +17,13 @@ import { ProductItem, ProductImage } from '@/Kiosk-Admin/types/product-type';
 
 //to get categories use in dropdown
 import { getCategories } from '@/Kiosk-Admin/services/private/category/dropdownCategoryServices';
+import { getSubCategories } from '@/Kiosk-Admin/services/private/subcategory/dropdownSubCategoryServices';
 
-import  ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
+import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
+import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
 
 interface Props {
-  product: (ProductItem & { images?: ProductImage[] }) | null;
+  product: (ProductItem & { images?: ProductImage[]; colorVariants?: ProductItem['color_variants'] }) | null;
 }
 
 const INPUT_SX = {
@@ -40,18 +42,24 @@ export default function EditProduct({ product }: Props) {
   const [open, setOpen] = useState(false);
   const productState = useProductStore();
 
-  const {setItemCategoryId, item_category_id} = useProductStore();
+  const {setItemCategoryId, item_category_id, sub_category_id, setSubCategoryId} = useProductStore();
 
   const {
     errors,
     isPending,
-    fileInputRef,
     previews,
     existingImages,
     handleSubmit,
     handleImageChange,
     removeNewImage,
     removeExistingImage,
+    existingVariants,
+    newVariants,
+    addNewVariant,
+    updateNewVariantName,
+    updateNewVariantImage,
+    removeNewVariant,
+    removeExistingVariant,
   } = useUpdateProduct(open ? product : null);
 
   const handleClose = () => {
@@ -59,23 +67,21 @@ export default function EditProduct({ product }: Props) {
     productState.resetForm();
   };
 
-    const { data: categories,
-  }= useDynamicQuery(
-    ['categories'], 
-    getCategories
-  );
+    const { data: categories } = useDynamicQuery(['categories'], getCategories);
+    const { data: subCategories } = useDynamicQuery(['sub-categories-dropdown'], getSubCategories);
 
     useEffect(() => {
-      if(categories?.length) {
+      if (categories?.length) {
         setItemCategoryId(Number(categories[0].id));
       }
     }, [categories]);
   
-    const options = 
-        categories?.map((item) => ({
-          label: item.name,
-          value: item.id,
-        })) ?? [];
+    const options = categories?.map((item) => ({ label: item.name, value: item.id })) ?? [];
+
+    // Filter sub-categories by selected category
+    const subCategoryOptions = (subCategories ?? [])
+      .filter((s) => s.item_category_id === item_category_id)
+      .map((s) => ({ label: s.name, value: s.id }));
 
   return (
     <>
@@ -137,8 +143,15 @@ export default function EditProduct({ product }: Props) {
                 onChange={(value) => setItemCategoryId(Number(value))}
                 options={options}
               />
-           
-          </Stack>
+          </Stack>  
+
+          {/* Sub-Category */}
+          <ReusableSelect
+            label="Sub-Category (optional)"
+            value={sub_category_id ?? ''}
+            onChange={(value) => setSubCategoryId(value ? Number(value) : null)}
+            options={[{ label: '— None —', value: '' }, ...subCategoryOptions]}
+          />
 
           {/* Price + Quantity */}
           <Stack direction="row" spacing={2}>
@@ -191,6 +204,17 @@ export default function EditProduct({ product }: Props) {
             }
             error={errors.images}
             label='Product Images'
+          />
+
+          {/* Color Variants */}
+          <ColorVariantsEditor
+            existingVariants={existingVariants}
+            onRemoveExisting={removeExistingVariant}
+            newVariants={newVariants}
+            onAdd={addNewVariant}
+            onNameChange={updateNewVariantName}
+            onImageChange={updateNewVariantImage}
+            onRemoveNew={removeNewVariant}
           />
 
           {/* Save button */}

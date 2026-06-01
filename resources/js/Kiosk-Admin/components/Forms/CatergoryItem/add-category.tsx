@@ -1,56 +1,51 @@
-import { useState } from 'react';
-import { Button, Stack, TextField, } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Button, Stack, TextField } from '@mui/material';
 import BaseModal from '@/Kiosk-Admin/components/modals/BaseModal';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 
-import  ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
-
-
-//from hooks to create
+import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import { useCreateCategory } from '@/Kiosk-Admin/hooks/category/useCreateCategory';
 import { useCategoryStore } from '@/Kiosk-Admin/hooks/zustands/use-store-category';
 
+const BTN_SX = {
+  backgroundColor: '#7e22ce',
+  '&:hover': { backgroundColor: '#6d28d9' },
+};
 
 export default function AddCategory() {
-     const [open, setOpen] = useState(false);
+  const [open, setOpen]           = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
- const {
-    handleSubmit,
-    handleImageChange,
-    image,
-    errors,
-    isPending,
-  } = useCreateCategory();
+  const { handleSubmit, handleImageChange, image, setImage, errors, isPending } = useCreateCategory();
+  const { name, setName } = useCategoryStore();
 
-    const {
-      name,
-      setName,
-    } = useCategoryStore();
+  // Create/revoke object URL when image changes
+  useEffect(() => {
+    if (!image) { setPreviewUrl(null); return; }
+    const url = URL.createObjectURL(image);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [image]);
 
+  const handleClose = () => {
+    setOpen(false);
+    setPreviewUrl(null);
+  };
 
   return (
     <div>
       <Button
         variant="contained"
-         sx={{
-          backgroundColor: '#7e22ce',
-          '&:hover': {
-            backgroundColor: '#6d28d9',
-          },
-        }}
+        sx={BTN_SX}
         startIcon={<AddBoxOutlinedIcon />}
         onClick={() => setOpen(true)}
       >
         Add Category
       </Button>
 
-      <BaseModal
-        open={open}
-        onClose={() => setOpen(false)}
-        title="Add New Category"
-      >
-        <Stack spacing={2} sx={{mt:1}}>
+      <BaseModal open={open} onClose={handleClose} title="Add New Category">
+        <Stack spacing={2} sx={{ mt: 1 }}>
           <TextField
             label="Category Name"
             value={name}
@@ -59,16 +54,14 @@ export default function AddCategory() {
             helperText={errors.name}
           />
 
-        <ImageUploader
-            previews={
-              image
-                ? [{ file: image, previewUrl:URL.createObjectURL(image)}]
-                : []
-            }
+          <ImageUploader
+            previews={image && previewUrl ? [{ file: image, previewUrl }] : []}
             onAdd={handleImageChange}
+            onRemoveNew={() => { setImage(null); setPreviewUrl(null); }}
             error={errors.image_path}
-            label='Product Images'
+            label="Category Image"
             multiple={false}
+            maxImages={1}
           />
 
           <Button
@@ -76,6 +69,7 @@ export default function AddCategory() {
             startIcon={<SaveOutlinedIcon />}
             onClick={handleSubmit}
             disabled={isPending}
+            sx={BTN_SX}
           >
             {isPending ? 'Adding...' : 'Add Category'}
           </Button>

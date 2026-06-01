@@ -31,30 +31,30 @@ const NAV_SECTIONS: NavSection[] = [
     label: null,
     items: [
       { icon: "📦", label: "Products",     href: route('products'),     badge: null },
-      { icon: "⊞", label: "Category",     href: route('categories'),     badge: "3"  },
-      { icon: "📈", label: "Stock Monitor", href: "/stock-monitor", badge: null },
-      { icon: "🔔", label: "Alerts",        href: "/alerts",        badge: "12" },
+      { icon: "⊞", label: "Category",     href: route('categories'),     badge: null  },
+      { icon: "🏷️", label: "Sub Category", href: route('sub-categories'), badge: null },
+      // { icon: "🔔", label: "Alerts",        href: "/alerts",        badge: "12" },
     ],
   },
-  {
-    label: "Management",
-    items: [
-      { icon: "🏷️", label: "Categories",     href: "/categories",      badge: null },
-      { icon: "🏭", label: "Suppliers",       href: "/suppliers",       badge: null },
-      { icon: "📋", label: "Purchase Orders", href: "/purchase-orders", badge: "2"  },
-      { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },
-    ],
-  },
-  {
-    label: "Reports",
-    items: [
-      // { icon: "📊", label: "Analytics", href: "/analytics", badge: null },
-      // { icon: "📉", label: "Low Stock",  href: "/low-stock", badge: "7"  },
-      { icon: "📅", label: "History",    href: "/history",   badge: null },
-      { icon: "⬇️", label: "Import",     href: "/import",    badge: null },
-      // { icon: "⬇️", label: "Export",     href: "/export",    badge: null },
-    ],
-  },
+  // {
+  //   label: "Management",
+  //   items: [
+  //     // { icon: "🏷️", label: "Categories",     href: "/categories",      badge: null },
+  //     { icon: "🏭", label: "Suppliers",       href: "/suppliers",       badge: null },
+  //     { icon: "📋", label: "Purchase Orders", href: "/purchase-orders", badge: "2"  },
+  //     { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },
+  //   ],
+  // },
+  // {
+  //   label: "Reports",
+  //   items: [
+  //     // { icon: "📊", label: "Analytics", href: "/analytics", badge: null },
+  //     // { icon: "📉", label: "Low Stock",  href: "/low-stock", badge: "7"  },
+  //     { icon: "📅", label: "History",    href: "/history",   badge: null },
+  //     { icon: "⬇️", label: "Import",     href: "/import",    badge: null },
+  //     // { icon: "⬇️", label: "Export",     href: "/export",    badge: null },
+  //   ],
+  // },
   // {
   //   label: "Discover",
   //   items: [

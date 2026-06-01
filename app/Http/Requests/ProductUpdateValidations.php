@@ -18,6 +18,7 @@ class ProductUpdateValidations extends FormRequest
             'name'              => ['sometimes', 'nullable', 'string'],
             'sku'               => ['sometimes', 'nullable', 'string'],
             'item_category_id'  => ['sometimes', 'nullable'],
+            'sub_category_id'   => ['sometimes', 'nullable', 'exists:sub_categories,id'],
             'price'             => ['sometimes', 'nullable'],
             'quantity'          => ['sometimes', 'nullable'],
             'item_description'  => ['sometimes', 'nullable'],
@@ -27,9 +28,17 @@ class ProductUpdateValidations extends FormRequest
             'images'            => ['sometimes', 'array'],
             'images.*'          => ['image', 'mimes:jpg,jpeg,png,webp'],
 
-            // ids of existing images to delete ← bago
+            // ids of existing images to delete
             'removed_image_ids'   => ['sometimes', 'nullable', 'array'],
             'removed_image_ids.*' => ['integer', 'exists:product_item_images,id'],
+
+            // color variants
+            'color_variants'                  => ['sometimes', 'nullable', 'array'],
+            'color_variants.*.id'             => ['sometimes', 'nullable', 'integer', 'exists:product_color_variants,id'],
+            'color_variants.*.color_name'     => ['required_with:color_variants.*', 'string', 'max:50'],
+            'color_variants.*.image_path'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'removed_variant_ids'             => ['sometimes', 'nullable', 'array'],
+            'removed_variant_ids.*'           => ['integer', 'exists:product_color_variants,id'],
         ];
     }
 }

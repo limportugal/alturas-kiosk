@@ -1,19 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import BaseModal from '@/Kiosk-Admin/components/modals/BaseModal';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import useDynamicQuery from '@/hooks/useDynamicQuery';
 
-//from hooks to create
 import { useCreateProduct } from '@/Kiosk-Admin/hooks/products/useCreateProduct';
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
-
-//to get categories use in dropdown
 import { getCategories } from '@/Kiosk-Admin/services/private/category/dropdownCategoryServices';
+import { getSubCategories } from '@/Kiosk-Admin/services/private/subcategory/dropdownSubCategoryServices';
+import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown';
+import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
+import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
 
-//buttons
-import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown'; 
+const INPUT_SX = {
+  '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#7e22ce' } },
+  '& .MuiInputLabel-root.Mui-focused': { color: '#7e22ce' },
+};
+
+const BTN_SX = {
+  backgroundColor: '#7e22ce',
+  '&:hover': { backgroundColor: '#6d28d9' },
+};
 
 export default function AddProduct() {
   const [open, setOpen] = useState(false);
@@ -21,174 +29,155 @@ export default function AddProduct() {
   const {
     handleSubmit,
     handleImageChange,
-    images,
+    removeNewImage,
+    previews,
+    colorVariants,
+    addColorVariant,
+    updateVariantName,
+    updateVariantImage,
+    removeColorVariant,
     errors,
-    fileInputRef,
     isPending,
   } = useCreateProduct();
 
   const {
-    item_code,
-    name,
-    sku,
-    item_category_id,
-    price,
-    quantity,
-    item_description,
-    status,
-    setItemCode,
-    setName,
-    setSku,
-    setItemCategoryId,
-    setPrice,
-    setQuantity,
-    setItemDescriptions,
-    setStatus,
+    item_code, name, sku, item_category_id, sub_category_id,
+    price, quantity, item_description,
+    setItemCode, setName, setSku, setItemCategoryId, setSubCategoryId,
+    setPrice, setQuantity, setItemDescriptions,
   } = useProductStore();
 
-  const { data: categories,
-  }= useDynamicQuery(
-    ['categories'], 
-    getCategories
-  );
+  const { data: categories }    = useDynamicQuery(['categories'], getCategories);
+  const { data: subCategories } = useDynamicQuery(['sub-categories-dropdown'], getSubCategories);
 
   useEffect(() => {
-    if(categories?.length) {
+    if (categories?.length) {
       setItemCategoryId(Number(categories[0].id));
     }
   }, [categories]);
 
-  const options = 
-      categories?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      })) ?? [];
+  const categoryOptions = categories?.map((item) => ({ label: item.name, value: item.id })) ?? [];
 
+  const subCategoryOptions = (subCategories ?? [])
+    .filter((s) => s.item_category_id === item_category_id)
+    .map((s) => ({ label: s.name, value: s.id }));
 
   return (
     <>
       <Button
         variant="contained"
         onClick={() => setOpen(true)}
-        sx={{
-          backgroundColor: '#7e22ce',
-          '&:hover': {
-            backgroundColor: '#6d28d9',
-          },
-        }}
+        sx={BTN_SX}
         startIcon={<AddBoxOutlinedIcon />}
       >
         Product Item
       </Button>
 
-      <BaseModal
-        open={open}
-        title="Add Product"
-        onClose={() => setOpen(false)}
-        width={600}
-      >
+      <BaseModal open={open} title="Add Product" onClose={() => setOpen(false)} width={600}>
         <Stack spacing={2}>
-          <TextField
-            label="Item Code"
-            fullWidth
-            value={item_code ?? ''}
-            onChange={(e) => setItemCode(e.target.value.toUpperCase())}
-            error={!!errors.item_code}
-            helperText={errors.item_code}
-          />
 
-          <TextField
-            label="Item Name"
-            fullWidth
-            value={name ?? ''}
-            onChange={(e) => setName(e.target.value)}
-            error={!!errors.name}
-            helperText={errors.name}
-          />
+          {/* Item Code + Name */}
+          <Stack direction="row" spacing={2}>
+            <TextField
+              label="Item Code" fullWidth
+              value={item_code ?? ''}
+              onChange={(e) => setItemCode(e.target.value.toUpperCase())}
+              error={!!errors.item_code} helperText={errors.item_code}
+              sx={INPUT_SX}
+            />
+            <TextField
+              label="Item Name" fullWidth
+              value={name ?? ''}
+              onChange={(e) => setName(e.target.value)}
+              error={!!errors.name} helperText={errors.name}
+              sx={INPUT_SX}
+            />
+          </Stack>
 
-  
+          {/* SKU + Category */}
+          <Stack direction="row" spacing={2}>
+            <TextField
+              label="SKU" fullWidth
+              value={sku ?? ''}
+              onChange={(e) => setSku(e.target.value.toUpperCase())}
+              error={!!errors.sku} helperText={errors.sku}
+              sx={INPUT_SX}
+            />
+            <ReusableSelect
+              label="Category"
+              value={item_category_id ?? ''}
+              onChange={(value) => setItemCategoryId(Number(value))}
+              options={categoryOptions}
+            />
+          </Stack>
+
+          {/* Sub-Category */}
           <ReusableSelect
-            label="Category"
-            value={item_category_id ?? ''}
-            onChange={(value) => setItemCategoryId(Number(value))}
-            options={options}
+            label="Sub-Category (optional)"
+            value={sub_category_id ?? ''}
+            onChange={(value) => setSubCategoryId(value ? Number(value) : null)}
+            options={[{ label: '— None —', value: '' }, ...subCategoryOptions]}
           />
 
-          <TextField
-            label="SKU"
-            fullWidth
-            value={sku ?? ''}
-            onChange={(e) => setSku(e.target.value.toUpperCase())}
-            error={!!errors.sku}
-            helperText={errors.sku}
-          />
+          {/* Price + Quantity */}
+          <Stack direction="row" spacing={2}>
+            <TextField
+              label="Price" type="number" fullWidth
+              value={price ?? 0}
+              onChange={(e) => setPrice(Number(e.target.value))}
+              error={!!errors.price} helperText={errors.price}
+              sx={INPUT_SX}
+            />
+            <TextField
+              label="Quantity" type="number" fullWidth
+              value={quantity ?? 0}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              error={!!errors.quantity} helperText={errors.quantity}
+              sx={INPUT_SX}
+            />
+          </Stack>
 
+          {/* Description */}
           <TextField
-            label="Price"
-            type="number"
-            fullWidth
-            value={price ?? 0}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            error={!!errors.price}
-            helperText={errors.price}
-          />
-
-          <TextField
-            label="Quantity"
-            type="number"
-            fullWidth
-            value={quantity ?? 0}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            error={!!errors.quantity}
-            helperText={errors.quantity}
-          />
-
-          <TextField
-            label="Description"
-            fullWidth
-            multiline
-            minRows={3}
+            label="Description" fullWidth multiline minRows={3}
             value={item_description}
             onChange={(e) => setItemDescriptions(e.target.value)}
-            error={!!errors.item_description}
-            helperText={errors.item_description}
+            error={!!errors.item_description} helperText={errors.item_description}
+            sx={INPUT_SX}
           />
 
-          <input
-            ref={fileInputRef}
-            type="file"
+          {/* Images */}
+          <ImageUploader
+            previews={previews}
+            onRemoveNew={removeNewImage}
+            onAdd={(files) =>
+              handleImageChange({ target: { files } } as React.ChangeEvent<HTMLInputElement>)
+            }
+            error={errors.images}
+            label="Product Images"
             multiple
-            accept="image/png,image/jpeg,image/jpg,image/webp"
-            onChange={(e) => handleImageChange(e.target.files)}
+            maxImages={5}
           />
 
-          {errors.images && (
-            <Typography color="error" sx={{ fontSize: 14 }}>
-              {errors.images}
-            </Typography>
-          )}
-
-          {images.length > 0 && (
-            <Typography color="text.secondary" sx={{ fontSize: 14 }}>
-              {images.length} image(s) selected
-            </Typography>
-          )}
+          {/* Color Variants */}
+          <ColorVariantsEditor
+            newVariants={colorVariants}
+            onAdd={addColorVariant}
+            onNameChange={updateVariantName}
+            onImageChange={updateVariantImage}
+            onRemoveNew={removeColorVariant}
+          />
 
           <Button
             variant="contained"
-            sx={{
-              backgroundColor: '#7e22ce',
-              '&:hover': {
-                backgroundColor: '#6d28d9',
-              },
-              width: 150,
-            }}
+            sx={{ ...BTN_SX, width: 150 }}
             startIcon={<SaveOutlinedIcon />}
             onClick={handleSubmit}
             disabled={isPending}
           >
             {isPending ? 'Saving...' : 'Save Item'}
           </Button>
+
         </Stack>
       </BaseModal>
     </>

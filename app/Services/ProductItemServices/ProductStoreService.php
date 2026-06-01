@@ -11,6 +11,7 @@ use App\Services\Shared\DuplicateCheckerService;
 
 use App\Models\ProductItem\ProductItemModel;
 use App\Models\ProductItem\ProductItemImage;
+use App\Models\ProductItem\ProductColorVariant;
 
 
 class ProductStoreService {
@@ -42,7 +43,8 @@ class ProductStoreService {
         ]);
 
         $images = $data['images'] ?? [];
-        unset($data['images']);
+        $colorVariants = $data['color_variants'] ?? [];
+        unset($data['images'], $data['color_variants']);
     
         $product = ProductItemModel::create($data);
         
@@ -56,9 +58,23 @@ class ProductStoreService {
                 'sort_order' => $index
             ]);
         }
+
+        foreach ($colorVariants as $variant) {
+            $variantImagePath = null;
+            if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
+                $variantImagePath = $variant['image_path']->store('color-variants', 'public');
+            }
+
+            ProductColorVariant::create([
+                'product_item_id' => $product->id,
+                'color_name'      => $variant['color_name'],
+                'image_path'      => $variantImagePath,
+            ]);
+        }
+
         return [
             'message' => 'product saved successfully',
-            'data' => $product->load('images'),
+            'data' => $product->load('images', 'colorVariants'),
         ];
     });
 }

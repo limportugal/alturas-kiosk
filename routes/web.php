@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SubCategoryController;
 
 
 use Illuminate\Foundation\Application;
@@ -45,7 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}','update');
         Route::delete('/{id}','destroy');
     });
-
+    //Category
     Route::prefix('category')->controller(CategoryController::class)->group(function () {
         Route::get('/categories', 'index')->name('categories');
         Route::get('/category-list', 'CategoriesList')->name('category-list');
@@ -57,6 +58,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/edit', 'edit');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
+    });
+
+     //Sub-Category
+    Route::prefix('sub-category')->controller(SubCategoryController::class)->group(function () {
+        Route::get('/sub-categories',              'index')->name('sub-categories');
+        Route::get('/sub-category-list',           'SubCategoryList')->name('sub-category-list');
+        Route::get('/sub-category-item',           'dropdown')->name('sub-category-dropdown');
+        Route::post('/sub-category-store',         'saveSubCategory')->name('sub-category-store');
+        Route::put('/{id}/sub-category-update',    'updateSubCategory')->name('sub-category-update');
+        Route::put('/{id}/sub-category-status',    'SubCatToggleStatus')->name('sub-category-status');
     });
 
 });

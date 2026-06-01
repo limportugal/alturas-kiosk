@@ -22,10 +22,15 @@ class ProductStoreValidations extends FormRequest{
         'sku' =>  'required|string|unique:product_items,sku',
         'item_description' => ['nullable', 'string'],
         'item_category_id' => ['required', 'exists:item_categories,id'],
+        'sub_category_id'  => ['nullable', 'exists:sub_categories,id'],
         'quantity' => ['required', 'integer', 'min:0'],
         
         'images' => ['nullable', 'array', 'max:5'],
         'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+
+        'color_variants'               => ['nullable', 'array'],
+        'color_variants.*.color_name'  => ['required_with:color_variants.*', 'string', 'max:50'],
+        'color_variants.*.image_path'  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]; 
     }
 

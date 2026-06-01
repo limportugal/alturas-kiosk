@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 use App\Models\ProductItem\ProductItemModel;
 use App\Models\ProductItem\ProductItemImage;
+use App\Models\ProductItem\ProductColorVariant;
 
 class ProductUpdateService
 {
@@ -17,9 +18,9 @@ class ProductUpdateService
         try {
             $product = ProductItemModel::findOrFail($id);
 
-            // ── Update product fields (exclude images) ────────────────────
+            // ── Update product fields (exclude images + variants) ─────────
             $productData = collect($data)
-                ->except(['images', 'removed_image_ids', 'existing_images'])
+                ->except(['images', 'removed_image_ids', 'existing_images', 'color_variants', 'removed_variant_ids'])
                 ->toArray();
 
             $product->update($productData);
@@ -58,9 +59,42 @@ class ProductUpdateService
                 }
             }
 
+            // ── Remove specific color variants ────────────────────────────
+            if (!empty($data['removed_variant_ids'])) {
+                $toRemove = ProductColorVariant::whereIn('id', $data['removed_variant_ids'])
+                    ->where('product_item_id', $product->id)
+                    ->get();
+
+                foreach ($toRemove as $variant) {
+                    if ($variant->image_path) {
+                        Storage::disk('public')->delete($variant->image_path);
+                    }
+                    $variant->delete();
+                }
+            }
+
+            // ── Add new color variants ────────────────────────────────────
+            if (!empty($data['color_variants'])) {
+                foreach ($data['color_variants'] as $variant) {
+                    // Skip if it already has an id (existing variant, no change)
+                    if (!empty($variant['id'])) continue;
+
+                    $variantImagePath = null;
+                    if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
+                        $variantImagePath = $variant['image_path']->store('color-variants', 'public');
+                    }
+
+                    ProductColorVariant::create([
+                        'product_item_id' => $product->id,
+                        'color_name'      => $variant['color_name'],
+                        'image_path'      => $variantImagePath,
+                    ]);
+                }
+            }
+
             DB::commit();
 
-            return $product->load('images');
+            return $product->load('images', 'colorVariants');
 
         } catch (\Exception $e) {
             DB::rollBack();
