@@ -4,7 +4,7 @@ import  useDynamicQuery  from "@/hooks/useDynamicQuery";
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { Proditem } from '@/Kiosk-Admin/components/Datatable/column';
 import AddProduct from '@/Kiosk-Admin/components/Forms/Product-Item/add-product';
-import { ProductsServices } from '@/Kiosk-Admin/services/private/products/GetProductServices'
+import { ProductsServices } from '@/Kiosk-Admin/services/products/GetProductServices'
 
 export default function ProductItemPage() {
   

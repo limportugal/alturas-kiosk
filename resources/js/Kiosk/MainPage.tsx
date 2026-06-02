@@ -2,10 +2,10 @@ import { useState } from "react";
 
 import { Screen, Product } from "@/Kiosk/types/types";
 import { CATEGORIES } from "@/Kiosk/data";
-import CategoryScreen from "@/Kiosk/pages/CategoryScreen";
 import SubCategoryScreen from "@/Kiosk/pages/SubCategoryScreen";
 import ProductScreen from "@/Kiosk/pages/ProductScreen";
-import HomeScreen from "@/Kiosk/pages/HomeScreen";
+import ProductDetailScreen from "@/Kiosk/pages/ProductDetailScreen";
+import HomeCategoryScreen from "@/Kiosk/pages/HomeCategoryScreen";
 
 import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
@@ -40,18 +40,20 @@ export default function MainPage() {
   return (
     <div style={{ position: "relative", width: 1080, height: 1920, overflow: "hidden" }}>
       {screen === "home" && (
-        <HomeScreen onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }} />
+        <HomeCategoryScreen onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }} />
       )}
       {screen === "category" && activeCategory && (
-        <CategoryScreen
+        <SubCategoryScreen
           category={activeCategory}
+          categoryId={activeCategoryId ?? ""}
           onBack={goHome}
           onSubSelect={(subId) => { setActiveSubId(subId); setScreen("subcategory"); }}
         />
       )}
       {screen === "subcategory" && activeCategory && activeSubId && (
-        <SubCategoryScreen
+        <ProductScreen
           category={activeCategory}
+          categoryId={activeCategoryId ?? ""}
           subId={activeSubId}
           onBack={() => setScreen("category")}
           onProduct={(p) => { setActiveProduct(p); setScreen("product"); }}
@@ -59,7 +61,7 @@ export default function MainPage() {
         />
       )}
       {screen === "product" && activeCategory && activeSubId && activeProduct && (
-        <ProductScreen
+        <ProductDetailScreen
           product={activeProduct}
           category={activeCategory}
           subId={activeSubId}

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { KIOSK_STYLE } from "@/Kiosk/components/shared";
 import useDynamicQuery from "@/hooks/useDynamicQuery";
-import { CategoriesPublicServices } from "@/Kiosk-Admin/services/public/category/GetCategoriesListServices";
+import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategoriesListServices";
 import { CategoryList } from "@/Kiosk-Admin/types/category-types";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 
-export default function HomeScreen({ onSelect }: { onSelect: (id: string, name: string) => void }) {
+export default function HomeCategoryScreen({ onSelect }: { onSelect: (id: string, name: string) => void }) {
   const [mounted, setMounted] = useState(false);
   const [pressed, setPressed] = useState<string | null>(null);
 

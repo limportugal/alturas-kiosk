@@ -1,6 +1,6 @@
 import { useDynamicMutation } from '@/hooks/useDynamicMutation';
 import { useToast } from '@/hooks/use-toast';
-import { updateSubCatStatus } from '@/Kiosk-Admin/services/private/subcategory/UpdateSubCatStatusServices';
+import { updateSubCatStatus } from '@/Kiosk-Admin/services/subcategory/UpdateSubCatStatusServices';
 
 export const useSubCategoryToggleStatus = () => {
     const { showToast } = useToast();

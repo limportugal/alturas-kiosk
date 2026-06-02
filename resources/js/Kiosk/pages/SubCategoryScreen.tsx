@@ -1,130 +1,107 @@
 import { useState, useEffect } from "react";
-import { CategoryData, Product } from "../types/types";
-import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "@/Kiosk/components/shared";
+import { CategoryData } from "../types/types";
+import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "../components/shared";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
-import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
+
+import useDynamicQuery from "@/hooks/useDynamicQuery";
+import { typography } from "@/Kiosk/utils/typography";
+import { colors } from "@/Kiosk/utils/colors";
+
+
+import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 
 export default function SubCategoryScreen({
   category,
-  subId,
+  categoryId,
   onBack,
-  onProduct,
-  onHome,
+  onSubSelect,
 }: {
   category: CategoryData;
-  subId: string;
+  categoryId: string;
   onBack: () => void;
-  onProduct: (product: Product) => void;
-  onHome: () => void;
+  onSubSelect: (subId: string) => void;
+   
 }) {
-  const sub = category.subCategories.find((s) => s.id === subId);
-  const [activeTab, setActiveTab] = useState(0);
-  const products = category.products[subId] ?? [];
   const [mounted, setMounted] = useState(false);
+  const [pressed, setPressed] = useState<string | null>(null);
+
+   const { data: subCategoriesData } = useDynamicQuery(
+    ["sub-category-public-list"],
+    SubCategoriesPublicServices
+  );
+  
+  const visibleSubCategories =
+    subCategoriesData?.data?.filter(
+      (subCategory) => String(subCategory.item_category_id) === categoryId
+    ) ?? [];
 
   useEffect(() => {
     setMounted(false);
-    const t = setTimeout(() => setMounted(true), 60);
+    const t = setTimeout(() => setMounted(true), 80);
     return () => clearTimeout(t);
-  }, [subId]);
+  }, [category.id]);
+
+  const handlePress = (id: string) => {
+    setPressed(id);
+    setTimeout(() => { setPressed(null); onSubSelect(id); }, 220);
+  };
+
+  const slideDir = (col: number) => col === 0 ? "-130%" : col === 2 ? "130%" : "0%";
+  const stagger  = (col: number, row: number) => row * 100 + col * 40;
 
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
       <PurpleBanner>{category.label}</PurpleBanner>
-      <MainMenuBtn onClick={onHome} />
-      <PurpleBanner small>{sub?.label.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
+      <MainMenuBtn onClick={onBack} />
 
-      {/* Tabs */}
-      <div style={{ 
-        display: "flex", 
-        flexDirection: "row", 
-        gap:22, 
-        padding:"24px 48px", 
-        overflowX: "auto", 
-        flexShrink: 0, 
-        background: "#fff", 
-        borderBottom: "1px solid #e0dbd5",
-        scrollBehavior: "smooth",
-        WebkitOverflowScrolling: "touch",
-        }}
-        >
-        {category.subCategoryTabs.map((tab, i) => (
-          <ImageCardButton
-            key={tab.label}
-            image={tab.image}
-            label={tab.label}
-            active={activeTab === i}
-            onClick={() => setActiveTab(i)}
-            width={180}
-            imageHeight={120}
-          />
-        ))}
+      {/* Hero card */}
+      <div style={{ margin: "32px 48px 0", display: "flex", gap: 32, background: colors.primary, borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
+        <div style={{ width: 320, flexShrink: 0, position: "relative" }}>
+          <img src={category.image} alt={category.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(90,45,130,0.85)", padding: "14px 18px" }}>
+            <span style={{ color: colors.surface, ...typography.title, letterSpacing: 2 }}>{category.label}</span>
+          </div>
+        </div>
+        <div style={{ flex: 1, padding: "32px 32px 32px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <p style={{ color: colors.surface, ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
+            Welcome to the {category.label.toLowerCase()} category!
+          </p>
+          <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0 }}>
+            {category.description}
+          </p>
+        </div>
       </div>
 
-
-      <PurpleBanner small>{category.subCategoryTabs[activeTab]?.label.toUpperCase() ?? ""}</PurpleBanner>
-
-      {/* Product grid */}
-      <div style={{ flex: 1, overflowY: "auto", padding: "32px 48px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, alignContent: "start", boxSizing: "border-box" }}>
-        {products.map((product, idx) => {
-          const col = idx % 3;
-          const delay = col * 80 + Math.floor(idx / 3) * 100;
-          const slideFrom = col === 0 ? "-110%" : col === 2 ? "110%" : "0%";
+      {/* Sub-category grid */}
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, padding: "36px 48px", boxSizing: "border-box", overflow: "auto", alignItems: "start", alignContent: "start" }}>
+        {visibleSubCategories.map((sub, index) => {
+          const col = (index % 3) as 0 | 1 | 2;
+          const row = Math.floor(index / 3);
+          const isPressed = pressed === String(sub.id);
+          const delay = stagger(col, row);
+          const tx = !mounted ? slideDir(col) : isPressed ? "translateX(0) scale(0.95)" : "translateX(0) scale(1)";
+          const tr = !mounted ? "none" : `transform ${isPressed ? "0.12s" : "0.5s"} cubic-bezier(0.22,1,0.36,1) ${!isPressed ? delay : 0}ms, opacity 0.4s ease ${delay}ms`;
 
           return (
-            <button
-              key={product.id}
-              onClick={() => onProduct(product)}
+            <div
+              key={sub.id}
               style={{
-                background: "#fff",
-                border: "2px solid #e0dbd5",
-                borderRadius: 12,
-                overflow: "hidden",
-                cursor: "pointer",
-                padding: 0,
-                textAlign: "left",
-                display: "flex",
-                flexDirection: "column",
-                boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
                 opacity: mounted ? 1 : 0,
-                transform: mounted ? "translateX(0) scale(1)" : `translateX(${slideFrom})`,
-                transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms, opacity 0.4s ease ${delay}ms`,
+                transform: tx,
+                transition: tr,
               }}
             >
-              {product.isBestSeller && (
-                <div style={{ background: "#e8333c", color: "#fff", fontSize: 18, fontWeight: 700, padding: "6px 16px", fontFamily: "Arial, sans-serif" }}>Best seller</div>
-              )}
-              {product.tags?.map((tag) => (
-                <div key={tag} style={{ color: "#c0392b", fontSize: 18, fontWeight: 600, padding: "6px 16px 0", fontFamily: "Arial, sans-serif" }}>{tag}</div>
-              ))}
-              <div style={{ background: "#f0ede8", aspectRatio: "1/1", overflow: "hidden" }}>
-                <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
-              </div>
-              <div style={{ padding: "16px 18px 20px", flex: 1 }}>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "#111", fontFamily: "Arial, sans-serif" }}>{product.name}</div>
-                <div style={{ fontSize: 18, color: "#555", fontFamily: "Arial, sans-serif", marginTop: 4 }}>{product.subtitle}</div>
-                <div style={{ fontSize: 28, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", marginTop: 10 }}>₱{product.price.toLocaleString()}</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-                  <Stars rating={product.rating} size={18} />
-                  <span style={{ fontSize: 16, color: "#777", fontFamily: "Arial, sans-serif" }}>({product.reviewCount})</span>
-                </div>
-                <div style={{ marginTop: 10, fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ Available for delivery</div>
-                <div style={{ fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ In stock in Pasay City</div>
-              </div>
-            </button>
+              <ImageCardButton
+                image={sub.image_path ? `/storage/${sub.image_path}` : undefined}
+                label={sub.name}
+                active={isPressed}
+                onClick={() => handlePress(String(sub.id))}
+                imageHeight={200}
+              />
+            </div>
           );
         })}
-        {products.length === 0 && (
-          <div style={{ gridColumn: "1 / -1", textAlign: "center", color: "#aaa", fontSize: 28, padding: "80px 0", fontFamily: "Arial, sans-serif" }}>
-            Products coming soon
-          </div>
-        )}
-      </div>
-
-      {/* Back */}
-      <div style={{ background: "#fff", borderTop: "1px solid #e0dbd5", padding: "24px 48px", flexShrink: 0 }}>
-        <KioskButton onClick={onBack}>← BACK</KioskButton>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 import  useDynamicQuery  from "@/hooks/useDynamicQuery";
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
-import { CategoriesServices } from '@/Kiosk-Admin/services/private/category/GetCategoriesListServices';
+import { CategoriesServices } from '@/Kiosk-Admin/services/category/GetCategoriesListServices';
 import { CatItem } from '@/Kiosk-Admin/components/Datatable/column';
 import AddCategory from "../components/Forms/CatergoryItem/add-category";
 

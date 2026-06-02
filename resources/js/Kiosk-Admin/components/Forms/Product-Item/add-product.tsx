@@ -7,8 +7,8 @@ import useDynamicQuery from '@/hooks/useDynamicQuery';
 
 import { useCreateProduct } from '@/Kiosk-Admin/hooks/products/useCreateProduct';
 import { useProductStore } from '@/Kiosk-Admin/hooks/zustands/use-store-product';
-import { getCategories } from '@/Kiosk-Admin/services/private/category/dropdownCategoryServices';
-import { getSubCategories } from '@/Kiosk-Admin/services/private/subcategory/dropdownSubCategoryServices';
+import { getCategories } from '@/Kiosk-Admin/services/category/dropdownCategoryServices';
+import { getSubCategories } from '@/Kiosk-Admin/services/subcategory/dropdownSubCategoryServices';
 import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown';
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
