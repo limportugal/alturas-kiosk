@@ -57,6 +57,8 @@ export interface CreateProductPayload extends ProductPayload {}
 
 export interface UpdateProductPayload extends ProductPayload {
   id: number;
+  existing_images?: ProductImage[];
+  removed_image_ids?: number[];
   removed_variant_ids?: number[];
 }
 

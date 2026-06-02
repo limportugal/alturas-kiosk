@@ -1,5 +1,5 @@
 import { uploadApi } from '@/lib/axios';
-import { route } from 'ziggy-js';
+import { relativeRoute } from '@/lib/relativeRoute';
 import { UpdateProductPayload } from '@/Kiosk-Admin/types/product-type';
 
 export const UpdateProductServices = async ({
@@ -45,6 +45,6 @@ export const UpdateProductServices = async ({
     formData.append('removed_variant_ids[]', String(variantId));
   });
 
-  const response = await uploadApi.post(route('product.update-item', id), formData);
+  const response = await uploadApi.post(relativeRoute('product.update-item', id), formData);
   return response.data;
 };

@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import { route } from 'ziggy-js';
+import { relativeRoute } from '@/lib/relativeRoute';
 import { CategoryList, CreateCategoryPayload } from '@/Kiosk-Admin/types/category-types'
 
 export const CreateCategortServices = async (payload: CreateCategoryPayload): Promise<{ message: string; data: CategoryList}> => {
@@ -12,7 +12,7 @@ export const CreateCategortServices = async (payload: CreateCategoryPayload): Pr
         }
     formData.append('status', payload.status);
 
-    const response = await api.post(route('category-store'), formData, {
+    const response = await api.post(relativeRoute('category-store'), formData, {
          headers: {
       'Content-Type': 'multipart/form-data',
     },

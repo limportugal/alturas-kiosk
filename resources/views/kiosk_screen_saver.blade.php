@@ -9,8 +9,15 @@
         html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden; background: #000; }
         #app { width: 100%; height: 100%; }
     </style>
+    @php
+        if (request()->isSecure()) {
+            \Illuminate\Support\Facades\Vite::useHotFile(storage_path('framework/vite.hot.disabled'));
+        }
+    @endphp
     @routes
-    @viteReactRefresh
+    @if (!request()->isSecure())
+        @viteReactRefresh
+    @endif
     @vite(['resources/css/app.css', 'resources/js/Kiosk-Screen-Saver/Kiosk.tsx'])
 </head>
 <body>

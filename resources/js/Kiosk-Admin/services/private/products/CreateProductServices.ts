@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import { route } from 'ziggy-js';
+import { relativeRoute } from '@/lib/relativeRoute';
 import { CreateProductPayload, ProductItem } from '@/Kiosk-Admin/types/product-type';
 
 export const CreateProductServices = async (
@@ -30,7 +30,7 @@ export const CreateProductServices = async (
     }
   });
 
-  const response = await api.post(route('products.store'), formData, {
+  const response = await api.post(relativeRoute('products.store'), formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   });
 

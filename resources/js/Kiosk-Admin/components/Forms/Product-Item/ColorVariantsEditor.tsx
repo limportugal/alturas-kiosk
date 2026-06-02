@@ -47,7 +47,7 @@ export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProp
         label="Color Name"
         value={variant.color_name}
         size="small"
-        sx={{ ...INPUT_SX, width: 160 }}
+        sx={{ ...INPUT_SX, width: 260 }}
         slotProps={{ input: { readOnly: true } }}
       />
 

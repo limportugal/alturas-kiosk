@@ -1,5 +1,5 @@
 import { uploadApi } from '@/lib/axios';
-import { route } from 'ziggy-js';
+import { relativeRoute } from '@/lib/relativeRoute';
 import { UpdateSubCategoryPayload } from '@/Kiosk-Admin/types/subcategory-types';
 
 export const UpdateSubCategoryServices = async ({
@@ -22,6 +22,6 @@ export const UpdateSubCategoryServices = async ({
 
     formData.append('_method', 'PUT');
 
-    const response = await uploadApi.post(route('sub-category-update', id), formData);
+    const response = await uploadApi.post(relativeRoute('sub-category-update', id), formData);
     return response.data;
 };

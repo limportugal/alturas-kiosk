@@ -1,7 +1,7 @@
 import api from '@/lib/axios';
-import { route } from 'ziggy-js';
+import { relativeRoute } from '@/lib/relativeRoute';
 
 export const updateCatStatus = async (catId: number) => {
-        const response = await api.put(route('category-status', catId));
+        const response = await api.put(relativeRoute('category-status', catId));
         return response.data;
 };

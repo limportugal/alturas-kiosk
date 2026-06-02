@@ -1,9 +1,5 @@
 import { create } from 'zustand';
-
-interface ProductImage {
-  id?: number;
-  image_path: string;
-}
+import type { ProductImage } from '@/Kiosk-Admin/types/product-type';
 
 //Storing Datas
 
