@@ -96,7 +96,7 @@ export const CatItem: Column<CategoryList>[] = [
     id: 'image_path',
     label: 'Image',
     render: (row) => (
-      <ImagePreviewCell imagePath={row.image_path} alt={row.name} />
+      <ImagePreviewCell imagePath={row.image_path ? `/${row.image_path}` : undefined} alt={row.name} />
     ),
   },
   { id: 'name', label: 'Category Name' },

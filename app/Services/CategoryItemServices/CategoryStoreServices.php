@@ -35,8 +35,12 @@ class CategoryStoreServices {
             $imagePath = null;
 
             //check if image exists 
-            if (isset($data['image_path']) && $data['image_path']){                
-                $imagePath = $data['image_path']->store('categories', 'public');
+            if (isset($data['image_path']) && $data['image_path']){ 
+                $file = $data['image_path'];
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('categories'), $fileName);
+
+                $imagePath = 'categories/' . $fileName;
             }
 
             $category = ItemCategoryModel::create([

@@ -110,6 +110,7 @@ export default function EditCategory({ category }: Props) {
             label="Category Image"
             multiple={false}
             maxImages={1}
+            storagePath="/"
           />
 
           <Button
