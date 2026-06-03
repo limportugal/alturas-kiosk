@@ -93,7 +93,7 @@ export default function SubCategoryScreen({
               }}
             >
               <ImageCardButton
-                image={sub.image_path ? `/storage/${sub.image_path}` : undefined}
+                image={sub.image_path ? `/${sub.image_path}` : undefined}
                 label={sub.name}
                 active={isPressed}
                 onClick={() => handlePress(String(sub.id))}

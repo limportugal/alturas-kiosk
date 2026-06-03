@@ -91,7 +91,7 @@ export default function HomeCategoryScreen({ onSelect }: { onSelect: (id: string
                 }}
               >
                 <ImageCardButton
-                  image={cat.image_path ? `/storage/${cat.image_path}` : undefined}
+                  image={cat.image_path ? `/${cat.image_path}` : undefined}
                   label={cat.name}
                   active={isPressed}
                   onClick={() => handlePress(String(cat.id), cat.name)}

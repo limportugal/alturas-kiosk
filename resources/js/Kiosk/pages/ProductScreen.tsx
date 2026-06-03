@@ -65,7 +65,7 @@ export default function ProductScreen({
         {(subCategoriesData?.data?.filter((s) => String(s.item_category_id) === categoryId) ?? []).map((tab, i) => (
           <ImageCardButton
             key={tab.name}
-            image={tab.image_path ? `/storage/${tab.image_path}` : undefined}
+            image={tab.image_path ? `/${tab.image_path}` : undefined}
             label={tab.name}
             active={activeTab === i}
             onClick={() => setActiveTab(i)}
