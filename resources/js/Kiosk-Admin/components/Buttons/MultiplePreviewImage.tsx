@@ -25,11 +25,14 @@ export default function MultiplePreviewImage({
     return <span>No Image</span>;
   }
 
+ const toImageUrl = (path?: string) =>
+  !path ? '' : path.startsWith('/') || path.startsWith('http') ? path : `/${path}`;
+
   return (
     <>
       <Box
         component="img"
-        src={`/storage/${sortedImages[0].image_path}`}
+        src={toImageUrl(sortedImages[0]?.image_path)}
         alt={productName}
         onClick={() => {
           setSelectedIndex(0);

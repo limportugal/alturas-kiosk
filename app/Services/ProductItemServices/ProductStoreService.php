@@ -49,7 +49,13 @@ class ProductStoreService {
         $product = ProductItemModel::create($data);
         
         foreach($images as $index => $image) {
-            $storedPath = $image->store('products', 'public');
+            $fileName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
+
+            $image->move(
+                    public_path('products'),
+                    $fileName
+                );
+             $storedPath = 'products/' . $fileName;
 
             ProductItemImage::create([
                 'product_item_id' => $product->id,
@@ -62,7 +68,16 @@ class ProductStoreService {
         foreach ($colorVariants as $variant) {
             $variantImagePath = null;
             if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
-                $variantImagePath = $variant['image_path']->store('color-variants', 'public');
+                $file = $variant['image_path'];
+
+                $fileName = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+
+                $file->move(
+                    public_path('color-variants'),
+                    $fileName
+                );
+
+                $variantImagePath = 'color-variants/' . $fileName;
             }
 
             ProductColorVariant::create([

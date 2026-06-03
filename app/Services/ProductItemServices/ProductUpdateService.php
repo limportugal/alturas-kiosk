@@ -32,9 +32,19 @@ class ProductUpdateService
                     ->get();
 
                 foreach ($toRemove as $img) {
-                    Storage::disk('public')->delete($img->image_path); // delete file
-                    $img->delete(); // delete record
-                }
+                //     Storage::disk('public')->delete($img->image_path); // delete file
+                //    
+                // }
+
+                if (
+                        $img->image_path &&
+                        file_exists(public_path($img->image_path))
+                    ) {
+                        unlink(public_path($img->image_path));
+                    }
+
+                     $img->delete(); // delete record
+              }
             }
 
             // ── Add new images ─────────────────────────────────────────────
@@ -48,7 +58,16 @@ class ProductUpdateService
                     ->exists();
 
                 foreach ($data['images'] as $index => $image) {
-                    $path = $image->store('products', 'public');
+                    // $path = $image->store('products', 'public');
+
+                    $fileName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+                    $image->move(
+                        public_path('products'),
+                        $fileName
+                    );
+
+                    $path = 'products/' . $fileName;
 
                     ProductItemImage::create([
                         'product_item_id'  => $product->id,
@@ -67,7 +86,12 @@ class ProductUpdateService
 
                 foreach ($toRemove as $variant) {
                     if ($variant->image_path) {
-                        Storage::disk('public')->delete($variant->image_path);
+                       if (
+                            $variant->image_path &&
+                            file_exists(public_path($variant->image_path))
+                        ) {
+                            unlink(public_path($variant->image_path));
+                        }
                     }
                     $variant->delete();
                 }
@@ -81,7 +105,18 @@ class ProductUpdateService
 
                     $variantImagePath = null;
                     if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
-                        $variantImagePath = $variant['image_path']->store('color-variants', 'public');
+                        // $variantImagePath = $variant['image_path']->store('color-variants', 'public');
+
+                        $file = $variant['image_path'];
+
+                            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                            $file->move(
+                                public_path('color-variants'),
+                                $fileName
+                            );
+
+                            $variantImagePath = 'color-variants/' . $fileName;
                     }
 
                     ProductColorVariant::create([

@@ -22,17 +22,34 @@ class SubCategoryUpdateServices
             );
 
             if ($removeImage && $sub->image_path) {
-                if (Storage::disk('public')->exists($sub->image_path)) {
-                    Storage::disk('public')->delete($sub->image_path);
+                // if (Storage::disk('public')->exists($sub->image_path)) {
+                //     Storage::disk('public')->delete($sub->image_path);
+                // }
+
+                if(file_exists(public_path($sub->image_path))) {
+                    unlink(public_path($sub->image_path));
                 }
+
                 $imagePath = null;
             }
 
-            if (isset($data['image_path']) && $data['image_path']) {
-                if ($sub->image_path && $imagePath !== null && Storage::disk('public')->exists($sub->image_path)) {
-                    Storage::disk('public')->delete($sub->image_path);
+            // if (isset($data['image_path']) && $data['image_path']) {
+            //     if ($sub->image_path && $imagePath !== null && Storage::disk('public')->exists($sub->image_path)) {
+            //         Storage::disk('public')->delete($sub->image_path);
+            //     }
+            if(isset($data['image_path']) && $data['image_path']){
+              if (
+                    $sub->image_path &&
+                    file_exists(public_path($sub->image_path))
+                ){
+                    unlink(public_path($suby->image_path));
                 }
-                $imagePath = $data['image_path']->store('sub-categories', 'public');
+
+                $file = $data['image_path'];
+                $imageName = time().'_'.$file->getClientOriginalName();
+                $file->move(public_path('sub-categories'), $imageName);
+
+                $imagePath = 'sub-categories/' .$imageName;
             }
 
             $sub->update([

@@ -26,7 +26,7 @@ class ProductUpdateValidations extends FormRequest
 
             // new image uploads
             'images'            => ['sometimes', 'array'],
-            'images.*'          => ['image', 'mimes:jpg,jpeg,png,webp'],
+            'images.*'          => ['file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
 
             // ids of existing images to delete
             'removed_image_ids'   => ['sometimes', 'nullable', 'array'],
@@ -36,7 +36,7 @@ class ProductUpdateValidations extends FormRequest
             'color_variants'                  => ['sometimes', 'nullable', 'array'],
             'color_variants.*.id'             => ['sometimes', 'nullable', 'integer', 'exists:product_color_variants,id'],
             'color_variants.*.color_name'     => ['required_with:color_variants.*', 'string', 'max:50'],
-            'color_variants.*.image_path'     => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'color_variants.*.image_path'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
             'removed_variant_ids'             => ['sometimes', 'nullable', 'array'],
             'removed_variant_ids.*'           => ['integer', 'exists:product_color_variants,id'],
         ];

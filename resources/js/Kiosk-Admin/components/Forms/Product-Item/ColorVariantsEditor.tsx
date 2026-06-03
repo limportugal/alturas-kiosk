@@ -18,6 +18,9 @@ interface ExistingVariantRowProps {
   onRemove: (id: number) => void;
 }
 
+
+
+
 export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProps) {
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', maxWidth: 520 }}>
@@ -31,7 +34,7 @@ export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProp
       >
         {variant.image_path ? (
           <img
-            src={`/storage/${variant.image_path}`}
+            src={`/${variant.image_path}`}
             alt={variant.color_name}
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />

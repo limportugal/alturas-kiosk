@@ -14,7 +14,7 @@ class CategoryStoreServices {
     protected DuplicateCheckerService $duplicateCheckerService;
 
     public function __construct(
-        DuplicateCheckerService $duplicateCheckerService
+        DuplicateCheckerService $duplicateCheckerService 
     ) {
         $this->duplicateCheckerService = $duplicateCheckerService;
     }

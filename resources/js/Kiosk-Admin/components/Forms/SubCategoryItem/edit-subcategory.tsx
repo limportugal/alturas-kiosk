@@ -112,6 +112,7 @@ export default function EditSubCategory({ subCategory }: Props) {
                         label="Sub-Category Image"
                         multiple={false}
                         maxImages={1}
+                        storagePath="/"
                     />
 
                     <Button

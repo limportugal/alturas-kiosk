@@ -30,7 +30,13 @@ class SubCategoryStoreServices
             $imagePath = null;
 
             if (isset($data['image_path']) && $data['image_path']) {
-                $imagePath = $data['image_path']->store('sub-categories', 'public');
+
+                if(isset($data['image_path']) &&  $data['image_path']){
+                    $file = $data['image_path'];
+                    $fileName = time() . '_' . $file->getClientOriginalName();
+                    $file->move(public_path('sub-categories'), $fileName); 
+                }
+                $imagePath = 'sub-categories/' . $fileName;
             }
 
             return SubCategoryModel::create([

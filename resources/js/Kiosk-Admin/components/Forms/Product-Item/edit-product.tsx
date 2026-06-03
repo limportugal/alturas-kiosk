@@ -204,6 +204,7 @@ export default function EditProduct({ product }: Props) {
             }
             error={errors.images}
             label='Product Images'
+            storagePath="/"
           />
 
           {/* Color Variants */}

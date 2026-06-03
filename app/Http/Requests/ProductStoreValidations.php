@@ -26,7 +26,7 @@ class ProductStoreValidations extends FormRequest{
         'quantity' => ['required', 'integer', 'min:0'],
         
         'images' => ['nullable', 'array', 'max:5'],
-        'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        'images.*' => ['file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
 
         'color_variants'               => ['nullable', 'array'],
         'color_variants.*.color_name'  => ['required_with:color_variants.*', 'string', 'max:50'],

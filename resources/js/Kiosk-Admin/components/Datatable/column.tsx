@@ -11,6 +11,7 @@ import EditCategory from '@/Kiosk-Admin/components/Forms/CatergoryItem/edit-cate
 import EditSubCategory from '@/Kiosk-Admin/components/Forms/SubCategoryItem/edit-subcategory';
 import ImagePreviewCell from '@/Kiosk-Admin/components/Buttons/ImagePreviewCell';
 import MultiplePreviewImage from '@/Kiosk-Admin/components/Buttons/MultiplePreviewImage';
+import { rawListeners } from 'node:cluster';
 
 export interface User {
   id: number;
@@ -61,7 +62,7 @@ export const Proditem: Column<ProductItem>[] = [
             >
               {v.image_path ? (
                 <img
-                  src={`/storage/${v.image_path}`}
+                  src={`/${v.image_path}`}
                   alt={v.color_name}
                   style={{ width: 62, height: 62, objectFit: 'cover', borderRadius: 4, border: '1px solid #e0dbd5' }}
                 />
@@ -82,6 +83,7 @@ export const Proditem: Column<ProductItem>[] = [
   {
     id: 'action',
     label: 'Actions',
+    
     render: (row) => (
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <ProductToggleStatus id={row.id} status={row.status === 'Active'} />
@@ -117,7 +119,7 @@ export const SubCatItem: Column<SubCategoryList>[] = [
     id: 'image_path',
     label: 'Image',
     render: (row) => (
-      <ImagePreviewCell imagePath={row.image_path} alt={row.name} />
+      <ImagePreviewCell imagePath={row.image_path ? `/${row.image_path}` : undefined} alt={row.name} />
     ),
   },
   {
