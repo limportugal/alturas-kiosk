@@ -35,7 +35,7 @@ export interface ProductItem {
 // A new variant being added (no id yet)
 export interface NewColorVariant {
   color_name: string;
-  image_path?: File | null;
+  image_path?: File | null; 
   previewUrl?: string | null;
 }
 

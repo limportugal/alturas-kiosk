@@ -7,7 +7,12 @@ import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "@/Kiosk
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 
+import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
+import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategoriesListServices";
+
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
+
 
 export default function ProductScreen({
   category,
@@ -21,18 +26,32 @@ export default function ProductScreen({
   categoryId: string;
   subId: string;
   onBack: () => void;
-  onProduct: (product: Product) => void;
+  onProduct: (product: ProductItem) => void;
   onHome: () => void;
 }) {
-   const { data: subCategoriesData } = useDynamicQuery(
+   const { data: publicData } = useDynamicQuery(
+    ["product-public-list"],
+    ProductPublicServices
+  );
+
+  const { data: subCategoriesData } = useDynamicQuery(
     ["sub-category-public-list"],
     SubCategoriesPublicServices
   );
+
+    const { data: categories_data } = useDynamicQuery(
+    ["category-public-list"],
+    CategoriesPublicServices
+  );
   
-  const sub = subCategoriesData?.data.find((s) => String(s.id) === subId);
+  const visibleProducts = publicData?.data?.filter((p) => String(p.sub_category_id) === subId) ?? [];
+  const cat = categories_data?.data.find((c) => String(c.id) === subId);
+  const subcat = subCategoriesData?.data.find((s) => String(s.id) === subId);
   const [activeTab, setActiveTab] = useState(0);
   const products = category.products[subId] ?? [];
   const [mounted, setMounted] = useState(false);
+
+  
 
  
   useEffect(() => {
@@ -44,9 +63,9 @@ export default function ProductScreen({
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
-      <PurpleBanner>{category.label}</PurpleBanner>
+      <PurpleBanner>{cat?.name ??  "No Subcategory"}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
-      <PurpleBanner small>{sub?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
+      <PurpleBanner small>{subcat?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
 
       {/* Tabs */}
       <div style={{ 
@@ -80,7 +99,7 @@ export default function ProductScreen({
 
       {/* Product grid */}
       <div style={{ flex: 1, overflowY: "auto", padding: "32px 48px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, alignContent: "start", boxSizing: "border-box" }}>
-        {products.map((product, idx) => {
+        {visibleProducts.map((product, idx) => {
           const col = idx % 3;
           const delay = col * 80 + Math.floor(idx / 3) * 100;
           const slideFrom = col === 0 ? "-110%" : col === 2 ? "110%" : "0%";
@@ -105,22 +124,26 @@ export default function ProductScreen({
                 transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms, opacity 0.4s ease ${delay}ms`,
               }}
             >
-              {product.isBestSeller && (
+              {/* {product.isBestSeller && (
                 <div style={{ background: "#e8333c", color: "#fff", fontSize: 18, fontWeight: 700, padding: "6px 16px", fontFamily: "Arial, sans-serif" }}>Best seller</div>
-              )}
-              {product.tags?.map((tag) => (
+              )} */}
+              {/* {product.tags?.map((tag) => (
                 <div key={tag} style={{ color: "#c0392b", fontSize: 18, fontWeight: 600, padding: "6px 16px 0", fontFamily: "Arial, sans-serif" }}>{tag}</div>
-              ))}
+              ))} */}
               <div style={{ background: "#f0ede8", aspectRatio: "1/1", overflow: "hidden" }}>
-                <img src={product.images[0]} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
+                <img src={
+                  product.images?.[0]?.image_path
+                    ? `/${product.images[0].image_path}`
+                    : "https://placehold.co/600x600?text=No+Image"
+                  } style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 12, boxSizing: "border-box" }} />
               </div>
               <div style={{ padding: "16px 18px 20px", flex: 1 }}>
                 <div style={{ fontSize: 22, fontWeight: 800, color: "#111", fontFamily: "Arial, sans-serif" }}>{product.name}</div>
-                <div style={{ fontSize: 18, color: "#555", fontFamily: "Arial, sans-serif", marginTop: 4 }}>{product.subtitle}</div>
+                {/* <div style={{ fontSize: 18, color: "#555", fontFamily: "Arial, sans-serif", marginTop: 4 }}>{product.subtitle}</div> */}
                 <div style={{ fontSize: 28, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", marginTop: 10 }}>₱{product.price.toLocaleString()}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-                  <Stars rating={product.rating} size={18} />
-                  <span style={{ fontSize: 16, color: "#777", fontFamily: "Arial, sans-serif" }}>({product.reviewCount})</span>
+                  {/* <Stars rating={product.rating} size={18} /> */}
+                  {/* <span style={{ fontSize: 16, color: "#777", fontFamily: "Arial, sans-serif" }}>({product.reviewCount})</span> */}
                 </div>
                 <div style={{ marginTop: 10, fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ Available for delivery</div>
                 <div style={{ fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ In stock in Pasay City</div>
@@ -128,7 +151,7 @@ export default function ProductScreen({
             </button>
           );
         })}
-        {products.length === 0 && (
+        {visibleProducts.length === 0 && (
           <div style={{ gridColumn: "1 / -1", textAlign: "center", color: "#aaa", fontSize: 28, padding: "80px 0", fontFamily: "Arial, sans-serif" }}>
             Products coming soon
           </div>
