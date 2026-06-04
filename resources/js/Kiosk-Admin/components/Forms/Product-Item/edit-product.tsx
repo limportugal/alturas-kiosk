@@ -18,6 +18,7 @@ import { ProductItem, ProductImage } from '@/Kiosk-Admin/types/product-type';
 //to get categories use in dropdown
 import { getCategories } from '@/Kiosk-Admin/services/category/dropdownCategoryServices';
 import { getSubCategories } from '@/Kiosk-Admin/services/subcategory/dropdownSubCategoryServices';
+import { getVariations } from '@/Kiosk-Admin/services/variation/dropdownVariationServices';
 
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
@@ -42,7 +43,7 @@ export default function EditProduct({ product }: Props) {
   const [open, setOpen] = useState(false);
   const productState = useProductStore();
 
-  const {setItemCategoryId, item_category_id, sub_category_id, setSubCategoryId} = useProductStore();
+  const {setItemCategoryId, item_category_id, sub_category_id, setSubCategoryId, variation_type_id, setVariationTypeId} = useProductStore();
 
   const {
     errors,
@@ -69,6 +70,7 @@ export default function EditProduct({ product }: Props) {
 
     const { data: categories } = useDynamicQuery(['categories'], getCategories);
     const { data: subCategories } = useDynamicQuery(['sub-categories-dropdown'], getSubCategories);
+    const { data: variations }    = useDynamicQuery(['variations-dropdown'], getVariations);
 
     useEffect(() => {
       if (categories?.length) {
@@ -82,6 +84,9 @@ export default function EditProduct({ product }: Props) {
     const subCategoryOptions = (subCategories ?? [])
       .filter((s) => s.item_category_id === item_category_id)
       .map((s) => ({ label: s.name, value: s.id }));
+
+    const variationOptions = (variations ?? [])
+      .map((v) => ({ label: v.name, value: v.id }));
 
   return (
     <>
@@ -151,6 +156,14 @@ export default function EditProduct({ product }: Props) {
             value={sub_category_id ?? ''}
             onChange={(value) => setSubCategoryId(value ? Number(value) : null)}
             options={[{ label: '— None —', value: '' }, ...subCategoryOptions]}
+          />
+
+          {/* Variation Type */}
+          <ReusableSelect
+            label="Variation Type (optional)"
+            value={variation_type_id ?? ''}
+            onChange={(value) => setVariationTypeId(value ? Number(value) : null)}
+            options={[{ label: '— None —', value: '' }, ...variationOptions]}
           />
 
           {/* Price + Quantity */}

@@ -10,7 +10,7 @@ import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategoriesListServices";
-
+import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 
@@ -18,6 +18,7 @@ export default function ProductScreen({
   category,
   categoryId,
   subId,
+  varId,
   onBack,
   onProduct,
   onHome,
@@ -25,6 +26,7 @@ export default function ProductScreen({
   category: CategoryData;
   categoryId: string;
   subId: string;
+  varId: string
   onBack: () => void;
   onProduct: (product: ProductItem) => void;
   onHome: () => void;
@@ -33,7 +35,7 @@ export default function ProductScreen({
     ["product-public-list"],
     ProductPublicServices
   );
-
+ 
   const { data: subCategoriesData } = useDynamicQuery(
     ["sub-category-public-list"],
     SubCategoriesPublicServices
@@ -43,19 +45,33 @@ export default function ProductScreen({
     ["category-public-list"],
     CategoriesPublicServices
   );
-  
-  const visibleProducts = publicData?.data?.filter((p) => String(p.sub_category_id) === subId) ?? [];
+
+  const { data: variationsData } = useDynamicQuery(
+    ["variations-public-list"],
+    ProductVariationsPublicServices
+  );
+
+  const [activeTab, setActiveTab] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  const visibleProducts = publicData?.data?.filter((p) => {
+    const matchesSub = String(p.sub_category_id) === subId;
+    if (activeTab === null) return matchesSub;
+    const selectedVar = variationsData?.data?.[activeTab as number];
+    if (!selectedVar) return matchesSub;
+    return matchesSub && String(p.variation_type_id) === String(selectedVar.id);
+  }) ?? [];
   const cat = categories_data?.data.find((c) => String(c.id) === subId);
   const subcat = subCategoriesData?.data.find((s) => String(s.id) === subId);
-  const [activeTab, setActiveTab] = useState(0);
+  const prodVar = variationsData?.data?.find((v) => String(v.id) === varId) ?? [];
   const products = category.products[subId] ?? [];
-  const [mounted, setMounted] = useState(false);
 
   
 
  
   useEffect(() => {
     setMounted(false);
+    setActiveTab(null);
     const t = setTimeout(() => setMounted(true), 60);
     return () => clearTimeout(t);
   }, [subId]);
@@ -81,13 +97,13 @@ export default function ProductScreen({
         WebkitOverflowScrolling: "touch",
         }}
         >
-        {(subCategoriesData?.data?.filter((s) => String(s.item_category_id) === categoryId) ?? []).map((tab, i) => (
+        {(variationsData?.data ?? []).map((tab, i) => (
           <ImageCardButton
             key={tab.name}
             image={tab.image_path ? `/${tab.image_path}` : undefined}
             label={tab.name}
             active={activeTab === i}
-            onClick={() => setActiveTab(i)}
+            onClick={() => setActiveTab(activeTab === i ? null : i)}
             width={180} 
             imageHeight={120}
           />
@@ -95,7 +111,7 @@ export default function ProductScreen({
       </div>
 
 
-      <PurpleBanner small>{category.subCategoryTabs[activeTab]?.label.toUpperCase() ?? ""}</PurpleBanner>
+      <PurpleBanner small>{category.subCategoryTabs[activeTab ?? 0]?.label.toUpperCase() ?? ""}</PurpleBanner>
 
       {/* Product grid */}
       <div style={{ flex: 1, overflowY: "auto", padding: "32px 48px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, alignContent: "start", boxSizing: "border-box" }}>

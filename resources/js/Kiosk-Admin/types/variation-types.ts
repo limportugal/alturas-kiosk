@@ -6,6 +6,12 @@ export interface VariationList {
     actions?: string;
 }
 
+export interface DropdownVariation {
+    id: number;
+    name: string;
+    image_path?: string | null;
+}
+
 export interface VariationPayload {
     name: string;
     image_path?: File | null;
@@ -17,4 +23,11 @@ export interface CreateVariationPayload extends VariationPayload {}
 export interface UpdateVariationPayload extends VariationPayload {
     id: number;
     remove_image?: boolean;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    total: number;
 }

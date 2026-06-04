@@ -9,6 +9,7 @@ interface ProductTypeStore {
     sku?: string;
     item_category_id?: number;
     sub_category_id?: number | null;
+    variation_type_id?: number | null;
     price?: number;
     quantity?: number;
     item_description: string;
@@ -24,6 +25,7 @@ interface ProductTypeStore {
     setQuantity: (quantity: number) => void;
     setItemCategoryId: (item_category_id: number) => void;
     setSubCategoryId: (sub_category_id: number | null) => void;
+    setVariationTypeId: (variation_type_id: number | null) => void;
     setItemDescriptions: (item_description: string) => void;
     setStatus: (status: string) => void;
     setExistingImages: (images: ProductImage[]) => void;
@@ -39,6 +41,7 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
     quantity: 0,
     item_category_id: 0,
     sub_category_id: null,
+    variation_type_id: null,
     item_description: '',
     status: 'active',
     image_path: '',
@@ -52,6 +55,7 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
     setQuantity: (quantity) => set(() => ({ quantity })),
     setItemCategoryId: (item_category_id) => set(() => ({ item_category_id, sub_category_id: null })),
     setSubCategoryId: (sub_category_id) => set(() => ({ sub_category_id })),
+    setVariationTypeId: (variation_type_id) => set(() => ({ variation_type_id })),
     setItemDescriptions: (item_description) => set(() => ({ item_description })),
     setStatus: (status) => set(() => ({ status })),
     setExistingImages: (existingImages) => set({ existingImages }),
@@ -68,6 +72,7 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
         quantity: 0,
         item_category_id: 1,
         sub_category_id: null,
+        variation_type_id: null,
         item_description: '',
         status: 'active',
         image_path: '',

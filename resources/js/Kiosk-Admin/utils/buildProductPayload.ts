@@ -12,6 +12,7 @@ export const buildCreateProductPayload = (
     sku:              state.sku ?? "",
     item_category_id: Number(state.item_category_id ?? ""),
     sub_category_id:  state.sub_category_id ?? null,
+    variation_type_id: state.variation_type_id ?? null,
     price:            String(state.price ?? ""),
     quantity:         String(state.quantity ?? ""),
     item_description: state.item_description ?? "",

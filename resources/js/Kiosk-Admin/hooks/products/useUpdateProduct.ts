@@ -41,6 +41,7 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
     productState.setSku(product.sku);
     productState.setItemCategoryId(product.item_category_id);
     productState.setSubCategoryId(product.sub_category_id ?? null);
+    productState.setVariationTypeId(product.variation_type_id ?? null);
     productState.setPrice(Number(product.price));
     productState.setQuantity(Number(product.quantity));
     productState.setItemDescriptions(product.item_description ?? "");

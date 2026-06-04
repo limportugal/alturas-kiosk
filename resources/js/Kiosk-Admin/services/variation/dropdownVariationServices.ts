@@ -1,8 +1,8 @@
 import api from '@/lib/axios';
 import { relativeRoute } from '@/lib/relativeRoute';
-import { VariationList } from '@/Kiosk-Admin/types/variation-types';
+import { DropdownVariation } from '@/Kiosk-Admin/types/variation-types';
 
-export const getVariations = async (): Promise<VariationList[]> => {
+export const getVariations = async (): Promise<DropdownVariation[]> => {
     const response = await api.get(relativeRoute('variation-dropdown'));
     return response.data;
 };

@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::get('/kiosk/categories', [CategoryController::class, 'CategoriesList'])->name('category-public-list');
 Route::get('/kiosk/sub-categories', [SubCategoryController::class, 'SubCategoryPublicList'])->name('sub-category-public-list');
 Route::get('/Kiosk/products', [ProductController::class, 'list'])->name('product-public-list');
+Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->name('product-variations-public-list');
 
 
 Route::get('/welcome', function () {
