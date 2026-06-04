@@ -12,7 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_items', function (Blueprint $table) {
-            $table->string('variations')->nullable()->after('item_description');
+            $table->foreignId('variation_type_id')
+                  ->nullable()
+                  ->after('item_description')
+                  ->constrained('product_variations')
+                  ->nullOnDelete();
         });
     }
 
@@ -22,7 +26,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_items', function (Blueprint $table) {
-            $table->dropColumn('variations');
+            // Drop variation_type_id FK if it exists (post-migration state)
+            if (Schema::hasColumn('product_items', 'variation_type_id')) {
+                $table->dropForeign(['variation_type_id']);
+                $table->dropColumn('variation_type_id');
+            }
+            // Drop old string column if it exists (pre-migration state)
+            if (Schema::hasColumn('product_items', 'variations')) {
+                $table->dropColumn('variations');
+            }
         });
     }
 };

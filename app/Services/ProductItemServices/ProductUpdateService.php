@@ -129,7 +129,7 @@ class ProductUpdateService
 
             DB::commit();
 
-            return $product->load('images', 'colorVariants');
+            return $product->load('images', 'colorVariants', 'variationType');
 
         } catch (\Exception $e) {
             DB::rollBack();

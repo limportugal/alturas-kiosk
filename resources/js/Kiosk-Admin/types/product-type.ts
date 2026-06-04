@@ -13,6 +13,12 @@ export interface ProductImage {
   sort_order: number;
 }
 
+export interface ProductVariationType {
+  id: number;
+  name: string;
+  image_path?: string | null;
+  status: 'Active' | 'Inactive';
+}
 
 export interface ProductItem {
   id: number;
@@ -26,7 +32,9 @@ export interface ProductItem {
   price: number;
   quantity: number;
   item_description?: string;
-  status:string;
+  variation_type_id?: number | null;
+  variation_type?: ProductVariationType | null;
+  status: string;
   action: string;
   images?: ProductImage[];
   color_variants?: ProductColorVariant[];
@@ -35,7 +43,7 @@ export interface ProductItem {
 // A new variant being added (no id yet)
 export interface NewColorVariant {
   color_name: string;
-  image_path?: File | null; 
+  image_path?: File | null;
   previewUrl?: string | null;
 }
 
@@ -48,6 +56,7 @@ export interface ProductPayload {
   price: string;
   quantity: string;
   item_description: string;
+  variation_type_id?: number | null;
   status: string;
   images: File[];
   color_variants?: NewColorVariant[];
@@ -61,7 +70,6 @@ export interface UpdateProductPayload extends ProductPayload {
   removed_image_ids?: number[];
   removed_variant_ids?: number[];
 }
-
 
 export interface PaginatedResponse<T> {
   data: T[];

@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\VariationController;
 
 
 use Illuminate\Foundation\Application;
@@ -71,6 +72,16 @@ Route::middleware('auth')->group(function () {
         Route::post('/sub-category-store',         'saveSubCategory')->name('sub-category-store');
         Route::put('/{id}/sub-category-update',    'updateSubCategory')->name('sub-category-update');
         Route::put('/{id}/sub-category-status',    'SubCatToggleStatus')->name('sub-category-status');
+    });
+
+    // Variation Types
+    Route::prefix('variation')->controller(VariationController::class)->group(function () {
+        Route::get('/variations',              'page')->name('variations');
+        Route::get('/variation-list',          'index')->name('variation-list');
+        Route::get('/variation-dropdown',      'dropdown')->name('variation-dropdown');
+        Route::post('/variation-store',        'store')->name('variation-store');
+        Route::put('/{id}/variation-update',   'update')->name('variation-update');
+        Route::put('/{id}/variation-status',   'toggleStatus')->name('variation-status');
     });
 
 });

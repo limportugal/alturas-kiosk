@@ -33,6 +33,7 @@ const NAV_SECTIONS: NavSection[] = [
       { icon: "📦", label: "Products",     href: route('products'),     badge: null },
       { icon: "⊞", label: "Category",     href: route('categories'),     badge: null  },
       { icon: "🏷️", label: "Sub Category", href: route('sub-categories'), badge: null },
+      { icon: "🔀", label: "Variations",   href: route('variations'),     badge: null },
       // { icon: "🔔", label: "Alerts",        href: "/alerts",        badge: "12" },
     ],
   },

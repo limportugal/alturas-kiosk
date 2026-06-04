@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
-        
-            $table->foreignId('product_item_id')->constrained('product_items')->cascadeOnDelete();
             $table->string('name');
             $table->string('image_path')->nullable();
-            $table->enum('status', ['Active', 'Inactive']);
+            $table->enum('status', ['Active', 'Inactive'])->default('Active');
             $table->timestamps();
-
         });
     }
 

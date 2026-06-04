@@ -89,7 +89,7 @@ class ProductStoreService {
 
         return [
             'message' => 'product saved successfully',
-            'data' => $product->load('images', 'colorVariants'),
+            'data' => $product->load('images', 'colorVariants', 'variationType'),
         ];
     });
 }

@@ -22,6 +22,7 @@ class ProductUpdateValidations extends FormRequest
             'price'             => ['sometimes', 'nullable'],
             'quantity'          => ['sometimes', 'nullable'],
             'item_description'  => ['sometimes', 'nullable'],
+            'variation_type_id' => ['sometimes', 'nullable', 'exists:product_variations,id'],
             'status'            => ['sometimes', 'nullable'],
 
             // new image uploads

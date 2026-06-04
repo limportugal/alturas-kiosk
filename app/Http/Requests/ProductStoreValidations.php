@@ -24,6 +24,7 @@ class ProductStoreValidations extends FormRequest{
         'item_category_id' => ['required', 'exists:item_categories,id'],
         'sub_category_id'  => ['nullable', 'exists:sub_categories,id'],
         'quantity' => ['required', 'integer', 'min:0'],
+        'variation_type_id' => ['nullable', 'exists:product_variations,id'],
         
         'images' => ['nullable', 'array', 'max:5'],
         'images.*' => ['file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],

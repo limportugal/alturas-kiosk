@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Category\ItemCategoryModel;
 use App\Models\ProductItem\ProductItemImage;
 use App\Models\ProductItem\ProductColorVariant;
+use App\Models\ProductItem\ProductVariations;
 
 class ProductItemModel extends Model
 {
@@ -13,7 +14,7 @@ class ProductItemModel extends Model
 
     
     protected $fillable = [
-        'item_code', 
+        'item_code',
         'name',
         'sku',
         'item_category_id',
@@ -21,6 +22,7 @@ class ProductItemModel extends Model
         'price',
         'quantity',
         'item_description',
+        'variation_type_id',
         'status'
     ];
 
@@ -42,6 +44,11 @@ class ProductItemModel extends Model
     public function subCategory()
     {
         return $this->belongsTo(\App\Models\SubCategory\SubCategoryModel::class, 'sub_category_id');
+    }
+
+    public function variationType()
+    {
+        return $this->belongsTo(ProductVariations::class, 'variation_type_id');
     }
 }
 

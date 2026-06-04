@@ -2,16 +2,18 @@ import { Column } from './types';
 import { ProductItem } from '@/Kiosk-Admin/types/product-type';
 import { CategoryList } from '@/Kiosk-Admin/types/category-types';
 import { SubCategoryList } from '@/Kiosk-Admin/types/subcategory-types';
+import { VariationList } from '@/Kiosk-Admin/types/variation-types';
 
 import CategoryToggleStatus from '@/Kiosk-Admin/components/CategoryToggleStatus';
 import SubCategoryToggleStatus from '@/Kiosk-Admin/components/SubCategoryToggleStatus';
 import ProductToggleStatus from '@/Kiosk-Admin/components/ProductToggleStatus';
+import VariationToggleStatus from '@/Kiosk-Admin/components/VariationToggleStatus';
 import EditProduct from '@/Kiosk-Admin/components/Forms/Product-Item/edit-product';
 import EditCategory from '@/Kiosk-Admin/components/Forms/CatergoryItem/edit-category';
 import EditSubCategory from '@/Kiosk-Admin/components/Forms/SubCategoryItem/edit-subcategory';
+import EditVariation from '@/Kiosk-Admin/components/Forms/VariationItem/edit-variation';
 import ImagePreviewCell from '@/Kiosk-Admin/components/Buttons/ImagePreviewCell';
 import MultiplePreviewImage from '@/Kiosk-Admin/components/Buttons/MultiplePreviewImage';
-import { rawListeners } from 'node:cluster';
 
 export interface User {
   id: number;
@@ -135,6 +137,27 @@ export const SubCatItem: Column<SubCategoryList>[] = [
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <SubCategoryToggleStatus id={row.id} status={row.status === 'Active'} />
         <EditSubCategory subCategory={row} />
+      </div>
+    ),
+  },
+];
+
+export const VariationItem: Column<VariationList>[] = [
+  {
+    id: 'image_path',
+    label: 'Image',
+    render: (row) => (
+      <ImagePreviewCell imagePath={row.image_path ? `/${row.image_path}` : undefined} alt={row.name} />
+    ),
+  },
+  { id: 'name', label: 'Variation Name' },
+  {
+    id: 'actions',
+    label: 'Actions',
+    render: (row) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <VariationToggleStatus id={row.id} status={row.status === 'Active'} />
+        <EditVariation variation={row} />
       </div>
     ),
   },

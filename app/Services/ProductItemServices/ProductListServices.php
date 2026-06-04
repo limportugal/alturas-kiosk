@@ -9,7 +9,7 @@ class ProductListServices
     public function showProductList()
     {
         return ProductItemModel::query()
-            ->with(['images', 'colorVariants'])
+            ->with(['images', 'colorVariants', 'variationType'])
             ->join('item_categories', 'product_items.item_category_id', '=', 'item_categories.id')
             ->leftJoin('sub_categories', 'product_items.sub_category_id', '=', 'sub_categories.id')
             ->select(
@@ -24,6 +24,7 @@ class ProductListServices
                 'product_items.price',
                 'product_items.quantity',
                 'product_items.item_description',
+                'product_items.variation_type_id',
                 'product_items.status'
             )
             ->latest('product_items.id')
