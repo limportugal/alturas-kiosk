@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { CategoryData, Product } from "@/Kiosk/types/types";
+
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
 
+import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ThumbnailButton } from "@/Kiosk/components/buttons/ThumbnailButton";
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 
@@ -10,6 +11,9 @@ import { colors } from "@/Kiosk/utils/colors";
 
 import { ProductItem} from "@/Kiosk-Admin/types/product-type";
 import { VariationList } from "@/Kiosk-Admin/types/variation-types";
+
+import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
+
 
 
 export default function ProductDetailScreen({
@@ -20,17 +24,22 @@ export default function ProductDetailScreen({
   onBack,
   onHome,
   onOrder,
-  variantionType,
 }: {
   product: ProductItem;
   subName?: { id: number; name: string; image_path?: string | null } | null
   categoryName?: Category; 
   variantionType?:VariationList;
 
-  onBack: () => void;
+  onBack: () => void; 
   onHome: () => void;
   onOrder: (product: ProductItem, color: string, qty: number) => void;
 }) {
+    const { data: variationsData } = useDynamicQuery(
+    ["variations-public-list"],
+    ProductVariationsPublicServices
+  );
+  
+  const [activeProduct, setActiveProduct] = useState<ProductItem | null>(product);
   const [activeImg, setActiveImg]     = useState(0);
   const [activeColor, setActiveColor] = useState(-1);
 
@@ -38,10 +47,7 @@ export default function ProductDetailScreen({
 
   const images = product.images ?? [{image_path: ""}];
 
-  const currentImagePath = images[activeImg]?.image_path
-    product.images?.[0]?.image_path
-            ? `/${product.images[0].image_path}`
-            : "https://placehold.co/600x600?text=No+Image"
+
 
   const selectVariantImage = activeColor >= 0 && variants[activeColor]?.image_path
         ? `/${variants[activeColor].image_path}`
@@ -53,9 +59,14 @@ export default function ProductDetailScreen({
       : null;
 
 
-  const mainDisplayImage = selectVariantImage ?? selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
 
-      
+  const activeVariationType = variationsData?.data?.find(
+    (v) => v.id === activeProduct?.variation_type_id
+  ) ?? null;
+
+
+  const mainDisplayImage = selectVariantImage ?? selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
+   
 
   const handleColorSelect = (i: number) => {
     setActiveColor(i);
@@ -96,7 +107,7 @@ export default function ProductDetailScreen({
             letterSpacing: 3,
            }}
            >
-          {variantionType?.name.toUpperCase() ?? ""}
+          {activeVariationType?.name.toUpperCase() ?? ""}
         </span>
       </div>
 

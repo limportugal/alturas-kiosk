@@ -13,6 +13,7 @@ export const CreateVariationServices = async (
     if (payload.image_path instanceof File) {
         formData.append('image_path', payload.image_path);
     }
+  
 
     const response = await api.post(relativeRoute('variation-store'), formData, {
         headers: { 'Content-Type': 'multipart/form-data' },

@@ -78,6 +78,7 @@ export default function MainPage() {
         <ProductDetailScreen
           product={activeProduct}
           subName={activeSubCategory}
+          // variantionType={activeVariationType}
           // category={activeCategory}
           // subId={activeSubId}
           onBack={() => setScreen("subcategory")}

@@ -24,6 +24,10 @@ export const UpdateProductServices = async ({
   formData.append('item_description', data.item_description);
   formData.append('status',           data.status);
 
+    if (data.variation_type_id) {
+    formData.append('variation_type_id', String(data.variation_type_id));
+  }
+
   data.images.forEach((image) => {
     formData.append('images[]', image);
   });

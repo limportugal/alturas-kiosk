@@ -45,7 +45,7 @@ export default function ProductScreen({
     ["category-public-list"],
     CategoriesPublicServices
   );
-
+ 
   const { data: variationsData } = useDynamicQuery(
     ["variations-public-list"],
     ProductVariationsPublicServices

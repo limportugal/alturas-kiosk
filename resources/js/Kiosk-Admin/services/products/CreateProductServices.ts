@@ -23,6 +23,10 @@ export const CreateProductServices = async (
     formData.append('images[]', image);
   });
 
+  if (payload.variation_type_id) {
+    formData.append('variation_type_id', String(payload.variation_type_id));
+  }
+
   (payload.color_variants ?? []).forEach((variant, i) => {
     formData.append(`color_variants[${i}][color_name]`, variant.color_name);
     if (variant.image_path instanceof File) {
