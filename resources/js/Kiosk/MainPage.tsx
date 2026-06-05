@@ -10,6 +10,10 @@ import HomeCategoryScreen from "@/Kiosk/pages/HomeCategoryScreen";
 import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
 
+import useDynamicQuery from "@/hooks/useDynamicQuery";
+import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
+
 
 
 // ── ROOT ───────────────────────────────────────────
@@ -18,13 +22,22 @@ export default function MainPage() {
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
   const [activeSubId, setActiveSubId]           = useState<string | null>(null);
-  const [activeProduct, setActiveProduct]       = useState<Product | null>(null);
-  const [orderProduct, setOrderProduct]         = useState<Product | null>(null);
+  const [activeProduct, setActiveProduct] = useState<ProductItem | null>(null);
+  const [orderProduct, setOrderProduct]   = useState<ProductItem | null>(null);
   const [orderColor, setOrderColor]             = useState<string>("");
   const [showConfirm, setShowConfirm]           = useState(false);
 
   const activeCategory = CATEGORIES.find(
     (c) => c.label.toLowerCase() === (activeCategoryName ?? "").toLowerCase()
+  ) ?? null;
+
+  const { data: subCategoriesData } = useDynamicQuery(
+    ["sub-category-public-list"],
+    SubCategoriesPublicServices
+  );
+
+  const activeSubCategory = subCategoriesData?.data?.find(
+    (s) => String(s.id) === activeSubId
   ) ?? null;
 
   const goHome = () => {
@@ -58,13 +71,15 @@ export default function MainPage() {
           onBack={() => setScreen("category")}
           onProduct={(p) => { setActiveProduct(p); setScreen("product"); }}
           onHome={goHome}
+          varId=""
         />
       )}
       {screen === "product" && activeCategory && activeSubId && activeProduct && (
         <ProductDetailScreen
           product={activeProduct}
-          category={activeCategory}
-          subId={activeSubId}
+          subName={activeSubCategory}
+          // category={activeCategory}
+          // subId={activeSubId}
           onBack={() => setScreen("subcategory")}
           onHome={goHome}
           onOrder={(p, color) => { setOrderProduct(p); setOrderColor(color); }}

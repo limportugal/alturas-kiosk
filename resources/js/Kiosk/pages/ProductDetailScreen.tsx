@@ -8,21 +8,24 @@ import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 
-import { ProductItem} from "@/Kiosk-Admin/types/product-type"
+import { ProductItem} from "@/Kiosk-Admin/types/product-type";
+import { VariationList } from "@/Kiosk-Admin/types/variation-types";
+
 
 export default function ProductDetailScreen({
   product,
   // category,
   // subId,
-  categoryName,
   subName,
   onBack,
   onHome,
   onOrder,
+  variantionType,
 }: {
   product: ProductItem;
-  subName?: string;
+  subName?: { id: number; name: string; image_path?: string | null } | null
   categoryName?: Category; 
+  variantionType?:VariationList;
 
   onBack: () => void;
   onHome: () => void;
@@ -77,7 +80,23 @@ export default function ProductDetailScreen({
             letterSpacing: 3,
            }}
            >
-          {subName?.toUpperCase() ?? ""}
+          {subName?.name.toUpperCase() ?? ""}
+        </span>
+      </div>
+        <div style={{ 
+          background: "#5a2d82", 
+          padding: "16px 48px", 
+          textAlign: "center", 
+          flexShrink: 0 
+          }}
+          >
+        <span style={{ 
+            ...typography.heading,
+            color:colors.surface, 
+            letterSpacing: 3,
+           }}
+           >
+          {variantionType?.name.toUpperCase() ?? ""}
         </span>
       </div>
 

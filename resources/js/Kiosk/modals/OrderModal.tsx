@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Product } from "@/Kiosk/types/types";
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 export default function OrderModal({
   product,
@@ -7,7 +8,7 @@ export default function OrderModal({
   onConfirm,
   onCancel,
 }: {
-  product: Product;
+  product: ProductItem;
   color: string;
   onConfirm: () => void;
   onCancel: () => void;
@@ -22,15 +23,19 @@ export default function OrderModal({
           <span style={{ fontSize: 34, fontWeight: 800, color: "#fff", letterSpacing: 4, fontFamily: "Arial, sans-serif" }}>ORDER DETAILS</span>
         </div>
         <div style={{ background: "#f0ede8", padding: "28px", display: "flex", justifyContent: "center" }}>
-          <img src={product.images[0]} alt={product.name} style={{ height: 260, objectFit: "contain", display: "block" }} />
+          <img  
+            src={product.images?.[0]?.image_path ? `/${product.images[0].image_path}` : "https://placehold.co/600x600?text=No+Image"}  
+            alt={product.name} 
+            style={{ height: 260, objectFit: "contain", display: "block" }} 
+            />
         </div>
         <div style={{ padding: "24px 40px" }}>
           {([
-            ["ITEM:", `${product.name}  ${product.subtitle.split(",")[0]}`],
+            ["ITEM:", `${product.name}  ${product.item_description ?? "".split(",")[0]}`],
             ["PRICE:", `₱${product.price.toLocaleString()}.00`],
             ["SKU:", product.sku],
             ["COLOR VARIANTS:", color],
-            ["STOCK:", `${product.stock}`],
+            ["STOCK:", `${product.quantity}`],
           ] as [string, string][]).map(([label, value]) => (
             <div key={label} style={{ padding: "14px 0", borderBottom: "1px solid #eee", display: "flex", gap: 8 }}>
               <span style={{ fontSize: 26, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", minWidth: 260 }}>{label}</span>
@@ -43,7 +48,7 @@ export default function OrderModal({
             <span style={{ fontSize: 26, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif" }}>QUANTITY:</span>
             <button onClick={() => setQty(Math.max(1, qty - 1))} style={{ width: 52, height: 52, borderRadius: "50%", background: "#222", border: "none", color: "#fff", fontSize: 28, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>−</button>
             <span style={{ fontSize: 32, fontWeight: 700, minWidth: 48, textAlign: "center", fontFamily: "Arial, sans-serif" }}>{qty}</span>
-            <button onClick={() => setQty(Math.min(product.stock, qty + 1))} style={{ width: 52, height: 52, borderRadius: "50%", background: "#222", border: "none", color: "#fff", fontSize: 28, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
+            <button onClick={() => setQty(Math.min(product.quantity, qty + 1))} style={{ width: 52, height: 52, borderRadius: "50%", background: "#222", border: "none", color: "#fff", fontSize: 28, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>+</button>
           </div>
 
           {/* Total */}
