@@ -16,4 +16,17 @@ class CategoryListServices{
             ->latest('id')
             ->paginate(10);
     }
+
+    public function getPublicCategoryList(){
+        return ItemCategoryModel::query()
+            ->select([
+                'id',
+                'name',
+                'image_path',
+                'status'
+        ])
+            ->where('status','Active')
+            ->latest('id')
+            ->get();
+    }
 }

@@ -34,7 +34,7 @@ export default function ProductScreen({
   onHome: () => void;
 }) {
    const { data: publicData } = useDynamicQuery(
-    ["product-public-list"],
+    ["product-list"],
     ProductPublicServices
   );
  

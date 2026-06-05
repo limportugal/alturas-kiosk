@@ -31,6 +31,13 @@ class ProductController extends Controller {
         return response()->json($products);
     }
 
+    public function showPublicProduct(ProductListServices $service){
+        $product = $service->showPublicProductList();
+        return response()->json([
+        'data' => $product
+        ]);
+    }
+
     public function storeProduct(ProductStoreValidations $request, ProductStoreService $service ){
         $products = $service->store($request->validated());
         return response()->json([

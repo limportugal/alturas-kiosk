@@ -14,4 +14,14 @@ class SubCategoryListServices
             ->latest('id')
             ->paginate(10);
     }
+
+     public function getPublicSubCategoryList()
+    {
+        return SubCategoryModel::query()
+            ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
+            ->where('status', 'Active')
+            ->with('category:id,name') 
+            ->latest('id')
+            ->get();
+    }
 }

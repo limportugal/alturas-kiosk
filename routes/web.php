@@ -17,9 +17,9 @@ Route::get('/', function () {
 });
 
 // Public kiosk routes (no auth required)
-Route::get('/kiosk/categories', [CategoryController::class, 'CategoriesList'])->name('category-public-list');
+Route::get('/kiosk/categories', [CategoryController::class, 'publicCategoriesList'])->name('category-public-list');
 Route::get('/kiosk/sub-categories', [SubCategoryController::class, 'SubCategoryPublicList'])->name('sub-category-public-list');
-Route::get('/Kiosk/products', [ProductController::class, 'list'])->name('product-public-list');
+Route::get('/Kiosk/products', [ProductController::class, 'showPublicProduct'])->name('product-public-list');
 Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->name('product-variations-public-list');
 
 

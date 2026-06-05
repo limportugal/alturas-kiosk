@@ -34,6 +34,13 @@ class CategoryController extends Controller{
         return response()->json($category);
 
     }
+
+    public function publicCategoriesList(CategoryListServices $service) {
+        $category = $service->getPublicCategoryList();
+        return response()->json([
+        'data' => $category
+        ]);
+    }
     
     public function dropdown(CategoryDropDownServices $service){
         $category=$service->getCategoryDropDown();

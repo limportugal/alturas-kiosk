@@ -26,7 +26,7 @@ export default function SubCategoryScreen({
   const [pressed, setPressed] = useState<string | null>(null);
 
    const { data: subCategoriesData } = useDynamicQuery(
-    ["sub-category-public-list"],
+    ["sub-category-list"],
     SubCategoriesPublicServices
   );
   

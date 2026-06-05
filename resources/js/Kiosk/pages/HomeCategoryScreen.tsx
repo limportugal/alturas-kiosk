@@ -12,7 +12,7 @@ export default function HomeCategoryScreen({ onSelect }: { onSelect: (id: string
   const [pressed, setPressed] = useState<string | null>(null);
 
   const { data: categories_data } = useDynamicQuery(
-    ["category-public-list"],
+    ["category-list"],
     CategoriesPublicServices
   );
 
