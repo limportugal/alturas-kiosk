@@ -42,7 +42,7 @@ class SubCategoryUpdateServices
                     $sub->image_path &&
                     file_exists(public_path($sub->image_path))
                 ){
-                    unlink(public_path($suby->image_path));
+                    unlink(public_path($sub->image_path));
                 }
 
                 $file = $data['image_path'];

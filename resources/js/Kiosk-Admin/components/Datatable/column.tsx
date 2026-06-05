@@ -121,7 +121,7 @@ export const SubCatItem: Column<SubCategoryList>[] = [
     id: 'image_path',
     label: 'Image',
     render: (row) => (
-      <ImagePreviewCell imagePath={row.image_path ? `/${row.image_path}` : undefined} alt={row.name} />
+      <ImagePreviewCell imagePath={row.image_path ? `/sub-categories/${row.image_path}` : undefined} alt={row.name} />
     ),
   },
   {

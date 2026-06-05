@@ -83,7 +83,7 @@ export default function MultiplePreviewImage({
           >
             <Box
               component="img"
-              src={`/storage/${selectedImage.image_path}`}
+              src={`/${selectedImage.image_path}`}
               alt={productName}
               sx={{
                 maxWidth: '100%',
@@ -107,7 +107,7 @@ export default function MultiplePreviewImage({
               <Box
                 key={image.id ?? index}
                 component="img"
-                src={`/storage/${image.image_path}`}
+                src={`/${image.image_path}`}
                 alt={`${productName}-${index}`}
                 onClick={() => setSelectedIndex(index)}
                 sx={{

@@ -17,7 +17,7 @@ export default function ImagePreviewCell({ imagePath, alt }: Props) {
   const imageUrl =
     imagePath.startsWith('/') || imagePath.startsWith('http')
       ? imagePath
-      : `/storage/${imagePath}`;
+      : `/${imagePath}`;
 
   return (
     <>
