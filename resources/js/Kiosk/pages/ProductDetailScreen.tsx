@@ -78,7 +78,7 @@ export default function ProductDetailScreen({
       <HFHeader small />
       <PurpleBanner>{product.category_name ?? ""}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
-      <div style={{ 
+      {/* <div style={{  
           background: "#5a2d82", 
           padding: "16px 48px", 
           textAlign: "center", 
@@ -93,7 +93,7 @@ export default function ProductDetailScreen({
            >
           {subName?.name.toUpperCase() ?? ""}
         </span>
-      </div>
+      </div> */}
         <div style={{ 
           background: "#5a2d82", 
           padding: "16px 48px", 

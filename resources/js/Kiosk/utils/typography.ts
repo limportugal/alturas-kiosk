@@ -12,4 +12,5 @@ export const typography = {
   productNameStri: { fontSize: 24, fontWeight: 600, letterSpacing: 1, fontFamily: "Arial, sans-serif" },
   productDetailsLabel: { fontSize: 26, fontWeight: 700, fontFamily: "Arial, sans-serif"},
   productDetailsSubLabel: { fontSize: 26, fontFamily:"Arial, sans-serif"},
+  productVariantLabel: { fontSize: 16, fontWeight: 600, fontFamily: "Arial, sans-serif"}
 };

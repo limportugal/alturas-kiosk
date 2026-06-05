@@ -1,4 +1,5 @@
 import { colors } from "@/Kiosk/utils/colors";
+import { typography } from "@/Kiosk/utils/typography";
 
 // ── 2. Image card button (sub-category grid, tab buttons) ───────────────────
 export function ImageCardButton({
@@ -8,6 +9,8 @@ export function ImageCardButton({
   onClick,
   width,
   imageHeight = 120,
+  labelFontSize,
+  showArrow,
 }: {
   image?: string | null;
   label: string;
@@ -15,6 +18,8 @@ export function ImageCardButton({
   onClick: () => void;
   width?: number;
   imageHeight?: number;
+  labelFontSize?: number;
+  showArrow?: boolean;
 }) {
   return (
     <button
@@ -51,6 +56,8 @@ export function ImageCardButton({
           position: "relative",
           background: active ? "#3d1a5c" : "#5a2d82",
           padding: "14px 16px",
+          height: 60,
+          boxSizing:"border-box",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -60,17 +67,16 @@ export function ImageCardButton({
         <span
           style={{
             color: "#fff",
-            fontSize: 26,
-            fontWeight: 700,
-            letterSpacing: 2,
-            fontFamily: "Arial, sans-serif",
+            ...typography.button,
             textTransform: "uppercase",
+            fontSize: labelFontSize ?? typography.button.fontSize,
           }}
         >
           {label}
         </span>
 
         {/* arrow fixed right */}
+        {(showArrow ?? true) && (
         <span
           style={{
             position: "absolute",
@@ -83,6 +89,7 @@ export function ImageCardButton({
         >
           ›
         </span>
+          )}
       </div>
     </button>
   );

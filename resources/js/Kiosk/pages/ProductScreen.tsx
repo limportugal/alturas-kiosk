@@ -13,6 +13,8 @@ import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategorie
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
+import { typography } from "@/Kiosk/utils/typography";
+
 
 export default function ProductScreen({
   category,
@@ -106,11 +108,12 @@ export default function ProductScreen({
             onClick={() => setActiveTab(activeTab === i ? null : i)}
             width={180} 
             imageHeight={120}
+            labelFontSize={14} 
+            showArrow={false}
+            
           />
         ))}
       </div>
-
-
       <PurpleBanner small>{category.subCategoryTabs[activeTab ?? 0]?.label.toUpperCase() ?? ""}</PurpleBanner>
 
       {/* Product grid */}
