@@ -5,7 +5,7 @@ type ScreensaverProps = {
 export default function Screensaver({ onStart }: ScreensaverProps) {
     return (
         <main
-            className="relative h-screen w-screen overflow-hidden bg-black"
+            className="relative h-full w-full overflow-hidden bg-black"
             onClick={onStart}
             onTouchStart={onStart}
         >
