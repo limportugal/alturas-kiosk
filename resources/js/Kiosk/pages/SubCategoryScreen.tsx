@@ -6,7 +6,7 @@ import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
-
+import { ScrollableGrid } from "@/Kiosk/components/scrollablegrid";
 
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 
@@ -74,7 +74,7 @@ export default function SubCategoryScreen({
       </div>
 
       {/* Sub-category grid */}
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 28, padding: "36px 48px", boxSizing: "border-box", overflow: "auto", alignItems: "start", alignContent: "start" }}>
+      <ScrollableGrid columns={3} gap={28} padding="36px 48px">
         {visibleSubCategories.map((sub, index) => {
           const col = (index % 3) as 0 | 1 | 2;
           const row = Math.floor(index / 3);
@@ -97,12 +97,13 @@ export default function SubCategoryScreen({
                 label={sub.name}
                 active={isPressed}
                 onClick={() => handlePress(String(sub.id))}
-                imageHeight={200}
+                imageHeight={300}
               />
             </div>
           );
         })}
+      </ScrollableGrid>
       </div>
-    </div>
+
   );
 }
