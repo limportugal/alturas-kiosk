@@ -76,7 +76,7 @@ export default function ProductDetailScreen({
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
-      <PurpleBanner>{product.category_name ?? ""}</PurpleBanner>
+      <PurpleBanner>{(product.category_name ?? "").toUpperCase()}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
       {/* <div style={{  
           background: "#5a2d82", 

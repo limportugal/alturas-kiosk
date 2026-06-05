@@ -81,7 +81,7 @@ export default function ProductScreen({
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
-      <PurpleBanner>{cat?.name ??  "No Subcategory"}</PurpleBanner>
+      <PurpleBanner>{cat?.name.toUpperCase() ??  "No Subcategory"}</PurpleBanner>
       <MainMenuBtn onClick={onHome} />
       <PurpleBanner small>{subcat?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
 
