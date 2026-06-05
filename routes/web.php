@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\VariationController;
+use App\Http\Controllers\CartController;
 
 
 use Illuminate\Foundation\Application;
@@ -21,6 +22,12 @@ Route::get('/kiosk/categories', [CategoryController::class, 'publicCategoriesLis
 Route::get('/kiosk/sub-categories', [SubCategoryController::class, 'SubCategoryPublicList'])->name('sub-category-public-list');
 Route::get('/Kiosk/products', [ProductController::class, 'showPublicProduct'])->name('product-public-list');
 Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->name('product-variations-public-list');
+
+// Cart routes (no auth required)
+Route::get('/kiosk/cart/active', [CartController::class, 'getActiveCart'])->name('cart.active');
+Route::post('/kiosk/cart', [CartController::class, 'store'])->name('cart.store');
+Route::put('/kiosk/cart/{id}', [CartController::class, 'update'])->name('cart.update');
+Route::put('/kiosk/cart/{id}/confirm', [CartController::class, 'confirm'])->name('cart.confirm');
 
 
 Route::get('/welcome', function () {

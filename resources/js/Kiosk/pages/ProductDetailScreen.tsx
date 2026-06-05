@@ -14,7 +14,7 @@ import { VariationList } from "@/Kiosk-Admin/types/variation-types";
 
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 
-
+import { useCart } from "@/Kiosk/hooks/useCart";
 
 export default function ProductDetailScreen({
   product,
@@ -66,11 +66,27 @@ export default function ProductDetailScreen({
 
 
   const mainDisplayImage = selectVariantImage ?? selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
+
+  const { addItem, cartItems, getTotalAmount } = useCart();
    
 
   const handleColorSelect = (i: number) => {
     setActiveColor(i);
   };
+
+
+  const handleOrder = (qty: number) => {
+  addItem({
+    product_id: product.id,
+    name:       product.name,
+    sku:        product.sku,
+    price:      Number(product.price),
+    quantity:   qty,
+    color:      variants[activeColor]?.color_name ?? null,
+    image:      product.images?.[0]?.image_path ?? null,
+    subtotal:   Number(product.price) * qty,
+  });
+};
 
 
   return (
@@ -177,7 +193,13 @@ export default function ProductDetailScreen({
       {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
         <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton>
-        <KioskButton onClick={() => onOrder(product, variants[activeColor]?.color_name ?? "", 1)} style={{ flex: 1 }}>ORDER ITEM</KioskButton>
+        <KioskButton onClick={() => {
+          // handleOrder(1); 
+          onOrder(product, variants[activeColor]?.color_name ?? "", 1)
+          }} 
+          style={{ flex: 1 }}
+          >ORDER ITEM
+          </KioskButton>
       </div>
     </div>
   );

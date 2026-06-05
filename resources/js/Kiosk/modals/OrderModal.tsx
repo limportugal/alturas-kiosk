@@ -2,6 +2,12 @@ import { useState } from "react";
 import { Product } from "@/Kiosk/types/types";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
+
+
+import { useCart } from "@/Kiosk/hooks/useCart";
+
+
+
 export default function OrderModal({
   product,
   color,
@@ -15,6 +21,27 @@ export default function OrderModal({
 }) {
   const [qty, setQty] = useState(1);
   const total = product.price * qty;
+
+  const { addItem, cartItems, getTotalAmount } = useCart();
+
+  const variants = product.color_variants ?? [];
+  const [activeColor, setActiveColor] = useState(0);
+
+    
+  const handleOrder = (qty: number) => {
+  addItem({
+    product_id: product.id,
+    name:       product.name,
+    sku:        product.sku,
+    price:      Number(product.price),
+    quantity:   qty,
+    color:      variants[activeColor]?.color_name ?? null,
+    image:      product.images?.[0]?.image_path ?? null,
+    subtotal:   Number(product.price) * qty,
+  });
+};
+
+   
 
   return (
     <div style={{ position: "absolute", inset: 0, background: "rgba(180,160,210,0.55)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
@@ -59,7 +86,12 @@ export default function OrderModal({
         </div>
 
         <div style={{ display: "flex", borderTop: "2px solid #e0dbd5" }}>
-          <button onClick={onConfirm} style={{ flex: 1, background: "#5a2d82", border: "none", padding: "28px 0", fontSize: 26, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif", borderRight: "1px solid rgba(255,255,255,0.2)" }}>CONFIRM ORDER</button>
+          <button onClick={() => {
+                handleOrder(1);
+                onConfirm();
+                // onOrder(product, variants[activeColor]?.color_name ?? "", 1);
+                  }}   
+                style={{ flex: 1, background: "#5a2d82", border: "none", padding: "28px 0", fontSize: 26, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif", borderRight: "1px solid rgba(255,255,255,0.2)" }}>CONFIRM ORDER</button>
           <button onClick={onCancel}  style={{ flex: 1, background: "#5a2d82", border: "none", padding: "28px 0", fontSize: 26, fontWeight: 700, color: "#fff", cursor: "pointer", letterSpacing: 3, fontFamily: "Arial, sans-serif" }}>CANCEL</button>
         </div>
       </div>

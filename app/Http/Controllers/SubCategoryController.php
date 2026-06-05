@@ -39,18 +39,6 @@ class SubCategoryController extends Controller
         return response()->json([ 'data' => $subcategory]);
     }
 
-    // public function SubCategoryPublicList()
-    // {
-    //     // Public endpoint — no auth, no pagination, only active subcategories
-    //     $subcategories = \App\Models\SubCategory\SubCategoryModel::query()
-    //         ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
-    //         ->where('status', 'Active')
-    //         ->orderBy('item_category_id')
-    //         ->orderBy('id')
-    //         ->get();
-
-    //     return response()->json(['data' => $subcategories]);
-    // }
 
     public function dropdown(SubCategoryDropDownServices $service)
     {
