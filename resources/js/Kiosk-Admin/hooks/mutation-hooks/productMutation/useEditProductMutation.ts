@@ -2,7 +2,11 @@ import { useDynamicMutation } from "@/hooks/useDynamicMutation";
 import { useToast } from "@/hooks/use-toast";
 import { UpdateProductServices } from "@/Kiosk-Admin/services/products/UpdateProductServices";
 
-export const useEditProductMutation = () => {
+interface UseEditProductMutationOptions {
+  onError?: (error: any) => void;
+}
+
+export const useEditProductMutation = (options?: UseEditProductMutationOptions) => {
   const { showToast } = useToast();
 
   const mutation = useDynamicMutation({
@@ -15,11 +19,15 @@ export const useEditProductMutation = () => {
       });
     },
     onError: (error: any) => {
-      showToast({
-        message:
-          error?.response?.data?.message ?? "Failed to update product",
-        type: "error",
-      });
+      options?.onError?.(error);
+
+      if (!(error?.response?.status === 422 && error?.response?.data?.errors)) {
+        showToast({
+          message:
+            error?.response?.data?.message ?? "Failed to update product",
+          type: "error",
+        });
+      }
     },
   });
 

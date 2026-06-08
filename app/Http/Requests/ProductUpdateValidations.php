@@ -37,6 +37,7 @@ class ProductUpdateValidations extends FormRequest
             'color_variants'                  => ['sometimes', 'nullable', 'array'],
             'color_variants.*.id'             => ['sometimes', 'nullable', 'integer', 'exists:product_color_variants,id'],
             'color_variants.*.color_name'     => ['required_with:color_variants.*', 'string', 'max:50'],
+            'color_variants.*.quantity'       => ['required', 'integer', 'min:0'],
             'color_variants.*.image_path'     => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
             'removed_variant_ids'             => ['sometimes', 'nullable', 'array'],
             'removed_variant_ids.*'           => ['integer', 'exists:product_color_variants,id'],

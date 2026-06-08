@@ -12,16 +12,39 @@ const INPUT_SX = {
   '& .MuiInputLabel-root.Mui-focused': { color: '#7e22ce' },
 };
 
+const toReadableVariantError = (message?: string, fallback?: string) => {
+  if (!message) return undefined;
+
+  if (message.toLowerCase().includes('required')) {
+    return fallback;
+  }
+
+  return message;
+};
+
 // ── Existing variant row (from DB) ────────────────────────────────────────────
 interface ExistingVariantRowProps {
+  index: number;
   variant: ProductColorVariant;
+  onNameChange: (id: number, name: string) => void;
+  onQuantityChange: (id: number, quantity: string) => void;
   onRemove: (id: number) => void;
+  errors?: Record<string, string>;
 }
 
 
 
 
-export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProps) {
+export function ExistingVariantRow({ index, variant, onNameChange, onQuantityChange, onRemove, errors }: ExistingVariantRowProps) {
+  const nameError = toReadableVariantError(
+    errors?.[`color_variants.${index}.color_name`],
+    "Color name is required."
+  );
+  const quantityError = toReadableVariantError(
+    errors?.[`color_variants.${index}.quantity`],
+    "Quantity is required."
+  );
+
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', maxWidth: 520 }}>
       {/* Image preview */}
@@ -45,14 +68,29 @@ export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProp
         )}
       </Box>
 
-      {/* Color name (read-only for existing) */}
+      {/* Color name */}
       <TextField
         label="Color Name"
         value={variant.color_name}
+        onChange={(e) => onNameChange(variant.id, e.target.value)}
         size="small"
         sx={{ ...INPUT_SX, width: 260 }}
-        slotProps={{ input: { readOnly: true } }}
+        error={!!nameError}
+        helperText={nameError}
       />
+
+      <TextField
+        label="Quantity"
+        value={variant.quantity}
+        onChange={(e) => onQuantityChange(variant.id, e.target.value)}
+        size="small"
+        type="number"
+        sx={{ ...INPUT_SX, width: 100 }}
+        error={!!quantityError}
+        helperText={quantityError}
+      />
+
+
 
       {/* Remove */}
       <Tooltip title="Remove variant">
@@ -72,13 +110,24 @@ export function ExistingVariantRow({ variant, onRemove }: ExistingVariantRowProp
 interface NewVariantRowProps {
   variant: NewColorVariant;
   index: number;
+  errorIndex: number;
   onNameChange: (index: number, name: string) => void;
+  onQuantityChange: (index: number, quantity: string) => void;
   onImageChange: (index: number, file: File | null) => void;
   onRemove: (index: number) => void;
+  errors?: Record<string, string>;
 }
 
-export function NewVariantRow({ variant, index, onNameChange, onImageChange, onRemove }: NewVariantRowProps) {
+export function NewVariantRow({ variant, index, errorIndex, onNameChange, onQuantityChange, onImageChange, onRemove, errors }: NewVariantRowProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const nameError = toReadableVariantError(
+    errors?.[`color_variants.${errorIndex}.color_name`],
+    "Color name is required."
+  );
+  const quantityError = toReadableVariantError(
+    errors?.[`color_variants.${errorIndex}.quantity`],
+    "Quantity is required."
+  );
 
   return (
     <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', maxWidth: 520 }}>
@@ -125,7 +174,21 @@ export function NewVariantRow({ variant, index, onNameChange, onImageChange, onR
         size="small"
         placeholder="e.g. Dark Gray"
         sx={{ ...INPUT_SX, width: 160 }}
+        error={!!nameError}
+        helperText={nameError}
       />
+      {/* quantity input */}
+      <TextField
+          label="Quantity"
+          value={variant.quantity}
+          onChange={(e) => onQuantityChange(index, e.target.value)}
+          size="small"  
+          placeholder="e.g. 10"
+          type="number"
+          sx={{ ...INPUT_SX, width: 100 }}
+          error={!!quantityError}
+          helperText={quantityError}
+        />
 
       {/* Remove */}
       <Tooltip title="Remove">
@@ -145,24 +208,33 @@ export function NewVariantRow({ variant, index, onNameChange, onImageChange, onR
 interface ColorVariantsEditorProps {
   // For edit mode — existing variants from DB
   existingVariants?: ProductColorVariant[];
+  onExistingNameChange?: (id: number, name: string) => void;
+  onExistingQuantityChange?: (id: number, quantity: string) => void;
   onRemoveExisting?: (id: number) => void;
+
 
   // New variants being added
   newVariants: NewColorVariant[];
   onAdd: () => void;
   onNameChange: (index: number, name: string) => void;
+  onQuantityChange: (index: number, quantity: string) => void;
   onImageChange: (index: number, file: File | null) => void;
   onRemoveNew: (index: number) => void;
+  errors?: Record<string, string>;
 }
 
 export default function ColorVariantsEditor({
   existingVariants = [],
+  onExistingNameChange,
+  onExistingQuantityChange,
   onRemoveExisting,
   newVariants,
   onAdd,
   onNameChange,
+  onQuantityChange,
   onImageChange,
   onRemoveNew,
+  errors,
 }: ColorVariantsEditorProps) {
   const total = existingVariants.length + newVariants.length;
 
@@ -194,8 +266,12 @@ export default function ColorVariantsEditor({
         {existingVariants.map((v) => (
           <ExistingVariantRow
             key={v.id}
+            index={existingVariants.findIndex((variant) => variant.id === v.id)}
             variant={v}
+            onNameChange={onExistingNameChange ?? (() => {})}
+            onQuantityChange={onExistingQuantityChange ?? (() => {})}
             onRemove={onRemoveExisting ?? (() => {})}
+            errors={errors}
           />
         ))}
 
@@ -205,9 +281,12 @@ export default function ColorVariantsEditor({
             key={i}
             variant={v}
             index={i}
+            errorIndex={existingVariants.length + i}
             onNameChange={onNameChange}
+            onQuantityChange={onQuantityChange}
             onImageChange={onImageChange}
             onRemove={onRemoveNew}
+            errors={errors}
           />
         ))}
 

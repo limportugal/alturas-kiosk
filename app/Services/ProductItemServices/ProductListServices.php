@@ -25,6 +25,7 @@ class ProductListServices
                 'product_items.quantity',
                 'product_items.item_description',
                 'product_items.variation_type_id',
+                
                 'product_items.status'
             )
             ->latest('product_items.id')

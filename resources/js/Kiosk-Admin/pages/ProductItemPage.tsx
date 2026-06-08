@@ -2,7 +2,7 @@
 import  useDynamicQuery  from "@/hooks/useDynamicQuery";
 
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
-import { Proditem } from '@/Kiosk-Admin/components/Datatable/column';
+import { Proditem, renderProductExpandedRow } from '@/Kiosk-Admin/components/Datatable/column';
 import AddProduct from '@/Kiosk-Admin/components/Forms/Product-Item/add-product';
 import { ProductsServices } from '@/Kiosk-Admin/services/products/GetProductServices'
 
@@ -29,6 +29,7 @@ export default function ProductItemPage() {
         rows={product_data?.data ?? []}
         // loading= {isPending_product_data}
         columns={Proditem}
+        renderExpandedRow={renderProductExpandedRow}
         searchable ={true}
         actions={<AddProduct />}
       />

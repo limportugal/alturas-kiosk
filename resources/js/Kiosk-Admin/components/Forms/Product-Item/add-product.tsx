@@ -35,6 +35,7 @@ export default function AddProduct() {
     colorVariants,
     addColorVariant,
     updateVariantName,
+    onQuantityChange,
     updateVariantImage,
     removeColorVariant,
     errors,
@@ -178,8 +179,11 @@ export default function AddProduct() {
             onAdd={addColorVariant}
             onNameChange={updateVariantName}
             onImageChange={updateVariantImage}
+            onQuantityChange={onQuantityChange}
             onRemoveNew={removeColorVariant}
+            errors={errors}
           />
+
 
           <Button
             variant="contained"

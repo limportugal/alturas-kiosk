@@ -29,6 +29,7 @@ export const CreateProductServices = async (
 
   (payload.color_variants ?? []).forEach((variant, i) => {
     formData.append(`color_variants[${i}][color_name]`, variant.color_name);
+    formData.append(`color_variants[${i}][quantity]`, String(variant.quantity ));
     if (variant.image_path instanceof File) {
       formData.append(`color_variants[${i}][image_path]`, variant.image_path);
     }

@@ -2,6 +2,7 @@ export interface ProductColorVariant {
   id: number;
   product_item_id: number;
   color_name: string;
+  quantity: number | "";
   image_path?: string | null;
 }
 
@@ -43,7 +44,16 @@ export interface ProductItem {
 // A new variant being added (no id yet)
 export interface NewColorVariant {
   color_name: string;
+  quantity: number | "";
   image_path?: File | null;
+  previewUrl?: string | null;
+}
+
+export interface UpdateColorVariantPayload {
+  id?: number;
+  color_name: string;
+  quantity: number | "";
+  image_path?: File | string | null;
   previewUrl?: string | null;
 }
 
@@ -64,11 +74,12 @@ export interface ProductPayload {
 
 export interface CreateProductPayload extends ProductPayload {}
 
-export interface UpdateProductPayload extends ProductPayload {
+export interface UpdateProductPayload extends Omit<ProductPayload, 'color_variants'> {
   id: number;
   existing_images?: ProductImage[];
   removed_image_ids?: number[];
   removed_variant_ids?: number[];
+  color_variants?: UpdateColorVariantPayload[];
 }
 
 export interface PaginatedResponse<T> {

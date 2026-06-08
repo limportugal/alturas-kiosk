@@ -1,15 +1,26 @@
 import { useProductStore } from "@/Kiosk-Admin/hooks/zustands/use-store-product";
-import { NewColorVariant } from "@/Kiosk-Admin/types/product-type";
+import { NewColorVariant, ProductColorVariant, UpdateColorVariantPayload } from "@/Kiosk-Admin/types/product-type";
 
 type ProductState = ReturnType<typeof useProductStore.getState>;
 
 export const buildUpdateProductPayload = (
   images: File[],
+  existingVariants: ProductColorVariant[],
   colorVariants: NewColorVariant[],
   removedVariantIds: number[],
   state: ProductState,
   productId: number
 ) => {
+  const mergedColorVariants: UpdateColorVariantPayload[] = [
+    ...existingVariants.map((variant) => ({
+      id: variant.id,
+      color_name: variant.color_name,
+      quantity: variant.quantity,
+      image_path: variant.image_path ?? null,
+    })),
+    ...colorVariants,
+  ];
+
   return {
     id:               productId,
     item_code:        state.item_code ?? "",
@@ -25,7 +36,7 @@ export const buildUpdateProductPayload = (
     images,
     existing_images:     state.existingImages,
     removed_image_ids:   state.removedImageIds,
-    color_variants:      colorVariants,
+    color_variants:      mergedColorVariants,
     removed_variant_ids: removedVariantIds,
   };
 };

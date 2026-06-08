@@ -38,7 +38,11 @@ export const UpdateProductServices = async ({
 
   // New color variants (no id = new)
   (data.color_variants ?? []).forEach((variant, i) => {
+    if (variant.id) {
+      formData.append(`color_variants[${i}][id]`, String(variant.id));
+    }
     formData.append(`color_variants[${i}][color_name]`, variant.color_name);
+    formData.append(`color_variants[${i}][quantity]`, String(variant.quantity ?? 0));
     if (variant.image_path instanceof File) {
       formData.append(`color_variants[${i}][image_path]`, variant.image_path);
     }

@@ -11,6 +11,7 @@ class ProductColorVariant extends Model
     protected $fillable = [
         'product_item_id',
         'color_name',
+        'quantity',
         'image_path',
     ];
 

@@ -8,6 +8,16 @@ import { ProductItem, ProductImage, ProductColorVariant, NewColorVariant } from 
 
 type FormErrors = Partial<Record<keyof ProductTypeForm | "images", string>>;
 
+const mapBackendErrors = (backendErrors: Record<string, string[]>) => {
+  const fieldErrors: Record<string, string> = {};
+
+  Object.entries(backendErrors).forEach(([key, messages]) => {
+    fieldErrors[key] = messages[0];
+  });
+
+  return fieldErrors;
+};
+
 interface ImagePreview {
   file: File;
   previewUrl: string;
@@ -27,7 +37,14 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
   // New variants being added
   const [newVariants, setNewVariants]               = useState<NewColorVariant[]>([]);
 
-  const { mutate, isPending } = useEditProductMutation();
+  const { mutate, isPending } = useEditProductMutation({
+    onError: (error) => {
+      const backendErrors = error?.response?.data?.errors;
+      if (backendErrors) {
+        setErrors(mapBackendErrors(backendErrors));
+      }
+    },
+  });
 
   const existingImages  = productState.existingImages;
   const removedImageIds = productState.removedImageIds;
@@ -42,6 +59,7 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
     productState.setItemCategoryId(product.item_category_id);
     productState.setSubCategoryId(product.sub_category_id ?? null);
     productState.setVariationTypeId(product.variation_type_id ?? null);
+    
     productState.setPrice(Number(product.price));
     productState.setQuantity(Number(product.quantity));
     productState.setItemDescriptions(product.item_description ?? "");
@@ -94,13 +112,39 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
     setRemovedVariantIds((prev) => [...prev, id]);
   };
 
+  const updateExistingVariantName = (id: number, color_name: string) => {
+    setExistingVariants((prev) =>
+      prev.map((v) => (v.id === id ? { ...v, color_name } : v))
+    );
+  };
+
+  const updateExistingVariantQuantity = (id: number, quantity: string) => {
+    setExistingVariants((prev) =>
+      prev.map((v) =>
+        v.id === id
+          ? { ...v, quantity: quantity === "" ? "" : Number(quantity) }
+          : v
+      )
+    );
+  };
+
   const addNewVariant = () => {
-    setNewVariants((prev) => [...prev, { color_name: "", image_path: null, previewUrl: null }]);
+    setNewVariants((prev) => [...prev, { color_name: "", quantity: "", image_path: null, previewUrl: null }]);
   };
 
   const updateNewVariantName = (index: number, color_name: string) => {
     setNewVariants((prev) =>
       prev.map((v, i) => (i === index ? { ...v, color_name } : v))
+    );
+  };
+
+  const updateNewVariantQuantity = (index: number, quantity: string) => {
+    setNewVariants((prev) =>
+      prev.map((v, i) =>
+        i === index
+          ? { ...v, quantity: quantity === "" ? "" : Number(quantity) }
+          : v
+      )
     );
   };
 
@@ -157,6 +201,7 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
 
     const payload = buildUpdateProductPayload(
       images,
+      existingVariants,
       newVariants,
       removedVariantIds,
       productState,
@@ -183,8 +228,11 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
     // color variants
     existingVariants,
     newVariants,
+    updateExistingVariantName,
+    updateExistingVariantQuantity,
     addNewVariant,
     updateNewVariantName,
+    onQuantityChange: updateNewVariantQuantity,
     updateNewVariantImage,
     removeNewVariant,
     removeExistingVariant,

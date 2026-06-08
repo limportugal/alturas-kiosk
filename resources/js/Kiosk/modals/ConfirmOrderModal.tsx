@@ -42,7 +42,16 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
 
     if (!product) return null;
 
-    const maxQty   = product.quantity ?? 99;
+    // const maxQty   = product.quantity ?? 99;
+
+    const selectedVariant = product.color_variants?.find(
+        (v) => v.color_name == selectedColor
+    );
+
+    const maxQty = selectedVariant 
+        ? Number(selectedVariant.quantity)
+        : product.quantity ?? 99;
+
     const subtotal = Number(product.price) * quantity;
 
     const handleAddToCart = async () => {
@@ -180,7 +189,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                     disabled={quantity >= maxQty}
                                     style={{ width: 40, height: 40, borderRadius: 8, border: `2px solid ${colors.primary}`, background: quantity >= maxQty ? "#eee" : "#fff", color: colors.primary, fontSize: 22, fontWeight: 700, cursor: quantity >= maxQty ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                 >+</button>
-                                <span style={{ fontSize: 12, color: "#999" }}>{product.quantity} in stock</span>
+                                <span style={{ fontSize: 12, color: "#999" }}>{maxQty} in stock</span>
                             </div>
                         </div>
                     </div>

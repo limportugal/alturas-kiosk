@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -11,6 +12,8 @@ import {
   TableSortLabel,
 } from '@mui/material';
 import { Box } from  '@mui/material';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 
 import TableSearch from '@/Kiosk-Admin/components/Datatable/TableSearch';
 
@@ -24,6 +27,7 @@ interface Props<T> {
   actions?: React.ReactNode;
   defaultOrder?: Order,
   defaultOrderBy?: keyof T;
+  renderExpandedRow?: (row: T) => React.ReactNode;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -49,12 +53,14 @@ export default function DataTable<T extends { id: number }>({
   actions,
   defaultOrder = 'desc',
   defaultOrderBy = 'id' as keyof T,
+  renderExpandedRow,
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>(defaultOrder);
   const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [expandedRowId, setExpandedRowId] = React.useState<number | null>(null);
 
   const handleRequestSort = (property: keyof T) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -136,6 +142,7 @@ export default function DataTable<T extends { id: number }>({
         >
           <TableHead>
             <TableRow>
+              {renderExpandedRow && <TableCell sx={{ width: 56 }} />}
               {columns.map((column) => (
                 <TableCell
                   key={String(column.id)}
@@ -158,22 +165,52 @@ export default function DataTable<T extends { id: number }>({
           </TableHead>
 
           <TableBody>
-            {visibleRows.map((row) => (
-              <TableRow key={row.id}>
-                {columns.map((column) => (
-                  <TableCell
-                    key={String(column.id)}
-                    align={
-                      column.numeric ? 'right' : 'left'
-                    }
-                  >
-                    {column.render
-                      ? column.render(row)
-                      : String(row[column.id])}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
+            {visibleRows.map((row) => {
+              const isExpanded = expandedRowId === row.id;
+
+              return (
+                <React.Fragment key={row.id}>
+                  <TableRow>
+                    {renderExpandedRow && (
+                      <TableCell sx={{ width: 56 }}>
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            setExpandedRowId((prev) => (prev === row.id ? null : row.id))
+                          }
+                        >
+                          {isExpanded ? (
+                            <KeyboardArrowUpOutlinedIcon fontSize="small" />
+                          ) : (
+                            <KeyboardArrowDownOutlinedIcon fontSize="small" />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                    )}
+                    {columns.map((column) => (
+                      <TableCell
+                        key={String(column.id)}
+                        align={
+                          column.numeric ? 'right' : 'left'
+                        }
+                      >
+                        {column.render
+                          ? column.render(row)
+                          : String(row[column.id])}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+
+                  {renderExpandedRow && isExpanded && (
+                    <TableRow>
+                      <TableCell colSpan={columns.length + 1} sx={{ backgroundColor: '#faf8fc', py: 2 }}>
+                        {renderExpandedRow(row)}
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

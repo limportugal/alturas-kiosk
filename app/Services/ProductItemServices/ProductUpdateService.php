@@ -100,8 +100,42 @@ class ProductUpdateService
             // ── Add new color variants ────────────────────────────────────
             if (!empty($data['color_variants'])) {
                 foreach ($data['color_variants'] as $variant) {
-                    // Skip if it already has an id (existing variant, no change)
-                    if (!empty($variant['id'])) continue;
+                    if (!empty($variant['id'])) {
+                        $existingVariant = ProductColorVariant::where('id', $variant['id'])
+                            ->where('product_item_id', $product->id)
+                            ->first();
+
+                        if (!$existingVariant) {
+                            continue;
+                        }
+
+                        $variantData = [
+                            'color_name' => $variant['color_name'],
+                            'quantity' => $variant['quantity'] ?? 0,
+                        ];
+
+                        if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
+                            if (
+                                $existingVariant->image_path &&
+                                file_exists(public_path($existingVariant->image_path))
+                            ) {
+                                unlink(public_path($existingVariant->image_path));
+                            }
+
+                            $file = $variant['image_path'];
+                            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                            $file->move(
+                                public_path('color-variants'),
+                                $fileName
+                            );
+
+                            $variantData['image_path'] = 'color-variants/' . $fileName;
+                        }
+
+                        $existingVariant->update($variantData);
+                        continue;
+                    }
 
                     $variantImagePath = null;
                     if (isset($variant['image_path']) && $variant['image_path'] instanceof \Illuminate\Http\UploadedFile) {
@@ -122,6 +156,7 @@ class ProductUpdateService
                     ProductColorVariant::create([
                         'product_item_id' => $product->id,
                         'color_name'      => $variant['color_name'],
+                        'quantity'         => $variant['quantity'],
                         'image_path'      => $variantImagePath,
                     ]);
                 }

@@ -23,9 +23,9 @@ export interface User {
 }
 
 export const userColumns: Column<User>[] = [
-  { id: 'name',  label: 'Name'  },
+  { id: 'name', label: 'Name' },
   { id: 'email', label: 'Email' },
-  { id: 'age',   label: 'Age', numeric: true },
+  { id: 'age', label: 'Age', numeric: true },
 ];
 
 export const Proditem: Column<ProductItem>[] = [
@@ -36,56 +36,34 @@ export const Proditem: Column<ProductItem>[] = [
       <MultiplePreviewImage images={row.images} productName={row.name} />
     ),
   },
-  { id: 'category_name',    label: 'Category'    },
+  { id: 'category_name', label: 'Category' },
   {
     id: 'sub_category_name',
     label: 'Sub-Category',
     render: (row) => <span>{row.sub_category_name ?? '—'}</span>,
   },
-  { id: 'item_code',        label: 'Item Code'   },
-  { id: 'name',             label: 'Item Name'   },
+  { id: 'item_code', label: 'Item Code' },
+  { id: 'name', label: 'Item Name' },
   { id: 'item_description', label: 'Description' },
-  { id: 'sku',              label: 'SKU'         },
-  { id: 'price',            label: 'Item Price'  },
-  { id: 'quantity',         label: 'Quantity'    },
+  { id: 'sku', label: 'SKU' },
+  { id: 'price', label: 'Item Price' },
+  { id: 'quantity', label: 'Quantity' },
   {
     id: 'color_variants',
     label: 'Color Variants',
     render: (row) => {
-      const variants = row.color_variants ?? (row as ProductItem & { colorVariants?: ProductItem['color_variants'] }).colorVariants ?? [];
+      const variants =
+        row.color_variants ??
+        (row as ProductItem & { colorVariants?: ProductItem['color_variants'] }).colorVariants ??
+        [];
+
       if (!variants.length) return <span style={{ color: '#aaa' }}>—</span>;
-      return (
-        <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', alignItems: 'center' }}>
-          {variants.map((v) => (
-            <div
-              key={v.id}
-              title={v.color_name}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}
-            >
-              {v.image_path ? (
-                <img
-                  src={`/${v.image_path}`}
-                  alt={v.color_name}
-                  style={{ width: 62, height: 62, objectFit: 'cover', borderRadius: 4, border: '1px solid #e0dbd5' }}
-                />
-              ) : (
-                <div style={{ width: 32, height: 32, borderRadius: 4, background: '#f5f2ee', border: '1px solid #e0dbd5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>
-                  🎨
-                </div>
-              )}
-              <span style={{ fontSize: 9, color: '#666', maxWidth: 46, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {v.color_name}
-              </span>
-            </div>
-          ))}
-        </div>
-      );
+      return <span>{variants.length} variant{variants.length > 1 ? 's' : ''}</span>;
     },
   },
   {
     id: 'action',
     label: 'Actions',
-    
     render: (row) => (
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <ProductToggleStatus id={row.id} status={row.status === 'Active'} />
@@ -94,6 +72,93 @@ export const Proditem: Column<ProductItem>[] = [
     ),
   },
 ];
+
+export const renderProductExpandedRow = (row: ProductItem) => {
+  const variants =
+    row.color_variants ??
+    (row as ProductItem & { colorVariants?: ProductItem['color_variants'] }).colorVariants ??
+    [];
+
+  if (!variants.length) {
+    return <span style={{ color: '#888' }}>No color variants for this product.</span>;
+  }
+
+  return (
+    <div style={{ padding: '4px 8px' }}>
+      <div style={{ fontSize: 13, fontWeight: 700, color: '#5a2d82', marginBottom: 10 }}>
+        Color Variants
+      </div>
+      <div style={{ border: '1px solid #e9e0f3', borderRadius: 8, overflow: 'hidden', background: '#fff' }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '80px 1fr 120px',
+            gap: 12,
+            padding: '10px 12px',
+            background: '#f7f2fc',
+            fontSize: 12,
+            fontWeight: 700,
+            color: '#5a2d82',
+            borderBottom: '1px solid #e9e0f3',
+          }}
+        >
+          <span>Image</span>
+          <span>Color</span>
+          <span>Quantity</span>
+        </div>
+        {variants.map((variant, index) => (
+          <div
+            key={variant.id}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '80px 1fr 120px',
+              gap: 12,
+              alignItems: 'center',
+              padding: '10px 12px',
+              borderBottom: index < variants.length - 1 ? '1px solid #f0e8f7' : 'none',
+            }}
+          >
+            <div>
+              {variant.image_path ? (
+                <img
+                  src={`/${variant.image_path}`}
+                  alt={variant.color_name}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    objectFit: 'cover',
+                    borderRadius: 6,
+                    border: '1px solid #e0dbd5',
+                    display: 'block',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 6,
+                    border: '1px solid #e0dbd5',
+                    background: '#f5f2ee',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#888',
+                    fontSize: 12,
+                  }}
+                >
+                  —
+                </div>
+              )}
+            </div>
+            <span style={{ fontWeight: 600, color: '#333' }}>{variant.color_name}</span>
+            <span style={{ color: '#666' }}>{variant.quantity}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const CatItem: Column<CategoryList>[] = [
   {

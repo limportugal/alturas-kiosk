@@ -83,6 +83,7 @@ class ProductStoreService {
             ProductColorVariant::create([
                 'product_item_id' => $product->id,
                 'color_name'      => $variant['color_name'],
+                'quantity'        =>  $variant['quantity'],
                 'image_path'      => $variantImagePath,
             ]);
         }

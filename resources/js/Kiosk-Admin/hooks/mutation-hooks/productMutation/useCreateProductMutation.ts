@@ -4,6 +4,7 @@ import { CreateProductServices } from "@/Kiosk-Admin/services/products/CreatePro
 
 interface UseCreateProductMutationOptions {
   onSuccess?: () => void;
+  onError?: (error: any) => void;
 }
 
 export const useCreateProductMutation = (
@@ -25,10 +26,14 @@ export const useCreateProductMutation = (
     onError: (error: any) => {
       console.error("create product error", error);
 
-      showToast({
-        message: error?.response?.data?.message ?? "Failed to create product",
-        type: "error",
-      });
+      options?.onError?.(error);
+
+      if (!(error?.response?.status === 422 && error?.response?.data?.errors)) {
+        showToast({
+          message: error?.response?.data?.message ?? "Failed to create product",
+          type: "error",
+        });
+      }
     },
   });
 };

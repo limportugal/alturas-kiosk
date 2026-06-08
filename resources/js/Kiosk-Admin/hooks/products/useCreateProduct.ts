@@ -13,6 +13,16 @@ interface ImagePreview {
 
 type FormErrors = Partial<Record<keyof ProductTypeForm | "images", string>>;
 
+const mapBackendErrors = (backendErrors: Record<string, string[]>) => {
+  const fieldErrors: Record<string, string> = {};
+
+  Object.entries(backendErrors).forEach(([key, messages]) => {
+    fieldErrors[key] = messages[0];
+  });
+
+  return fieldErrors;
+};
+
 export const useCreateProduct = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const productState = useProductStore();
@@ -33,6 +43,12 @@ export const useCreateProduct = () => {
       setColorVariants([]);
       setErrors({});
       if (fileInputRef.current) fileInputRef.current.value = "";
+    },
+    onError: (error) => {
+      const backendErrors = error?.response?.data?.errors;
+      if (backendErrors) {
+        setErrors(mapBackendErrors(backendErrors));
+      }
     },
   });
 
@@ -97,12 +113,22 @@ export const useCreateProduct = () => {
 
   // ── Color variants ─────────────────────────────────────────────────────────
   const addColorVariant = () => {
-    setColorVariants((prev) => [...prev, { color_name: "", image_path: null, previewUrl: null }]);
+    setColorVariants((prev) => [...prev, { color_name: "", quantity: "", image_path: null, previewUrl: null }]);
   };
 
   const updateVariantName = (index: number, color_name: string) => {
     setColorVariants((prev) =>
       prev.map((v, i) => (i === index ? { ...v, color_name } : v))
+    );
+  };
+
+  const updateVariantQuantity = (index: number, quantity: string) => {
+    setColorVariants((prev) =>
+      prev.map((v, i) =>
+        i === index
+          ? { ...v, quantity: quantity === "" ? "" : Number(quantity) }
+          : v
+      )
     );
   };
 
@@ -140,6 +166,7 @@ export const useCreateProduct = () => {
     removeNewImage,
     addColorVariant,
     updateVariantName,
+    onQuantityChange: updateVariantQuantity,
     updateVariantImage,
     removeColorVariant,
     validateForm,

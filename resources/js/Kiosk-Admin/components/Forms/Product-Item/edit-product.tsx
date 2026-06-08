@@ -56,8 +56,11 @@ export default function EditProduct({ product }: Props) {
     removeExistingImage,
     existingVariants,
     newVariants,
+    updateExistingVariantName,
+    updateExistingVariantQuantity,
     addNewVariant,
     updateNewVariantName,
+    onQuantityChange,
     updateNewVariantImage,
     removeNewVariant,
     removeExistingVariant,
@@ -223,12 +226,16 @@ export default function EditProduct({ product }: Props) {
           {/* Color Variants */}
           <ColorVariantsEditor
             existingVariants={existingVariants}
+            onExistingNameChange={updateExistingVariantName}
+            onExistingQuantityChange={updateExistingVariantQuantity}
             onRemoveExisting={removeExistingVariant}
             newVariants={newVariants}
             onAdd={addNewVariant}
             onNameChange={updateNewVariantName}
+            onQuantityChange={onQuantityChange}
             onImageChange={updateNewVariantImage}
             onRemoveNew={removeNewVariant}
+            errors={errors}
           />
 
           {/* Save button */}
