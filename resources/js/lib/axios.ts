@@ -35,7 +35,7 @@ const triggerSessionExpiredModal = () => {
     window.dispatchEvent(new CustomEvent('session-expired'));
 };
 
-const PUBLIC_ROUTES = ['/kiosk/categories'];
+const PUBLIC_ROUTES = ['/kiosk/categories', '/kiosk/cart', '/kiosk/sub-categories', '/Kiosk/products', '/kiosk/product-variations'];
 
 const isPublicRoute = (url: string = '') =>
   PUBLIC_ROUTES.some((r) => url.includes(r));

@@ -26,7 +26,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
 
     const displayImage = product?.color_variants?.find(
         (v) => v.color_name == selectedColor
-    )?.image_path ?? product?.images?.[0].image_path ?? null;
+    )?.image_path ?? product?.images?.[0]?.image_path ?? null;
 
     useEffect(() => {
         if (product) {
@@ -44,16 +44,20 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
     const subtotal = Number(product.price) * quantity;
 
     const handleAddToCart = async () => {
-        await addItem({
-            product_id: product.id,
-            name:       product.name,
-            sku:        product.sku,
-            price:      Number(product.price),
-            quantity,
-            color:      selectedColor ?? null,
-            image:      displayImage ?? null,
-            subtotal,
-        });
+        try {
+            await addItem({
+                product_id: product.id,
+                name:       product.name,
+                sku:        product.sku,
+                price:      Number(product.price),
+                quantity,
+                color:      selectedColor ?? null,
+                image:      displayImage ?? null,
+                subtotal,
+            });
+        } catch {
+            // Local cart state is already updated; still close the modal
+        }
 
         setAdded(true);
         setTimeout(() => {

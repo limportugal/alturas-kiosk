@@ -189,7 +189,7 @@ export default function ProductDetailScreen({
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
         {/* <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton> */}
         <KioskButton onClick={() => setCartModalOpen(true)}>ADD TO CART</KioskButton>
-          <CartIcon onClick={onViewOrder} />
+          <CartIcon onClick={onViewOrder} grayWhenEmpty />
       </div>
       
       <ConfirmOrderModal

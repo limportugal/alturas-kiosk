@@ -11,7 +11,7 @@ interface CartSummaryModalProps {
     open: boolean;
     onClose: () => void;
     onPlaceOrder?: () => void;
-    product: ProductItem | null;
+    product?: ProductItem | null;
     selectedColor?: string | null;
 }
 
@@ -51,8 +51,12 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
 
     const handlePlaceOrder = async () => {
         setOrdered(true);
-        await confirmCart();
-        onPlaceOrder?.();
+        try {
+            await confirmCart();
+            onPlaceOrder?.();
+        } catch {
+            // Still close so the user isn't stuck on the modal
+        }
         setTimeout(() => {
             handleClose();
         }, 1800);
@@ -106,7 +110,13 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                 <div style={{ flex: 1, overflowY: "auto", padding: cartItems.length > 0 ? "0" : "48px 32px" }}>
                     {cartItems.length === 0 ? (
                         <div style={{ textAlign: "center" }}>
-                            <div style={{ fontSize: 56, marginBottom: 16 }}>🛒</div>
+                            <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
+                                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#cccccc" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                    <line x1="3" y1="6" x2="21" y2="6" />
+                                    <path d="M16 10a4 4 0 01-8 0" />
+                                </svg>
+                            </div>
                             <p style={{ fontSize: 18, fontWeight: 700, color: "#aaa", margin: 0 }}>Your cart is empty</p>
                         </div>
                     ) : (

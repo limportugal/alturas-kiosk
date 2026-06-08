@@ -53,18 +53,22 @@ export const useCart = () => {
     }, []);
 
     const addItem = async (item: CartItem) => {
-        // Update store first, then read fresh state
+        // Update store first, then sync to API in the background
         storeAddItem(item);
 
         const currentItems = getItems();
         const currentCartId = getCartId();
 
-        if (currentCartId === null) {
-            const result = await CartStoreService(currentItems);
-            setCartId(result.data.id);
-            setCartNumber(result.data.cart_number);
-        } else {
-            await CartUpdateService(currentCartId, currentItems);
+        try {
+            if (currentCartId === null) {
+                const result = await CartStoreService(currentItems);
+                setCartId(result.data.id);
+                setCartNumber(result.data.cart_number);
+            } else {
+                await CartUpdateService(currentCartId, currentItems);
+            }
+        } catch {
+            // Keep local cart state; API sync can retry on next action
         }
     };
 

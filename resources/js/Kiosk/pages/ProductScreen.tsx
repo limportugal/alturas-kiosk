@@ -11,7 +11,7 @@ import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListSe
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategoriesListServices";
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
-import { useCartStore } from "@/Kiosk/store/useCartStore";
+import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 import { typography } from "@/Kiosk/utils/typography";
@@ -58,9 +58,6 @@ export default function ProductScreen({
 
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const [mounted, setMounted]     = useState(false);
-
-  const cartItems  = useCartStore((s) => s.cartItems);
-  const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   const visibleProducts = publicData?.data?.filter((p) => {
     const matchesSub = String(p.sub_category_id) === subId;
@@ -201,50 +198,7 @@ export default function ProductScreen({
       <div style={{ background: "#fff", borderTop: "1px solid #e0dbd5", padding: "24px 48px", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         {/* <KioskButton onClick={onBack}>← BACK</KioskButton> */}
 
-        <button
-          onClick={onViewOrder}
-          style={{
-            position: "relative",
-            background: totalCount > 0 ? "#5a2d82" : "#ccc",
-            border: "none",
-            borderRadius: 12,
-            padding: "20px 32px",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 12,
-            color: "#fff",
-            fontSize: 20,
-            fontWeight: 700,
-            letterSpacing: 2,
-            fontFamily: "Arial, sans-serif",
-            transition: "background 0.2s ease",
-            flex:1,
-            justifyContent: "center",
-          }}
-        >
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-            <line x1="3" y1="6" x2="21" y2="6"/>
-            <path d="M16 10a4 4 0 01-8 0"/>
-          </svg>
-          VIEW ORDER
-          {totalCount > 0 && (
-            <span style={{
-              position: "absolute",
-              top: -8, right: -8,
-              background: "#ef4444",
-              color: "#fff",
-              borderRadius: "50%",
-              width: 28, height: 28,
-              fontSize: 13, fontWeight: 800,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              border: "2px solid #fff",
-            }}>
-              {totalCount > 99 ? "99+" : totalCount}
-            </span>
-          )}
-        </button>
+        <CartIcon onClick={onViewOrder} grayWhenEmpty />
       </div>
     </div>
   );
