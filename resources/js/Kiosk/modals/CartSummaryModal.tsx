@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
@@ -10,9 +11,11 @@ interface CartSummaryModalProps {
     open: boolean;
     onClose: () => void;
     onPlaceOrder?: () => void;
+    product: ProductItem | null;
+    selectedColor?: string | null;
 }
 
-export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryModalProps) {
+export function CartSummaryModal({product, selectedColor, open, onClose, onPlaceOrder }: CartSummaryModalProps) {
     const {
         cartItems,
         getTotalAmount,
@@ -27,6 +30,10 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
     const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
+
+    const displayImage = product?.color_variants?.find(
+        (v) => v.color_name == selectedColor
+    )?.image_path ?? product?.images?.[0];
 
     useEffect(() => {
         if (open) {

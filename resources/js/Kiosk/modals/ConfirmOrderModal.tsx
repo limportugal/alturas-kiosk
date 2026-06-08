@@ -23,6 +23,11 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
     const [added, setAdded]         = useState(false);
     const [visible, setVisible]     = useState(false);
 
+
+    const displayImage = product?.color_variants?.find(
+        (v) => v.color_name == selectedColor
+    )?.image_path ?? product?.images?.[0].image_path ?? null;
+
     useEffect(() => {
         if (product) {
             setQuantity(1);
@@ -46,7 +51,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
             price:      Number(product.price),
             quantity,
             color:      selectedColor ?? null,
-            image:      product.images?.[0]?.image_path ?? null,
+            image:      displayImage ?? null,
             subtotal,
         });
 
@@ -100,10 +105,10 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 {/* Body */}
                 <div style={{ display: "flex", gap: 32, padding: 32 }}>
                     {/* Product image */}
-                    {product.images?.[0]?.image_path && (
+                    {displayImage && (
                         <div style={{ width: 200, flexShrink: 0, borderRadius: 12, overflow: "hidden", background: "#f5f3f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
                             <img
-                                src={`/${product.images[0].image_path}`}
+                                src={`/${displayImage}`}
                                 alt={product.name}
                                 style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }}
                             />
@@ -121,13 +126,36 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                             <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, margin: 0 }}>{product.item_description}</p>
                         )}
 
-                        {/* Selected color */}
+                        {/* Selected color / variant */}
                         {selectedColor && (
                             <div>
-                                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: "#888", margin: "0 0 8px" }}>COLOR</p>
-                                <span style={{ padding: "8px 18px", borderRadius: 8, border: `2px solid ${colors.primary}`, background: colors.primary, color: "#fff", fontSize: 13, fontWeight: 700 }}>
-                                    {selectedColor}
-                                </span>
+                                <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: "#888", margin: "0 0 8px" }}>SELECTED COLOR</p>
+                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                    {/* Color swatch */}
+                                    <span
+                                        style={{
+                                            width: 28,
+                                            height: 28,
+                                            borderRadius: "50%",
+                                            background: selectedColor,
+                                            border: "2px solid #ddd",
+                                            flexShrink: 0,
+                                            display: "inline-block",
+                                        }}
+                                    />
+                                    {/* Color name badge */}
+                                    <span style={{
+                                        padding: "6px 16px",
+                                        borderRadius: 8,
+                                        border: `2px solid ${colors.primary}`,
+                                        color: colors.primary,
+                                        fontSize: 13,
+                                        fontWeight: 700,
+                                        background: "#f5f0fb",
+                                    }}>
+                                        {selectedColor}
+                                    </span>
+                                </div>
                             </div>
                         )}
 
