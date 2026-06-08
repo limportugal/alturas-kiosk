@@ -78,7 +78,15 @@ export default function ProductScreen({
       <HFHeader small />
       <div style={{ position: "relative"}}>
       <PurpleBanner>
-        {cat?.name.toUpperCase() ??  "No Subcategory"}
+        <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
+        <span>{cat?.name.toUpperCase() ??  "No Subcategory"}</span>
+        {subcat &&(
+          <>
+          <span style={{opacity: 0.5, fontSize: "0.9em"}}>›</span>
+            <span>{subcat.name.toUpperCase()}</span>
+          </>
+        )}
+        </div>
       </PurpleBanner>
             <KioskButton 
               onClick={onBack}  
@@ -92,7 +100,7 @@ export default function ProductScreen({
             </KioskButton>
     </div>
       <MainMenuBtn onClick={onHome} />
-      <PurpleBanner small>{subcat?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner>
+      {/* <PurpleBanner small>{subcat?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner> */}
 
       {/* Tabs */}
       <div style={{ 

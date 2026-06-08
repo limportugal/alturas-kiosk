@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
+import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
@@ -15,7 +16,7 @@ interface CartSummaryModalProps {
     selectedColor?: string | null;
 }
 
-export function CartSummaryModal({product, selectedColor, open, onClose, onPlaceOrder }: CartSummaryModalProps) {
+export function CartSummaryModal({open, onClose, onPlaceOrder }: CartSummaryModalProps) {
     const {
         cartItems,
         getTotalAmount,
@@ -27,13 +28,11 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
 
     const [visible, setVisible]   = useState(false);
     const [ordered, setOrdered]   = useState(false);
+    const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
     const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
 
-    // const displayImage = product?.color_variants?.find(
-    //     (v) => v.color_name == selectedColor
-    // )?.image_path ?? product?.images?.[0];
 
     useEffect(() => {
         if (open) {
@@ -60,6 +59,10 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
         setTimeout(() => {
             handleClose();
         }, 1800);
+    };
+
+    const handleClearAll = async () => {
+        await clearCart();
     };
 
     if (!open) return null;
@@ -196,7 +199,7 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                             </div>
                             <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                                 <button
-                                    onClick={clearCart}
+                                    onClick={() => setClearConfirmOpen(true)}
                                     style={{ padding: "14px 24px", borderRadius: 12, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
                                 >
                                     Clear All
@@ -220,6 +223,16 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                     </div>
                 )}
             </div>
+            <ConfirmActionModal
+                open={clearConfirmOpen}
+                title="Clear Cart"
+                message="Remove all items from your cart?"
+                confirmLabel="Yes, Clear"
+                cancelLabel="Keep Items"
+                confirmTone="danger"
+                onConfirm={handleClearAll}
+                onClose={() => setClearConfirmOpen(false)}
+            />
         </div>
     );
 }
