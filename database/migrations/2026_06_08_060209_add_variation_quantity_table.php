@@ -26,6 +26,6 @@ return new class extends Migration
     {
         Schema::table('product_color_variants', function (Blueprint $table) {
             $table->dropColumn('quantity');
-        });
+        }); 
     }
 };
