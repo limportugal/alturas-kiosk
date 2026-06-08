@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
-import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
+import { CartItem } from "@/Kiosk/types/cart-types";
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
     "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
@@ -12,27 +12,41 @@ interface CartSummaryModalProps {
     open: boolean;
     onClose: () => void;
     onPlaceOrder?: () => void;
-    product?: ProductItem | null;
-    selectedColor?: string | null;
 }
 
-export function CartSummaryModal({open, onClose, onPlaceOrder }: CartSummaryModalProps) {
-    const {
-        cartItems,
-        getTotalAmount,
-        removeItem,
-        updateQty,
-        confirmCart,
-        clearCart,
-    } = useCart();
+// ─── Trash icon ───────────────────────────────────────────────────────────────
+const TrashIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+    </svg>
+);
 
-    const [visible, setVisible]   = useState(false);
-    const [ordered, setOrdered]   = useState(false);
+// ─── Component ────────────────────────────────────────────────────────────────
+export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryModalProps) {
+    const { cartItems, getTotalAmount, removeItem, updateQty, confirmCart, clearCart } = useCart();
+
+    const [visible, setVisible] = useState(false);
+    const [ordered, setOrdered] = useState(false);
     const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
+    const [removeTarget, setRemoveTarget] = useState<{ product_id: number; color: string | null; name: string } | null>(null);
 
-    const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+    const totalCount = cartItems.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
 
+    // ── Group items by product name ───────────────────────────────────────────
+    // Same product, different colors → grouped under one header
+    const grouped = useMemo(() => {
+        const map = new Map<string, CartItem[]>();
+        cartItems.forEach((item: CartItem) => {
+            const key = item.name;
+            if (!map.has(key)) map.set(key, []);
+            map.get(key)!.push(item);
+        });
+        return Array.from(map.entries());
+    }, [cartItems]);
 
     useEffect(() => {
         if (open) {
@@ -54,20 +68,15 @@ export function CartSummaryModal({open, onClose, onPlaceOrder }: CartSummaryModa
             await confirmCart();
             onPlaceOrder?.();
         } catch {
-            // Still close so the user isn't stuck on the modal
+            // Still close so the user isn't stuck
         }
-        setTimeout(() => {
-            handleClose();
-        }, 1800);
-    };
-
-    const handleClearAll = async () => {
-        await clearCart();
+        setTimeout(handleClose, 1800);
     };
 
     if (!open) return null;
 
     return (
+        <>
         <div
             onClick={handleClose}
             style={{
@@ -95,104 +104,170 @@ export function CartSummaryModal({open, onClose, onPlaceOrder }: CartSummaryModa
                     boxShadow: "0 32px 80px rgba(0,0,0,0.25)",
                 }}
             >
-                {/* Header */}
+                {/* ── Header ── */}
                 <div style={{ background: colors.primary, padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+                            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <path d="M16 10a4 4 0 01-8 0"/>
                         </svg>
                         <span style={{ color: "#fff", fontSize: 18, fontWeight: 700, letterSpacing: 2 }}>ORDER SUMMARY</span>
                         <span style={{ background: "rgba(255,255,255,0.25)", color: "#fff", borderRadius: 20, fontSize: 13, fontWeight: 700, padding: "2px 12px" }}>
                             {totalCount} {totalCount === 1 ? "item" : "items"}
                         </span>
                     </div>
-                    <button onClick={handleClose} style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#fff", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}>×</button>
+                    <button
+                        onClick={handleClose}
+                        style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#fff", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
+                    >×</button>
                 </div>
 
-                {/* Items list */}
-                <div style={{ flex: 1, overflowY: "auto", padding: cartItems.length > 0 ? "0" : "48px 32px" }}>
+                {/* ── Items list ── */}
+                <div style={{ flex: 1, overflowY: "auto", padding: cartItems.length > 0 ? 0 : "48px 32px" }}>
                     {cartItems.length === 0 ? (
                         <div style={{ textAlign: "center" }}>
                             <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
-                                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#cccccc" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                                    <line x1="3" y1="6" x2="21" y2="6" />
-                                    <path d="M16 10a4 4 0 01-8 0" />
+                                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+                                    <line x1="3" y1="6" x2="21" y2="6"/>
+                                    <path d="M16 10a4 4 0 01-8 0"/>
                                 </svg>
                             </div>
                             <p style={{ fontSize: 18, fontWeight: 700, color: "#aaa", margin: 0 }}>Your cart is empty</p>
                         </div>
                     ) : (
-                        cartItems.map((item, idx) => (
-                            <div
-                                key={`${item.product_id}-${item.color ?? "default"}`}
-                                style={{
-                                    display: "flex", gap: 20,
-                                    padding: "20px 32px",
-                                    borderBottom: idx < cartItems.length - 1 ? "1px solid #f0ede8" : "none",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {/* Image */}
-                                {item.image ? (
-                                    <img src={`/${item.image}`} alt={item.name} style={{ width: 72, height: 72, borderRadius: 10, objectFit: "cover", flexShrink: 0, background: "#f5f3f0" }} />
-                                ) : (
-                                    <div style={{ width: 72, height: 72, borderRadius: 10, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28 }}>🛋️</div>
-                                )}
+                        grouped.map(([productName, variants]) => {
+                            const groupSubtotal     = variants.reduce((s: number, i: CartItem) => s + i.subtotal, 0);
+                            const hasMultipleColors = variants.length > 1;
 
-                                {/* Name + color */}
-                                <div style={{ flex: 1 }}>
-                                    <p style={{ fontSize: 15, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px" }}>{item.name}</p>
-                                    {item.color && (
-                                        <p style={{ fontSize: 12, color: "#888", margin: "0 0 4px" }}>Color: {item.color}</p>
-                                    )}
-                                    <p style={{ fontSize: 14, fontWeight: 600, color: colors.primary, margin: 0 }}>{fmt(item.price)} each</p>
+                            return (
+                                <div key={productName}>
+                                    {/* ── Group header ── */}
+                                    <div style={{
+                                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                                        padding: "10px 32px 8px",
+                                        background: "rgba(107,47,160,0.05)",
+                                        borderTop: "1px solid #f0ede8",
+                                        borderBottom: "1px solid rgba(107,47,160,0.1)",
+                                    }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                            <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: colors.primary }}>
+                                                {productName}
+                                            </span>
+                                            {hasMultipleColors && (
+                                                <span style={{ background: colors.primary, color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>
+                                                    {variants.length} colors
+                                                </span>
+                                            )}
+                                        </div>
+                                        {hasMultipleColors && (
+                                            <span style={{ fontSize: 12, fontWeight: 700, color: colors.primary }}>
+                                                Subtotal: {fmt(groupSubtotal)}
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* ── Variant rows ── */}
+                                    {variants.map((item, idx) => (
+                                        <div
+                                            key={`${item.product_id}-${item.color ?? "none"}`}
+                                            style={{
+                                                display: "flex", gap: 20,
+                                                padding: "16px 32px",
+                                                borderBottom: idx < variants.length - 1 ? "1px solid #f9f7f5" : "none",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            {/* Image */}
+                                            {item.image ? (
+                                                <img
+                                                    src={`/${item.image}`}
+                                                    alt={item.name}
+                                                    style={{ width: 64, height: 64, borderRadius: 10, objectFit: "cover", flexShrink: 0, background: "#f5f3f0" }}
+                                                />
+                                            ) : (
+                                                <div style={{ width: 64, height: 64, borderRadius: 10, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🛋️</div>
+                                            )}
+
+                                            {/* Info */}
+                                            <div style={{ flex: 1 }}>
+                                                {item.color ? (
+                                                    <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px", display: "flex", alignItems: "center", gap: 6 }}>
+                                                        <span style={{
+                                                            display: "inline-block", width: 12, height: 12, borderRadius: "50%",
+                                                            background: item.color.toLowerCase(),
+                                                            border: "1.5px solid rgba(0,0,0,0.15)",
+                                                            flexShrink: 0,
+                                                        }} />
+                                                        {item.color}
+                                                    </p>
+                                                ) : (
+                                                    <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px" }}>{item.name}</p>
+                                                )}
+                                                <p style={{ fontSize: 13, fontWeight: 600, color: colors.primary, margin: 0 }}>{fmt(item.price)} each</p>
+                                                <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>SKU: {item.sku}</p>
+                                            </div>
+
+                                            {/* Quantity controls */}
+                                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                                <button
+                                                    onClick={() => {
+                                                        if (item.quantity - 1 <= 0) {
+                                                            removeItem(item.product_id, item.color ?? null);
+                                                        } else {
+                                                            updateQty(item.product_id, item.color ?? null, item.quantity - 1);
+                                                        }
+                                                    }}
+                                                    disabled={item.quantity <= 1}
+                                                    style={{
+                                                        width: 32, height: 32, borderRadius: 8,
+                                                        border: `1.5px solid ${item.quantity <= 1 ? "#ddd" : colors.primary}`,
+                                                        background: "#fff",
+                                                        color: item.quantity <= 1 ? "#ddd" : colors.primary,
+                                                        fontSize: 18, fontWeight: 700,
+                                                        cursor: item.quantity <= 1 ? "not-allowed" : "pointer",
+                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                    }}
+                                                >−</button>
+                                                <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
+                                                <button
+                                                    onClick={() => updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
+                                                    style={{
+                                                        width: 32, height: 32, borderRadius: 8,
+                                                        border: `1.5px solid ${colors.primary}`,
+                                                        background: "#fff", color: colors.primary,
+                                                        fontSize: 18, fontWeight: 700, cursor: "pointer",
+                                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                                    }}
+                                                >+</button>
+                                            </div>
+
+                                            {/* Line total */}
+                                            <p style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", minWidth: 90, textAlign: "right", margin: 0 }}>
+                                                {fmt(item.subtotal)}
+                                            </p>
+
+                                            {/* Remove */}
+                                            <button
+                                                onClick={() => setRemoveTarget({ product_id: item.product_id, color: item.color ?? null, name: item.name })}
+                                                style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 4, display: "flex", alignItems: "center" }}
+                                                aria-label={`Remove ${item.name} ${item.color ?? ""}`}
+                                            >
+                                                <TrashIcon />
+                                            </button>
+                                        </div>
+                                    ))}
                                 </div>
-
-                                {/* Quantity controls */}
-                                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                    <button
-                                        onClick={() => {
-                                            if (item.quantity - 1 <= 0) {
-                                                removeItem(item.product_id, item.color ?? null);
-                                            } else {
-                                                updateQty(item.product_id, item.color ?? null, item.quantity - 1);
-                                            }
-                                        }}
-                                        disabled={item.quantity <= 1}
-                                        style={{ width: 32, height: 32, borderRadius: 8, border: `1.5px solid ${item.quantity <= 1 ? '#ddd' : colors.primary}`, background: "#fff", color: item.quantity <= 1 ? '#ddd' : colors.primary, fontSize: 18, fontWeight: 700, cursor: item.quantity <= 1 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                                    >−</button>
-                                    <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
-                                    <button
-                                        onClick={() => updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
-                                        style={{ width: 32, height: 32, borderRadius: 8, border: `1.5px solid ${colors.primary}`, background: "#fff", color: colors.primary, fontSize: 18, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
-                                    >+</button>
-                                </div>
-
-                                {/* Line total */}
-                                <p style={{ fontSize: 16, fontWeight: 800, color: "#1a1a1a", minWidth: 90, textAlign: "right", margin: 0 }}>
-                                    {fmt(item.subtotal)}
-                                </p>
-
-                                {/* Remove */}
-                                <button
-                                    onClick={() => removeItem(item.product_id, item.color ?? null)}
-                                    style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", fontSize: 20, padding: 4, display: "flex", alignItems: "center" }}
-                                    aria-label="Remove item"
-                                >
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
 
-                {/* Footer */}
+                {/* ── Footer ── */}
                 {cartItems.length > 0 && (
                     <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 32px", background: "#faf9f7", flexShrink: 0 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div>
                                 <p style={{ fontSize: 12, color: "#999", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
                                 <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(totalPrice)}</p>
@@ -223,16 +298,31 @@ export function CartSummaryModal({open, onClose, onPlaceOrder }: CartSummaryModa
                     </div>
                 )}
             </div>
-            <ConfirmActionModal
-                open={clearConfirmOpen}
-                title="Clear Cart"
-                message="Remove all items from your cart?"
-                confirmLabel="Yes, Clear"
-                cancelLabel="Keep Items"
-                confirmTone="danger"
-                onConfirm={handleClearAll}
-                onClose={() => setClearConfirmOpen(false)}
-            />
         </div>
+
+        {/* ── Clear All confirmation ── */}
+        <ConfirmActionModal
+            open={clearConfirmOpen}
+            title="Clear Cart"
+            message="Are you sure you want to remove all items from your cart?"
+            confirmLabel="Yes, Clear All"
+            cancelLabel="Cancel"
+            confirmTone="danger"
+            onConfirm={clearCart}
+            onClose={() => setClearConfirmOpen(false)}
+        />
+
+        {/* ── Remove item confirmation ── */}
+        <ConfirmActionModal
+            open={removeTarget !== null}
+            title="Remove Item"
+            message={`Remove ${removeTarget?.name}${removeTarget?.color ? ` (${removeTarget.color})` : ""} from your cart?`}
+            confirmLabel="Yes, Remove"
+            cancelLabel="Cancel"
+            confirmTone="danger"
+            onConfirm={() => removeItem(removeTarget!.product_id, removeTarget!.color)}
+            onClose={() => setRemoveTarget(null)}
+        />
+        </>
     );
 }
