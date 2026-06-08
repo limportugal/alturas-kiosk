@@ -13,7 +13,7 @@ export interface Cart {
   id: number;
   cart_number: string;
   cart_items: CartItem[];
-  status: 'active' | 'confirmed' | 'cancelled';
+  status: 'active' | 'inactive' | 'confirmed';
   created_at?: string;
   updated_at?: string;
 }

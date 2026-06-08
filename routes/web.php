@@ -28,6 +28,7 @@ Route::get('/kiosk/cart/active', [CartController::class, 'getActiveCart'])->name
 Route::post('/kiosk/cart', [CartController::class, 'store'])->name('cart.store');
 Route::put('/kiosk/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::put('/kiosk/cart/{id}/confirm', [CartController::class, 'confirm'])->name('cart.confirm');
+Route::put('/kiosk/cart/{id}/deactivate', [CartController::class, 'deactivate'])->name('cart.deactivate');
 
 
 Route::get('/welcome', function () {

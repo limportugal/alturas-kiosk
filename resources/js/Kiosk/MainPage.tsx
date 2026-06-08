@@ -9,6 +9,7 @@ import HomeCategoryScreen from "@/Kiosk/pages/HomeCategoryScreen";
 
 import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
+import { CartSummaryModal } from "@/Kiosk/modals/CartSummaryModal";
 
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
@@ -26,6 +27,7 @@ export default function MainPage() {
   const [orderProduct, setOrderProduct]   = useState<ProductItem | null>(null);
   const [orderColor, setOrderColor]             = useState<string>("");
   const [showConfirm, setShowConfirm]           = useState(false);
+  const [summaryOpen, setSummaryOpen]           = useState(false);
 
   const activeCategory = CATEGORIES.find(
     (c) => c.label.toLowerCase() === (activeCategoryName ?? "").toLowerCase()
@@ -48,12 +50,16 @@ export default function MainPage() {
     setActiveProduct(null);
     setOrderProduct(null);
     setShowConfirm(false);
+    setSummaryOpen(false);
   };
 
   return (
     <div style={{ position: "relative", width: 1080, height: 1920, overflow: "hidden" }}>
       {screen === "home" && (
-        <HomeCategoryScreen onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }} />
+        <HomeCategoryScreen
+          onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }}
+          onViewOrder={() => setSummaryOpen(true)}
+        />
       )}
       {screen === "category" && activeCategory && (
         <SubCategoryScreen
@@ -61,6 +67,7 @@ export default function MainPage() {
           categoryId={activeCategoryId ?? ""}
           onBack={goHome}
           onSubSelect={(subId) => { setActiveSubId(subId); setScreen("subcategory"); }}
+          onViewOrder={() => setSummaryOpen(true)}
         />
       )}
       {screen === "subcategory" && activeCategory && activeSubId && (
@@ -72,18 +79,16 @@ export default function MainPage() {
           onProduct={(p) => { setActiveProduct(p); setScreen("product"); }}
           onHome={goHome}
           varId=""
+          onViewOrder={() => setSummaryOpen(true)}
         />
       )}
       {screen === "product" && activeCategory && activeSubId && activeProduct && (
         <ProductDetailScreen
           product={activeProduct}
           subName={activeSubCategory}
-          // variantionType={activeVariationType}
-          // category={activeCategory}
-          // subId={activeSubId}
           onBack={() => setScreen("subcategory")}
           onHome={goHome}
-          onOrder={(p, color) => { setOrderProduct(p); setOrderColor(color); }}
+          onViewOrder={() => setSummaryOpen(true)}
         />
       )}
 
@@ -96,6 +101,7 @@ export default function MainPage() {
         />
       )}
       {showConfirm && <ConfirmationModal onClose={goHome} />}
+      <CartSummaryModal open={summaryOpen} onClose={() => setSummaryOpen(false)} />
     </div>
   );
 }

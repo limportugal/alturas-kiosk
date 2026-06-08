@@ -10,10 +10,24 @@ class CartStoreService
     public function store(array $data): array
     {
         return DB::transaction(function () use ($data) {
-            $cartNumber = $this->generateCartNumber();
+
+            // Reuse the most recent inactive cart instead of creating a new one
+            $existing = CartModel::where('status', 'inactive')->latest()->first();
+
+            if ($existing) {
+                $existing->update([
+                    'cart_items' => $data['cart_items'],
+                    'status'     => 'active',
+                ]);
+
+                return [
+                    'message' => 'Cart reactivated',
+                    'data'    => $existing->fresh(),
+                ];
+            }
 
             $cart = CartModel::create([
-                'cart_number' => $cartNumber,
+                'cart_number' => $this->generateCartNumber(),
                 'cart_items'  => $data['cart_items'],
                 'status'      => 'active',
             ]);
@@ -27,12 +41,10 @@ class CartStoreService
 
     private function generateCartNumber(): string
     {
-        $today = now()->format('Ymd');
+        $today  = now()->format('Ymd');
         $prefix = 'CART-' . $today . '-';
+        $count  = CartModel::whereDate('created_at', now()->toDateString())->count();
 
-        $count = CartModel::whereDate('created_at', now()->toDateString())->count();
-        $sequence = str_pad($count + 1, 4, '0', STR_PAD_LEFT);
-
-        return $prefix . $sequence;
+        return $prefix . str_pad($count + 1, 4, '0', STR_PAD_LEFT);
     }
 }

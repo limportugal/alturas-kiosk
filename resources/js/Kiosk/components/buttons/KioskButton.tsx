@@ -26,7 +26,7 @@ export function KioskButton({
         ...style,
       }}
     >
-      {children}
+      {children} 
     </button>
   );
 }

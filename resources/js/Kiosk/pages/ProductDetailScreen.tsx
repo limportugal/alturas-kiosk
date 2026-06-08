@@ -10,38 +10,34 @@ import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 
 import { ProductItem} from "@/Kiosk-Admin/types/product-type";
-import { VariationList } from "@/Kiosk-Admin/types/variation-types";
 
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
+
+import { ConfirmOrderModal } from "@/Kiosk/modals/ConfirmOrderModal";
+import { CartIcon } from "@/Kiosk/components/CartIcon";
 
 import { useCart } from "@/Kiosk/hooks/useCart";
 
 export default function ProductDetailScreen({
   product,
-  // category,
-  // subId,
-  subName,
   onBack,
   onHome,
-  onOrder,
+  onViewOrder,
 }: {
   product: ProductItem;
-  subName?: { id: number; name: string; image_path?: string | null } | null
-  categoryName?: Category; 
-  variantionType?:VariationList;
-
-  onBack: () => void; 
+  subName?: { id: number; name: string; image_path?: string | null } | null;
+  onBack: () => void;
   onHome: () => void;
-  onOrder: (product: ProductItem, color: string, qty: number) => void;
+  onViewOrder: () => void;
 }) {
     const { data: variationsData } = useDynamicQuery(
     ["variations-public-list"],
     ProductVariationsPublicServices
   );
   
-  const [activeProduct, setActiveProduct] = useState<ProductItem | null>(product);
-  const [activeImg, setActiveImg]     = useState(0);
-  const [activeColor, setActiveColor] = useState(-1);
+  const [activeImg, setActiveImg]         = useState(0);
+  const [activeColor, setActiveColor]     = useState(-1);
+  const [cartModalOpen, setCartModalOpen] = useState(false);
 
   const variants = product.color_variants ?? [];
 
@@ -61,38 +57,37 @@ export default function ProductDetailScreen({
 
 
   const activeVariationType = variationsData?.data?.find(
-    (v) => v.id === activeProduct?.variation_type_id
+    (v) => v.id === product.variation_type_id
   ) ?? null;
 
 
   const mainDisplayImage = selectVariantImage ?? selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
 
-  const { addItem, cartItems, getTotalAmount } = useCart();
-   
+  const { addItem } = useCart();
 
   const handleColorSelect = (i: number) => {
     setActiveColor(i);
   };
 
 
-  const handleOrder = (qty: number) => {
-  addItem({
-    product_id: product.id,
-    name:       product.name,
-    sku:        product.sku,
-    price:      Number(product.price),
-    quantity:   qty,
-    color:      variants[activeColor]?.color_name ?? null,
-    image:      product.images?.[0]?.image_path ?? null,
-    subtotal:   Number(product.price) * qty,
-  });
-};
-
-
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
-      <PurpleBanner>{(product.category_name ?? "").toUpperCase()}</PurpleBanner>
+        <div style={{ position: "relative"}}>
+      <PurpleBanner>
+        {(activeVariationType?.name ?? "").toUpperCase()}
+      </PurpleBanner>
+        <KioskButton 
+                onClick={onBack}  
+                style={{
+                  position: 'absolute',
+                  left: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)", 
+                  }}>
+                    ← BACK
+              </KioskButton>
+      </div>
       <MainMenuBtn onClick={onHome} />
       {/* <div style={{  
           background: "#5a2d82", 
@@ -110,7 +105,7 @@ export default function ProductDetailScreen({
           {subName?.name.toUpperCase() ?? ""}
         </span>
       </div> */}
-        <div style={{ 
+        {/* <div style={{ 
           background: "#5a2d82", 
           padding: "16px 48px", 
           textAlign: "center", 
@@ -125,7 +120,7 @@ export default function ProductDetailScreen({
            >
           {activeVariationType?.name.toUpperCase() ?? ""}
         </span>
-      </div>
+      </div> */}
 
       {/* Image viewer */}
       <div style={{ display: "flex", padding: "28px 48px 0", gap: 24, flexShrink: 0 }}>
@@ -192,15 +187,19 @@ export default function ProductDetailScreen({
 
       {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
-        <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton>
-        <KioskButton onClick={() => {
-          // handleOrder(1); 
-          onOrder(product, variants[activeColor]?.color_name ?? "", 1)
-          }} 
-          style={{ flex: 1 }}
-          >ORDER ITEM
-          </KioskButton>
+        {/* <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton> */}
+        <KioskButton onClick={() => setCartModalOpen(true)}>ADD TO CART</KioskButton>
+          <CartIcon onClick={onViewOrder} />
       </div>
+      
+      <ConfirmOrderModal
+          product={cartModalOpen ? product : null}
+          selectedColor={variants[activeColor]?.color_name ?? null}
+          onClose={() => setCartModalOpen(false)}
+          onConfirmed={onBack}
+        />
+      
     </div>
+    
   );
 }

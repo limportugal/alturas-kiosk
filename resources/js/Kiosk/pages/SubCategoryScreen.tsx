@@ -7,6 +7,7 @@ import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 import { ScrollableGrid } from "@/Kiosk/components/scrollablegrid";
+import { useCartStore } from "@/Kiosk/store/useCartStore";
 
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 
@@ -15,15 +16,18 @@ export default function SubCategoryScreen({
   categoryId,
   onBack,
   onSubSelect,
+  onViewOrder,
 }: {
   category: CategoryData;
   categoryId: string;
   onBack: () => void;
   onSubSelect: (subId: string) => void;
-   
+  onViewOrder: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
   const [pressed, setPressed] = useState<string | null>(null);
+  const cartItems = useCartStore((s) => s.cartItems);
+  const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
    const { data: subCategoriesData } = useDynamicQuery(
     ["sub-category-list"],
@@ -56,18 +60,66 @@ export default function SubCategoryScreen({
       <MainMenuBtn onClick={onBack} />
 
       {/* Hero card */}
-      <div style={{ margin: "32px 48px 0", display: "flex", gap: 32, background: colors.primary, borderRadius: 16, overflow: "hidden", flexShrink: 0 }}>
-        <div style={{ width: 320, flexShrink: 0, position: "relative" }}>
-          <img src={category.image} alt={category.label} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      <div
+        style={{
+          margin: "32px 48px 0",
+          display: "flex",
+          gap: 20,
+          background: colors.primary,
+          borderRadius: 16,
+          overflow: "hidden",
+          flexShrink: 0,
+          height: 200,
+          alignItems: "stretch",
+        }}
+      >
+        <div style={{ width: 300, flexShrink: 0, position: "relative", height: 200 }}>
+          <img
+            src={category.image}
+            alt={category.label}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center center",
+              display: "block",
+            }}
+          />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "rgba(90,45,130,0.85)", padding: "14px 18px" }}>
             <span style={{ color: colors.surface, ...typography.title, letterSpacing: 2 }}>{category.label}</span>
           </div>
         </div>
-        <div style={{ flex: 1, padding: "32px 32px 32px 0", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <p style={{ color: colors.surface, ...typography.hero, margin: "0 0 16px", fontFamily: "Georgia, serif" }}>
+        <div
+          style={{
+            flex: 1,
+            padding: "14px 20px 14px 0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            minWidth: 0,
+          }}
+        >
+          <p
+            style={{
+              color: colors.surface,
+              fontSize: 34,
+              fontWeight: 700,
+              margin: "0 0 10px",
+              fontFamily: "Georgia, serif",
+              lineHeight: 1.1,
+            }}
+          >
             Welcome to the {category.label.toLowerCase()} category!
           </p>
-          <p style={{ color: "rgba(255,255,255,0.88)", ...typography.serifBody, lineHeight: 1.6, margin: 0 }}>
+          <p
+            style={{
+              color: "rgba(255,255,255,0.88)",
+              fontSize: 18,
+              lineHeight: 1.35,
+              margin: 0,
+              overflowWrap: "break-word",
+            }}
+          >
             {category.description}
           </p>
         </div>
@@ -103,7 +155,72 @@ export default function SubCategoryScreen({
           );
         })}
       </ScrollableGrid>
+       {totalCount > 0 && (
+      <div
+        style={{
+          background: "#fff",
+          borderTop: "1px solid #e0dbd5",
+          padding: "24px 48px",
+          flexShrink: 0,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={onViewOrder}
+          style={{
+            position: "relative",
+            background: totalCount > 0 ? "#5a2d82" : "#ccc",
+            border: "none",
+            borderRadius: 12,
+            padding: "20px 32px",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: 12,
+            color: "#fff",
+            fontSize: 20,
+            fontWeight: 700,
+            letterSpacing: 2,
+            fontFamily: "Arial, sans-serif",
+            transition: "background 0.2s ease",
+            flex: 1,
+            justifyContent: "center",
+          }}
+        >
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 01-8 0"/>
+          </svg>
+          VIEW ORDER
+          {totalCount > 0 && (
+            <span
+              style={{
+                position: "absolute",
+                top: -8,
+                right: -8,
+                background: "#ef4444",
+                color: "#fff",
+                borderRadius: "50%",
+                width: 28,
+                height: 28,
+                fontSize: 13,
+                fontWeight: 800,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "2px solid #fff",
+              }}
+            >
+              {totalCount > 99 ? "99+" : totalCount}
+            </span>
+          )}
+        </button>
       </div>
+      )}
+    </div>
 
   );
 }
