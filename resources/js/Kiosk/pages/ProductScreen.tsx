@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CategoryData, Product } from "../types/types";
+import { CategoryData} from "../types/types";
 
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 
@@ -13,8 +13,6 @@ import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategorie
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
-
-import { typography } from "@/Kiosk/utils/typography";
 
 
 export default function ProductScreen({
@@ -68,10 +66,6 @@ export default function ProductScreen({
   }) ?? [];
   const cat = categories_data?.data.find((c) => String(c.id) === subId);
   const subcat = subCategoriesData?.data.find((s) => String(s.id) === subId);
-  const prodVar = variationsData?.data?.find((v) => String(v.id) === varId) ?? [];
-  const products = category.products[subId] ?? [];
-
-  
 
  
   useEffect(() => {
@@ -92,7 +86,7 @@ export default function ProductScreen({
               onClick={onBack}  
               style={{
                  position: 'absolute',
-                 left: 10,
+                 left: -45,
                  top: "50%",
                  transform: "translateY(-50%)", 
                  }}>

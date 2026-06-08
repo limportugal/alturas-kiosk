@@ -72,9 +72,9 @@ export const useCart = () => {
         }
     };
 
-    const removeCartItem = async (product_id: number) => {
+    const removeCartItem = async (product_id: number, color: string | null) => {
         // Update store first, then read fresh state
-        removeItem(product_id);
+        removeItem(product_id, color);
 
         const updatedItems  = getItems();
         const currentCartId = getCartId();
@@ -90,9 +90,9 @@ export const useCart = () => {
         }
     };
 
-    const updateQty = async (product_id: number, quantity: number) => {
+    const updateQty = async (product_id: number, color: string | null, quantity: number) => {
         // Update store first, then read fresh state
-        updateItemQty(product_id, quantity);
+        updateItemQty(product_id, color, quantity);
 
         const updatedItems  = getItems();
         const currentCartId = getCartId();

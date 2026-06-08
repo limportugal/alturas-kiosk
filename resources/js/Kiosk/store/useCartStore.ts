@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { CartItem } from '@/Kiosk/types/cart-types';
 
+const ItemKey = (product_id: number, color?: string | null) =>
+    `${product_id}::${color ?? '__none__'}`;
+
 interface CartStore {
     cartId:     number | null;
     cartNumber: string;
@@ -12,18 +15,18 @@ interface CartStore {
     setCartItems:  (cartItems: CartItem[])  => void;
     setStatus:     (status: string)         => void;
 
-    addItem:       (item: CartItem)                        => void;
-    removeItem:    (product_id: number)                    => void;
-    updateItemQty: (product_id: number, quantity: number)  => void;
-    clearCart:     ()                                      => void;
-    getTotalAmount: ()                                     => number;
+    addItem: (item: CartItem) => void;
+    removeItem: (product_id: number, color: string | null) => void;
+    updateItemQty: (product_id: number, color: string | null, quantity: number) => void;
+    clearCart: () => void;
+    getTotalAmount: () => number;
 }
 
 export const useCartStore = create<CartStore>((set, get) => ({
-    cartId:     null,
+    cartId: null,
     cartNumber: '',
-    cartItems:  [],
-    status:     'active',
+    cartItems: [],
+    status: 'active',
 
     setCartId:     (cartId)     => set((state) => ({ ...state, cartId })),
     setCartNumber: (cartNumber) => set((state) => ({ ...state, cartNumber })),
@@ -32,15 +35,16 @@ export const useCartStore = create<CartStore>((set, get) => ({
 
     addItem: (item) =>
         set((state) => {
+            const key = ItemKey(item.product_id, item.color);
             const existing = state.cartItems.find(
-                (i) => i.product_id === item.product_id
+                (i) => ItemKey(i.product_id, i.color) === key
             );
 
             if (existing) {
                 const newQty = existing.quantity + item.quantity;
                 return {
                     cartItems: state.cartItems.map((i) =>
-                        i.product_id === item.product_id
+                        ItemKey(i.product_id, i.color) === key
                             ? { ...i, quantity: newQty, subtotal: i.price * newQty }
                             : i
                     ),
@@ -50,19 +54,27 @@ export const useCartStore = create<CartStore>((set, get) => ({
             return { cartItems: [...state.cartItems, item] };
         }),
 
-    removeItem: (product_id) =>
-        set((state) => ({
-            cartItems: state.cartItems.filter((i) => i.product_id !== product_id),
-        })),
+    removeItem: (product_id: number, color: string | null) =>
+        set((state) => {
+            const key = ItemKey(product_id, color);
+            return {
+                cartItems: state.cartItems.filter(
+                    (i) => ItemKey(i.product_id, i.color) !== key
+                ),
+            };
+        }),
 
-    updateItemQty: (product_id, quantity) =>
-        set((state) => ({
-            cartItems: state.cartItems.map((i) =>
-                i.product_id === product_id
-                    ? { ...i, quantity, subtotal: i.price * quantity }
-                    : i
-            ),
-        })),
+    updateItemQty: (product_id: number, color: string | null, quantity: number) =>
+        set((state) => {
+            const key = ItemKey(product_id, color);
+            return {
+                cartItems: state.cartItems.map((i) =>
+                    ItemKey(i.product_id, i.color) === key
+                        ? { ...i, quantity, subtotal: i.price * quantity }
+                        : i
+                ),
+            };
+        }),
 
     clearCart: () =>
         set({

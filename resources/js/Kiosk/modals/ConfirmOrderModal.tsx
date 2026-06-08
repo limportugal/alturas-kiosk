@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
+import { Spinner } from "@/Kiosk/components/Spinner";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface ConfirmOrderModalProps {
@@ -21,6 +22,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
 
     const [quantity, setQuantity]   = useState(1);
     const [added, setAdded]         = useState(false);
+    const [loading, setLoading]     = useState(false);
     const [visible, setVisible]     = useState(false);
 
 
@@ -44,6 +46,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
     const subtotal = Number(product.price) * quantity;
 
     const handleAddToCart = async () => {
+        setLoading(true);
         try {
             await addItem({
                 product_id: product.id,
@@ -58,7 +61,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
         } catch {
             // Local cart state is already updated; still close the modal
         }
-
+        setLoading(false);
         setAdded(true);
         setTimeout(() => {
             setVisible(false);
@@ -191,18 +194,26 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                     </div>
                     <button
                         onClick={handleAddToCart}
+                        disabled={added || loading}
                         style={{
                             background: added ? "#22c55e" : colors.primary,
                             color: "#fff", border: "none", borderRadius: 12,
                             padding: "16px 40px", fontSize: 15, fontWeight: 700,
-                            letterSpacing: 1.5, cursor: "pointer",
+                            letterSpacing: 1.5, cursor: added || loading ? "not-allowed" : "pointer",
                             transition: "background 0.25s ease, transform 0.15s ease",
                             transform: added ? "scale(0.97)" : "scale(1)",
+                            opacity: loading ? 0.85 : 1,
                             display: "flex", alignItems: "center", gap: 10,
                         }}
                     >
-                        {added ? "✓ ADDED TO CART" : "CONFIRM ORDER"}
+                        {loading ? (
+                            <>
+                                <Spinner />
+                                ADDING...
+                            </>
+                        ) : added ? "✓ ADDED TO CART" : "ADD TO CART"}
                     </button>
+                    <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
                 </div>
             </div>
         </div>

@@ -81,9 +81,9 @@ export default function ProductDetailScreen({
                 onClick={onBack}  
                 style={{
                   position: 'absolute',
-                  left: 10,
+                  left: -45,
                   top: "50%",
-                  transform: "translateY(-50%)", 
+                  transform: "translateY(-50%)",
                   }}>
                     ← BACK
               </KioskButton>

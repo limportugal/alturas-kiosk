@@ -31,9 +31,9 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
     const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
 
-    const displayImage = product?.color_variants?.find(
-        (v) => v.color_name == selectedColor
-    )?.image_path ?? product?.images?.[0];
+    // const displayImage = product?.color_variants?.find(
+    //     (v) => v.color_name == selectedColor
+    // )?.image_path ?? product?.images?.[0];
 
     useEffect(() => {
         if (open) {
@@ -122,7 +122,7 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                     ) : (
                         cartItems.map((item, idx) => (
                             <div
-                                key={item.product_id}
+                                key={`${item.product_id}-${item.color ?? "default"}`}
                                 style={{
                                     display: "flex", gap: 20,
                                     padding: "20px 32px",
@@ -151,9 +151,9 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                                     <button
                                         onClick={() => {
                                             if (item.quantity - 1 <= 0) {
-                                                removeItem(item.product_id);
+                                                removeItem(item.product_id, item.color ?? null);
                                             } else {
-                                                updateQty(item.product_id, item.quantity - 1);
+                                                updateQty(item.product_id, item.color ?? null, item.quantity - 1);
                                             }
                                         }}
                                         disabled={item.quantity <= 1}
@@ -161,7 +161,7 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
                                     >−</button>
                                     <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
                                     <button
-                                        onClick={() => updateQty(item.product_id, item.quantity + 1)}
+                                        onClick={() => updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
                                         style={{ width: 32, height: 32, borderRadius: 8, border: `1.5px solid ${colors.primary}`, background: "#fff", color: colors.primary, fontSize: 18, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                     >+</button>
                                 </div>
@@ -173,7 +173,7 @@ export function CartSummaryModal({product, selectedColor, open, onClose, onPlace
 
                                 {/* Remove */}
                                 <button
-                                    onClick={() => removeItem(item.product_id)}
+                                    onClick={() => removeItem(item.product_id, item.color ?? null)}
                                     style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", fontSize: 20, padding: 4, display: "flex", alignItems: "center" }}
                                     aria-label="Remove item"
                                 >
