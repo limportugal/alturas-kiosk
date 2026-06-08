@@ -43,10 +43,14 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
 
     const isEmpty = totalCount === 0;
     const isGrayEmpty = isEmpty && grayWhenEmpty;
+    const isDisabled = isEmpty && grayWhenEmpty;
     const background = isGrayEmpty ? "#e8e8e8" : "#5a2d82";
     const foreground = isGrayEmpty ? "#888888" : "#ffffff";
 
     const handleClick = () => {
+        if(isEmpty && grayWhenEmpty) {
+            return;
+        }
         if (onClick) {
             onClick();
             return;
@@ -56,6 +60,7 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
 
     const button = (
         <button
+            disabled={isDisabled}
             onClick={handleClick}
             aria-label={`View cart (${totalCount} items)`}
             style={{
@@ -64,7 +69,8 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
                 border: isGrayEmpty ? "2px solid #cccccc" : "none",
                 borderRadius: 12,
                 padding: "20px 32px",
-                cursor: "pointer",
+                cursor: isDisabled ? "not-allowed" :"pointer",
+                opacity: isDisabled ? 0.7 : 1,
                 display: "flex",
                 alignItems: "center",
                 gap: 12,

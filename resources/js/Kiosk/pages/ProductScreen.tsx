@@ -17,9 +17,7 @@ import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 export default function ProductScreen({
   category,
-  categoryId,
   subId,
-  varId,
   onBack,
   onProduct,
   onHome,
@@ -176,7 +174,7 @@ export default function ProductScreen({
                   {/* <span style={{ fontSize: 16, color: "#777", fontFamily: "Arial, sans-serif" }}>({product.reviewCount})</span> */}
                 </div>
                 <div style={{ marginTop: 10, fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ Available for delivery</div>
-                <div style={{ fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ In stock in Pasay City</div>
+                {/* <div style={{ fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ In stock in Pasay City</div> */}
               </div>
             </button>
           );
@@ -189,11 +187,11 @@ export default function ProductScreen({
       </div>
 
       {/* Back */}
-      <div style={{ background: "#fff", borderTop: "1px solid #e0dbd5", padding: "24px 48px", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* <KioskButton onClick={onBack}>← BACK</KioskButton> */}
+      {/* <div style={{ background: "#fff", borderTop: "1px solid #e0dbd5", padding: "24px 48px", flexShrink: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <KioskButton onClick={onBack}>← BACK</KioskButton>
+      </div> */}
 
-        <CartIcon onClick={onViewOrder} grayWhenEmpty />
-      </div>
+             <CartIcon onClick={onViewOrder} style={{ flex: 1}} hideWhenEmpty />
     </div>
   );
 }
