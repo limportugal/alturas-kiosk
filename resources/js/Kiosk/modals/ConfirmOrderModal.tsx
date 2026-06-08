@@ -49,7 +49,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
     );
 
     const maxQty = selectedVariant 
-        ? Number(selectedVariant.quantity)
+        ? Number(selectedVariant.quantity) || 0
         : product.quantity ?? 99;
 
     const subtotal = Number(product.price) * quantity;
