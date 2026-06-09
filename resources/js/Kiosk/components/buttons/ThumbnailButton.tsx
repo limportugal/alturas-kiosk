@@ -26,7 +26,7 @@ export function ThumbnailButton({
         border: active ? "4px solid #5a2d82" : "2px solid #ddd",
         borderRadius: 8,
         overflow: "hidden",
-        background: colors.background,
+        background: colors.surface,
         cursor: "pointer",
         padding: 0,
         flexShrink: 0,

@@ -160,7 +160,7 @@ export default function ProductDetailScreen({
           ))}
         </div>
         {/* Main image */}
-        <div style={{ flex: 1, background: colors.background, borderRadius: 12, overflow: "hidden", aspectRatio: "1/1" }}>
+        <div style={{ flex: 1, background: colors.surface, borderRadius: 12, overflow: "hidden", aspectRatio: "1/1" }}>
           <img src={mainDisplayImage} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 24, boxSizing: "border-box", transition: "opacity 0.25s ease" }} />
         </div>
       </div>
