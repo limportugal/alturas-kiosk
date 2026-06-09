@@ -55,9 +55,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
     const subtotal = Number(product.price) * quantity;
 
     const handleAddToCart = async () => {
-        setLoading(true);
-        try {
-            await addItem({
+            addItem({
                 product_id: product.id,
                 name:       product.name,
                 sku:        product.sku,
@@ -68,10 +66,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 stock: selectedVariant ? selectedVariant.quantity : product.quantity,
                 subtotal,
             });
-        } catch {
-            // Local cart state is already updated; still close the modal
-        }
-        setLoading(false);
+       
         setAdded(true);
         setTimeout(() => {
             setVisible(false);
