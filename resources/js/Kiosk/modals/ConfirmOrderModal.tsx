@@ -65,6 +65,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 quantity,
                 color:      selectedColor ?? null,
                 image:      displayImage ?? null,
+                stock: selectedVariant ? selectedVariant.quantity : product.quantity,
                 subtotal,
             });
         } catch {

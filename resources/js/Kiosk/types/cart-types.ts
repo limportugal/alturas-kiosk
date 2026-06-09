@@ -7,6 +7,7 @@ export interface CartItem {
   color?: string | null;
   image?: string | null;
   subtotal: number;
+  stock:number;
 }
 
 export interface Cart {

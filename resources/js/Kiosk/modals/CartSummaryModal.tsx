@@ -3,6 +3,7 @@ import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { CartItem } from "@/Kiosk/types/cart-types";
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
@@ -32,6 +33,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
     const [ordered, setOrdered] = useState(false);
     const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
     const [removeTarget, setRemoveTarget] = useState<{ product_id: number; color: string | null; name: string } | null>(null);
+   
 
     const totalCount = cartItems.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
@@ -118,7 +120,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                         </span>
                     </div>
                     <button
-                        onClick={handleClose}
+                        onClick={handleClose} 
                         style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#fff", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
                     >×</button>
                 </div>
@@ -232,7 +234,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                 >−</button>
                                                 <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
                                                 <button
-                                                    onClick={() => updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
+                                                    disabled={item.quantity >= item.stock}
+                                                    onClick={() => item.quantity < item.stock && updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
                                                     style={{
                                                         width: 32, height: 32, borderRadius: 8,
                                                         border: `1.5px solid ${colors.primary}`,
