@@ -38,6 +38,9 @@ export default function OrderModal({
     color:      variants[activeColor]?.color_name ?? null,
     image:      product.images?.[0]?.image_path ?? null,
     subtotal:   Number(product.price) * qty,
+    stock:      variants[activeColor]?.quantity ?? product.quantity,
+
+
   });
 };
 
