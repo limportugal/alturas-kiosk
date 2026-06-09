@@ -16,6 +16,8 @@ import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetPro
 import { ConfirmOrderModal } from "@/Kiosk/modals/ConfirmOrderModal";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 
+import { SoldOutOverlay } from "@/Kiosk/components/Soldout";
+
 import { useCart } from "@/Kiosk/hooks/useCart";
 
 export default function ProductDetailScreen({
@@ -38,12 +40,24 @@ export default function ProductDetailScreen({
   const [activeImg, setActiveImg]         = useState(0);
   const [activeColor, setActiveColor]     = useState(-1);
   const [cartModalOpen, setCartModalOpen] = useState(false);
+  const [userPickedProductImg, setUserPickedProductImg] = useState(false);
 
   const variants = product.color_variants ?? [];
-
   const images = product.images ?? [{image_path: ""}];
 
+  // ── Primary product as a selectable "base" entry ───────────────────────────
+  // activeColor === -1  → primary (product_items) is selected
+  // activeColor >= 0    → a color variant is selected
+  const primarySoldOut = product.quantity <= 0;
 
+  // On modal open, if primary is sold out auto-select first available variant
+  const handleOpenCart = () => {
+    if (activeColor === -1 && primarySoldOut) {
+      const firstAvailable = variants.findIndex((v) => v.quantity > 0);
+      if (firstAvailable >= 0) setActiveColor(firstAvailable);
+    }
+    setCartModalOpen(true);
+  };
 
   const selectVariantImage = activeColor >= 0 && variants[activeColor]?.image_path
         ? `/${variants[activeColor].image_path}`
@@ -61,13 +75,21 @@ export default function ProductDetailScreen({
   ) ?? null;
 
 
-  const mainDisplayImage = selectVariantImage ?? selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
+  const mainDisplayImage = (!userPickedProductImg && selectVariantImage)
+           ? selectVariantImage
+           : selectProductImage ??  "https://placehold.co/600x600?text=No+Image";
 
-  const { addItem } = useCart();
+
 
   const handleColorSelect = (i: number) => {
     setActiveColor(i);
+    setUserPickedProductImg(false);
   };
+
+
+  const displayStock = activeColor >= 0 
+        ? (variants[activeColor]?.quantity ?? product.quantity)
+        : product.quantity; 
 
 
   return (
@@ -131,7 +153,7 @@ export default function ProductDetailScreen({
               key={i}
               image={img.image_path ? `/${img.image_path}` : "/images/placeholder.png"}
               active={activeImg === i}
-              onClick={() => {setActiveImg(i); setActiveColor(-1);}}
+              onClick={() => {setActiveImg(i); setUserPickedProductImg(true); }} //  onClick={() => {setActiveImg(i); setActiveColor(-1);}} auto select default when browsing side images , this only backup if wants to autoselect default
               width={120}
               height={120}
             />
@@ -153,7 +175,7 @@ export default function ProductDetailScreen({
       {/* Details */}
       <div style={{ padding: "24px 48px 0", flexShrink: 0 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
-          {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${product.quantity}`]].map(([label, value], i) => (
+          {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${displayStock}`]].map(([label, value], i) => (
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
               <span style={{ ...typography.productDetailsLabel, color:colors.heading }}>{label} </span>
               <span style={{ ...typography.productDetailsSubLabel, color:colors.heading }}>{value}</span>
@@ -166,20 +188,68 @@ export default function ProductDetailScreen({
         </div>
         <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
           <span style={{ ...typography.productDetailsLabel }}>COLOR VARIANTS: </span>
-          <span style={{ ...typography.productDetailsSubLabel }}>{variants.map((v) => v.color_name).join(" and ")}</span>
-          <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
-            {variants.map((variant, i) => (
-              <ThumbnailButton
-                key={i}
-                image={variant.image_path ? `/${variant.image_path}` : "/images/placeholder.png"}
-                alt={variant.color_name}
-                active={activeColor === i}
-                onClick={() => handleColorSelect(i)}
-                width={100}
-                height={80}
-              />
-            ))}
-          </div>
+          <span style={{ ...typography.productDetailsSubLabel }}>
+            {variants.map((v) => v.color_name).join(" and ")}
+            </span>
+           <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
+
+              {/* ── Primary / base product entry — only show when product has color variants ── */}
+              {variants.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                <SoldOutOverlay soldOut={primarySoldOut} badgePosition="top-right">
+                  <ThumbnailButton
+                    image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
+                    alt="Default"
+                    active={activeColor === -1}
+                    onClick={primarySoldOut ? undefined : () => { setActiveColor(-1); setActiveImg(0); }}
+                    width={100}
+                    height={80}
+                  />
+                </SoldOutOverlay>
+                <span style={{ fontSize: 11, fontWeight: 600, color: primarySoldOut ? "#aaa" : colors.heading, letterSpacing: 0.5 }}>
+                  Default
+                  {primarySoldOut && <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>}
+                </span>
+              </div>
+              )}
+            
+              {variants.map((variant, i) => {
+                // ── Per-variant sold out check ────────────────────────────────
+                const variantSoldOut = variant.quantity <= 0;
+
+                return (
+                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                    {/* SoldOutOverlay wraps only the thumbnail image */}
+                    <SoldOutOverlay
+                      soldOut={variantSoldOut}
+                      badgePosition="top-right"
+                    >
+                      <ThumbnailButton
+                        image={variant.image_path ? `/${variant.image_path}` : "/images/placeholder.png"}
+                        alt={variant.color_name}
+                        active={activeColor === i}
+                        onClick={variantSoldOut ? undefined : () => handleColorSelect(i)}
+                        width={100}
+                        height={80}
+                      />
+                    </SoldOutOverlay>
+
+                    {/* Color name below thumbnail */}
+                    <span style={{
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: variantSoldOut ? "#aaa" : colors.heading,
+                      letterSpacing: 0.5,
+                    }}>
+                      {variant.color_name}
+                      {variantSoldOut && (
+                        <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>
+                      )}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
         </div>
       </div>
 
@@ -188,7 +258,7 @@ export default function ProductDetailScreen({
       {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
         {/* <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton> */}
-        <KioskButton onClick={() => setCartModalOpen(true)}>ADD TO CART</KioskButton>
+        <KioskButton onClick={handleOpenCart}>ADD TO CART</KioskButton>
           <CartIcon onClick={onViewOrder} grayWhenEmpty />
       </div>
       

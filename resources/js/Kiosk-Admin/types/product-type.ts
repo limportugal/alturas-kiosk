@@ -2,7 +2,7 @@ export interface ProductColorVariant {
   id: number;
   product_item_id: number;
   color_name: string;
-  quantity: number | "";
+  quantity: number;
   image_path?: string | null;
 }
 

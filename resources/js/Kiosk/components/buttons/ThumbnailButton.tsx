@@ -13,7 +13,7 @@ export function ThumbnailButton({
   image: string;
   alt?: string;
   active?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   width?: number;
   height?: number;
 }) {

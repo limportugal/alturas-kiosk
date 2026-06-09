@@ -14,6 +14,8 @@ import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetPro
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
+import { SoldOutCard, isSoldOut } from "@/Kiosk/components/Soldout";
+
 
 export default function ProductScreen({
   category,
@@ -140,24 +142,40 @@ export default function ProductScreen({
           const delay = col * 80 + Math.floor(idx / 3) * 100;
           const slideFrom = col === 0 ? "-110%" : col === 2 ? "110%" : "0%";
 
+          // ── Sold out check per product card ──────────────────────────────────
+          // Card disabled only when product.quantity AND every variant.quantity are all 0.
+          const variantQty = product.color_variants?.length
+              ? product.color_variants.map((v) => v.quantity)
+              : undefined;
+
+          const productSoldOut = isSoldOut({
+              productQty: product.quantity,
+              variantQty,
+          });
+
           return (
-            <button
+              // SoldOutCard handles: gray out, overlay, disable click
+            <SoldOutCard
               key={product.id}
+              soldOut={productSoldOut}
               onClick={() => onProduct(product)}
               style={{
+                opacity: mounted ? 1 : 0,
+                transform: mounted ? "translateX(0) scale(1)" : `translateX(${slideFrom})`,
+                transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms, opacity 0.4s ease ${delay}ms`,
+                borderRadius: 12,
+              }}
+            >
+            <div style={{
                 background: "#fff",
                 border: "2px solid #e0dbd5",
                 borderRadius: 12,
                 overflow: "hidden",
-                cursor: "pointer",
                 padding: 0,
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
                 boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-                opacity: mounted ? 1 : 0,
-                transform: mounted ? "translateX(0) scale(1)" : `translateX(${slideFrom})`,
-                transition: `transform 0.5s cubic-bezier(0.22,1,0.36,1) ${delay}ms, opacity 0.4s ease ${delay}ms`,
               }}
             >
               {/* {product.isBestSeller && (
@@ -178,15 +196,45 @@ export default function ProductScreen({
                 {/* <div style={{ fontSize: 18, color: "#555", fontFamily: "Arial, sans-serif", marginTop: 4 }}>{product.subtitle}</div> */}
                 <div style={{ fontSize: 28, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", marginTop: 10 }}>₱{product.price.toLocaleString()}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
-                  {/* <Stars rating={product.rating} size={18} /> */}
-                  {/* <span style={{ fontSize: 16, color: "#777", fontFamily: "Arial, sans-serif" }}>({product.reviewCount})</span> */}
                 </div>
+
+                {/* Color variant swatches — faded + ✕ when that color is sold out */}
+                {product.color_variants && product.color_variants.length > 0 && (
+                    <div style={{ display: "flex", gap: 6, marginTop: 10, flexWrap: "wrap" }}>
+                        {product.color_variants.map((v) => (
+                            <div key={v.id}
+                                title={v.quantity <= 0 ? `${v.color_name} — Sold Out` : v.color_name}
+                                style={{
+                                    position: "relative",
+                                    padding: "2px 8px",
+                                    borderRadius: 20,
+                                    fontSize: 11,
+                                    fontWeight: 700,
+                                    border: "1.5px solid rgba(0,0,0,0.12)",
+                                    background: v.quantity <= 0 ? "#f0f0f0" : "#ede8f5",
+                                    color: v.quantity <= 0 ? "#bbb" : "#5a2d82",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 4,
+                                    opacity: v.quantity <= 0 ? 0.6 : 1,
+                                    textDecoration: v.quantity <= 0 ? "line-through" : "none",
+                                }}
+                            >
+                                {v.quantity <= 0 && <span style={{ fontSize: 9 }}>✕</span>}
+                                {v.color_name}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <div style={{ marginTop: 10, fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ Available for delivery</div>
                 {/* <div style={{ fontSize: 17, color: "#2e7d32", fontFamily: "Arial, sans-serif", fontWeight: 600 }}>✓ In stock in Pasay City</div> */}
-              </div>
-            </button>
+                </div>
+              </div>    
+            </SoldOutCard>
           );
         })}
+        
         {visibleProducts.length === 0 && (
           <div style={{ gridColumn: "1 / -1", textAlign: "center", color: "#aaa", fontSize: 28, padding: "80px 0", fontFamily: "Arial, sans-serif" }}>
             Products coming soon
