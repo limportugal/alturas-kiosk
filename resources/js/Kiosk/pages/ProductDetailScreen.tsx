@@ -188,25 +188,25 @@ export default function ProductDetailScreen({
         </div>
         <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
           <span style={{ ...typography.productDetailsLabel }}>COLOR VARIANTS: </span>
-          <span style={{ ...typography.productDetailsSubLabel }}>
+          {/* <span style={{ ...typography.productDetailsSubLabel }}>
             {variants.map((v) => v.color_name).join(" and ")}
-            </span>
+            </span> */}
            <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
 
               {/* ── Primary / base product entry — only show when product has color variants ── */}
               {variants.length > 0 && (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150 }}>
                 <SoldOutOverlay soldOut={primarySoldOut} badgePosition="top-right">
                   <ThumbnailButton
                     image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
                     alt="Default"
                     active={activeColor === -1}
                     onClick={primarySoldOut ? undefined : () => { setActiveColor(-1); setActiveImg(0); }}
-                    width={100}
-                    height={80}
+                    width={150}
+                    height={100}
                   />
                 </SoldOutOverlay>
-                <span style={{ fontSize: 11, fontWeight: 600, color: primarySoldOut ? "#aaa" : colors.heading, letterSpacing: 0.5 }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: primarySoldOut ? "#aaa" : colors.heading, letterSpacing: 0.5, width: "100%", textAlign: "center", wordBreak: "break-word", lineHeight: 1.4, display: "block" }}>
                   Default
                   {primarySoldOut && <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>}
                 </span>
@@ -218,7 +218,7 @@ export default function ProductDetailScreen({
                 const variantSoldOut = variant.quantity <= 0;
 
                 return (
-                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150 }}>
                     {/* SoldOutOverlay wraps only the thumbnail image */}
                     <SoldOutOverlay
                       soldOut={variantSoldOut}
@@ -229,17 +229,22 @@ export default function ProductDetailScreen({
                         alt={variant.color_name}
                         active={activeColor === i}
                         onClick={variantSoldOut ? undefined : () => handleColorSelect(i)}
-                        width={100}
-                        height={80}
+                        width={150}
+                        height={100}
                       />
                     </SoldOutOverlay>
 
                     {/* Color name below thumbnail */}
                     <span style={{
-                      fontSize: 11,
+                      fontSize: 14,
                       fontWeight: 600,
                       color: variantSoldOut ? "#aaa" : colors.heading,
                       letterSpacing: 0.5,
+                      width: "100%",
+                      textAlign: "center",
+                      wordBreak: "break-word",
+                      lineHeight: 1.4,
+                      display: "block",
                     }}>
                       {variant.color_name}
                       {variantSoldOut && (
