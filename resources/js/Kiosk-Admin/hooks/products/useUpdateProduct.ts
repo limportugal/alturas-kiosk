@@ -122,7 +122,7 @@ export const useUpdateProduct = (product: (ProductItem & { images?: ProductImage
     setExistingVariants((prev) =>
       prev.map((v) =>
         v.id === id
-          ? { ...v, quantity: quantity === "" ? "" : Number(quantity) }
+          ? { ...v, quantity: quantity === "" ? 0 : Number(quantity) }
           : v
       )
     );

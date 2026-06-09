@@ -14,7 +14,7 @@ import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetPro
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
-import { SoldOutCard, isSoldOut } from "@/Kiosk/components/Soldout";
+import { SoldOutCard, isSoldOut } from "@/Kiosk/components/SoldOutState";
 
 
 export default function ProductScreen({

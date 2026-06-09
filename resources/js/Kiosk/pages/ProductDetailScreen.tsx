@@ -16,7 +16,7 @@ import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetPro
 import { ConfirmOrderModal } from "@/Kiosk/modals/ConfirmOrderModal";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 
-import { SoldOutOverlay } from "@/Kiosk/components/Soldout";
+import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
 
 import { useCart } from "@/Kiosk/hooks/useCart";
 
