@@ -25,7 +25,7 @@ export function Badge({
                 borderRadius: "50%",
                 minWidth: 45,
                 height: 45,
-                fontSize: 30,
+                fontSize: 25,
                 fontWeight: 500,
                 display: "flex",
                 alignItems: "center",
