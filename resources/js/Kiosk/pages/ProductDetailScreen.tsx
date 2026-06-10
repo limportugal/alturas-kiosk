@@ -20,6 +20,8 @@ import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
 
 import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 
+import { useCartStore } from "@/Kiosk/store/useCartStore";
+
 export default function ProductDetailScreen({
   product,
   onBack,
@@ -44,11 +46,12 @@ export default function ProductDetailScreen({
 
   const variants = product.color_variants ?? [];
   const images = product.images ?? [{image_path: ""}];
+  const cartItems = useCartStore((s) => s.cartItems);
 
   // ── Live stock via polling ─────────────────────────────────────────────────
   const selectedColor = variants[activeColor]?.color_name ?? null;
 
-  const { productQty, variantQty, isSoldOut: liveSoldOut, isLowStock, stockDropped } = useStockPolling({
+  const { productQty, variantQty, isSoldOut: liveSoldOut, isLowStock } = useStockPolling({
     product_id:         product.id,
     color:              selectedColor,
     initialProductQty:  product.quantity,
@@ -97,9 +100,15 @@ export default function ProductDetailScreen({
     setActiveColor(i);
     setUserPickedProductImg(false);
   };
-
-
   const displayStock = variantQty !== null ? variantQty : (productQty ?? product.quantity);
+
+  const inCartQty = cartItems
+      .filter((i) => i.product_id === product.id && (i.color ?? null) === (selectedColor))
+      .reduce((sum,i) => sum + i.quantity, 0)
+
+  const availableStock = Math.max(0, (displayStock ?? 0) - inCartQty);
+
+
 
 
   return (
@@ -121,7 +130,6 @@ export default function ProductDetailScreen({
               </KioskButton>
       </div>
       <MainMenuBtn onClick={onHome} />
-
       {/* ── Stock dropped warning ── */}
       {/* {stockDropped && (
         <div style={{ background: "#fff3cd", color: "#856404", padding: "10px 48px", fontSize: 13, fontWeight: 600, textAlign: "center", flexShrink: 0 }}>
@@ -192,20 +200,15 @@ export default function ProductDetailScreen({
       {/* Details */}
       <div style={{ padding: "24px 48px 0", flexShrink: 0 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
-          {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${displayStock}`]].map(([label, value], i) => (
+          {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${availableStock}`]].map(([label, value], i) => (
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
               <span style={{ ...typography.productDetailsLabel, color:colors.heading }}>{label} </span>
-              <span style={{ ...typography.productDetailsSubLabel, color:colors.heading }}>{value}</span>
-              {i === 1 && isLowStock && (
-                <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 700, color: "#e65c00" }}>
-                  Low stock
-                </span>
-              )}
-              {i === 1 && liveSoldOut && (
+              <span style={{ ...typography.productDetailsSubLabel, color: i === 1 && availableStock <= 0 ? "#e53e3e" : colors.heading }}>{value}</span>
+              {/* {i === 1 && availableStock <= 0 && (
                 <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 700, color: "#e53e3e" }}>
                   Sold out
                 </span>
-              )}
+              )} */}
             </div>
           ))}
         </div>
@@ -241,8 +244,12 @@ export default function ProductDetailScreen({
               )}
             
               {variants.map((variant, i) => {
-                // ── Per-variant sold out check ────────────────────────────────
-                const variantSoldOut = variant.quantity <= 0;
+                // ── Per-variant sold out check — includes items already in cart ──
+                const variantInCart = cartItems
+                    .filter((ci) => ci.product_id === product.id && (ci.color ?? null) === variant.color_name)
+                    .reduce((sum, ci) => sum + ci.quantity, 0);
+
+                const variantSoldOut = (variant.quantity - variantInCart) <= 0 || variant.quantity <= 0;
 
                 return (
                   <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150 }}>
