@@ -18,7 +18,7 @@ const fmt = (n: number) =>
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed }: ConfirmOrderModalProps) {
-    const { addItem } = useCart();
+    const { addItem, cartItems } = useCart();
 
     const [quantity, setQuantity]   = useState(1);
     const [added, setAdded]         = useState(false);
@@ -48,9 +48,16 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
         (v) => v.color_name == selectedColor
     );
 
-    const maxQty = selectedVariant 
-        ? Number(selectedVariant.quantity) || 0
-        : product.quantity ?? 99;
+    const totalStock = selectedVariant
+        ? Number(selectedVariant.quantity)
+        : (product.quantity ?? 99);
+
+    // Subtract what's already in the cart for this exact product+color combo
+    const alreadyInCart = cartItems.find(
+        (i) => i.product_id === product.id && (i.color ?? null) === (selectedColor ?? null)
+    )?.quantity ?? 0;
+
+    const maxQty = Math.max(0, totalStock - alreadyInCart);
 
     const subtotal = Number(product.price) * quantity;
 
@@ -199,12 +206,12 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                     </div>
                     <button
                         onClick={handleAddToCart}
-                        disabled={added || loading}
+                        disabled={added || loading || maxQty === 0}
                         style={{
-                            background: added ? "#22c55e" : colors.primary,
+                            background: added ? "#22c55e" : maxQty === 0 ? "#aaa" : colors.primary,
                             color: "#fff", border: "none", borderRadius: 12,
                             padding: "16px 40px", fontSize: 15, fontWeight: 700,
-                            letterSpacing: 1.5, cursor: added || loading ? "not-allowed" : "pointer",
+                            letterSpacing: 1.5, cursor: added || loading || maxQty === 0 ? "not-allowed" : "pointer",
                             transition: "background 0.25s ease, transform 0.15s ease",
                             transform: added ? "scale(0.97)" : "scale(1)",
                             opacity: loading ? 0.85 : 1,
@@ -216,7 +223,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                 <Spinner />
                                 ADDING...
                             </>
-                        ) : added ? "✓ ADDED TO CART" : "ADD TO CART"}
+                        ) : added ? "✓ ADDED TO CART" : maxQty === 0 ? "MAX STOCK REACHED" : "ADD TO CART"}
                     </button>
                     <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
                 </div>

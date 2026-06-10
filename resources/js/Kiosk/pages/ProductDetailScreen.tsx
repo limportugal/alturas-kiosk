@@ -9,7 +9,7 @@ import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 
-import { ProductItem} from "@/Kiosk-Admin/types/product-type";
+import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 
@@ -18,7 +18,7 @@ import { CartIcon } from "@/Kiosk/components/CartIcon";
 
 import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
 
-import { useCart } from "@/Kiosk/hooks/useCart";
+import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 
 export default function ProductDetailScreen({
   product,
@@ -45,10 +45,20 @@ export default function ProductDetailScreen({
   const variants = product.color_variants ?? [];
   const images = product.images ?? [{image_path: ""}];
 
+  // ── Live stock via polling ─────────────────────────────────────────────────
+  const selectedColor = variants[activeColor]?.color_name ?? null;
+
+  const { productQty, variantQty, isSoldOut: liveSoldOut, isLowStock, stockDropped } = useStockPolling({
+    product_id: product.id,
+    color:      selectedColor,
+  });
+
   // ── Primary product as a selectable "base" entry ───────────────────────────
   // activeColor === -1  → primary (product_items) is selected
   // activeColor >= 0    → a color variant is selected
-  const primarySoldOut = product.quantity <= 0;
+  const primarySoldOut = activeColor === -1
+    ? (productQty !== null ? productQty <= 0 : product.quantity <= 0)
+    : false;
 
   // On modal open, if primary is sold out auto-select first available variant
   const handleOpenCart = () => {
@@ -87,9 +97,7 @@ export default function ProductDetailScreen({
   };
 
 
-  const displayStock = activeColor >= 0 
-        ? (variants[activeColor]?.quantity ?? product.quantity)
-        : product.quantity; 
+  const displayStock = variantQty !== null ? variantQty : (productQty ?? product.quantity);
 
 
   return (
@@ -111,6 +119,13 @@ export default function ProductDetailScreen({
               </KioskButton>
       </div>
       <MainMenuBtn onClick={onHome} />
+
+      {/* ── Stock dropped warning ── */}
+      {stockDropped && (
+        <div style={{ background: "#fff3cd", color: "#856404", padding: "10px 48px", fontSize: 13, fontWeight: 600, textAlign: "center", flexShrink: 0 }}>
+          ⚠ Stock just updated — please review your selection
+        </div>
+      )}
       {/* <div style={{  
           background: "#5a2d82", 
           padding: "16px 48px", 
@@ -179,6 +194,16 @@ export default function ProductDetailScreen({
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
               <span style={{ ...typography.productDetailsLabel, color:colors.heading }}>{label} </span>
               <span style={{ ...typography.productDetailsSubLabel, color:colors.heading }}>{value}</span>
+              {i === 1 && isLowStock && (
+                <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 700, color: "#e65c00" }}>
+                  Low stock
+                </span>
+              )}
+              {i === 1 && liveSoldOut && (
+                <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 700, color: "#e53e3e" }}>
+                  Sold out
+                </span>
+              )}
             </div>
           ))}
         </div>

@@ -10,6 +10,7 @@ use App\Services\CartServices\CartUpdateService;
 use App\Services\CartServices\CartConfirmService;
 use App\Services\CartServices\CartDeactivateService;
 use App\Services\CartServices\CartGetService;
+use App\Services\CartServices\StockCheckService;
 
 class CartController extends Controller
 {
@@ -67,5 +68,20 @@ class CartController extends Controller
     {
         $cart = $service->getActiveCart();
         return response()->json(['data' => $cart]);
+    }
+
+    public function checkStock(Request $request, StockCheckService $service){
+        
+        $validated = $request->validate([
+        'product_id' => ['required', 'integer'],
+        'color'      => ['nullable', 'string'],
+    ]);
+
+    $result = $service->check(
+        product_id: $validated['product_id'],
+        color:      $validated['color'] ?? null,
+    );
+
+    return response()->json($result);
     }
 }

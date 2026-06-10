@@ -9,7 +9,7 @@ class CartModel extends Model
     protected $table = 'cart';
 
     protected $fillable = [
-        'cart_number',
+        'cart_number', 
         'cart_items',
         'status',
     ];

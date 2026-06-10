@@ -11,7 +11,7 @@ use App\Models\ProductItem\ProductVariations;
 class ProductItemModel extends Model
 {
     protected $table = 'product_items';
-
+ 
     
     protected $fillable = [
         'item_code',

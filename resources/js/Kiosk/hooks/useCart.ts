@@ -8,6 +8,11 @@ import { CartConfirmService }    from '@/Kiosk/services/cart/CartConfirmService'
 import { CartDeactivateService } from '@/Kiosk/services/cart/CartDeactivateService';
 import { GetActiveCartService }  from '@/Kiosk/services/cart/GetActiveCartService';
 
+// ── No StockReserveService / StockReleaseService ──────────────────────────────
+// Stock is NOT reserved on add/remove/update.
+// Stock is only validated on Place Order (backend final check).
+// Stock display is kept fresh via useStockPolling (silent background fetch).
+
 export const useCart = () => {
     const {
         cartId,
@@ -25,7 +30,6 @@ export const useCart = () => {
         getTotalAmount,
     } = useCartStore();
 
-    // Read fresh state from store (avoids stale closure bugs)
     const getItems  = () => useCartStore.getState().cartItems;
     const getCartId = () => useCartStore.getState().cartId;
 
@@ -36,7 +40,7 @@ export const useCart = () => {
                 const response = await GetActiveCartService();
                 const cart = response.data;
 
-                if (cart && cart.cart_items && cart.cart_items.length > 0) {
+                if (cart?.cart_items?.length > 0) {
                     setCartId(cart.id);
                     setCartNumber(cart.cart_number);
                     setCartItems(cart.cart_items);
@@ -47,16 +51,15 @@ export const useCart = () => {
             }
         };
 
-        if (cartId === null) {
-            fetchActiveCart();
-        }
+        if (cartId === null) fetchActiveCart();
     }, []);
 
+    // ── addItem ───────────────────────────────────────────────────────────────
+    // No stock reserve — just update store and sync cart to DB
     const addItem = async (item: CartItem) => {
-        // Update store first, then sync to API in the background
         storeAddItem(item);
 
-        const currentItems = getItems();
+        const currentItems  = getItems();
         const currentCartId = getCartId();
 
         try {
@@ -68,12 +71,13 @@ export const useCart = () => {
                 await CartUpdateService(currentCartId, currentItems);
             }
         } catch {
-            // Keep local cart state; API sync can retry on next action
+            // Keep local cart state
         }
     };
 
+    // ── removeCartItem ────────────────────────────────────────────────────────
+    // No stock release — just remove from store and sync cart to DB
     const removeCartItem = async (product_id: number, color: string | null) => {
-        // Update store first, then read fresh state
         removeItem(product_id, color);
 
         const updatedItems  = getItems();
@@ -81,17 +85,17 @@ export const useCart = () => {
 
         if (currentCartId !== null) {
             if (updatedItems.length === 0) {
-                // Last item removed — deactivate the cart instead of sending empty array
                 await CartDeactivateService(currentCartId);
-                clearCart(); // resets cartId to null → reactivate path on next addItem
+                clearCart();
             } else {
                 await CartUpdateService(currentCartId, updatedItems);
             }
         }
     };
 
+    // ── updateQty ─────────────────────────────────────────────────────────────
+    // No stock reserve/release — just update store and sync cart to DB
     const updateQty = async (product_id: number, color: string | null, quantity: number) => {
-        // Update store first, then read fresh state
         updateItemQty(product_id, color, quantity);
 
         const updatedItems  = getItems();
@@ -102,6 +106,8 @@ export const useCart = () => {
         }
     };
 
+    // ── confirmCart ───────────────────────────────────────────────────────────
+    // Final stock validation happens here on the backend
     const confirmCart = async () => {
         const currentCartId = getCartId();
         if (currentCartId === null) return;
@@ -110,14 +116,14 @@ export const useCart = () => {
         clearCart();
     };
 
+    // ── clearCartWithDB ───────────────────────────────────────────────────────
+    // No stock release needed — stock was never reserved
     const clearCartWithDB = async () => {
         const currentCartId = getCartId();
         if (currentCartId !== null) {
-            // Set status to inactive in DB — keeps the row, clears items
-            // Next addItem will reactivate this same row instead of creating a new one
             await CartDeactivateService(currentCartId);
         }
-        clearCart(); // resets cartId to null in store → triggers reactivate path on next addItem
+        clearCart();
     };
 
     return {
@@ -126,10 +132,10 @@ export const useCart = () => {
         cartItems,
         status,
         addItem,
-        removeItem: removeCartItem,
+        removeItem:  removeCartItem,
         updateQty,
         confirmCart,
-        clearCart: clearCartWithDB,
+        clearCart:   clearCartWithDB,
         getTotalAmount,
     };
 };
