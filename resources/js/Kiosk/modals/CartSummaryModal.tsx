@@ -66,12 +66,16 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
     const handlePlaceOrder = async () => {
         setOrdered(true);
-        try {
-            await confirmCart();
-            onPlaceOrder?.();
-        } catch {
-            // Still close so the user isn't stuck
-        }
+        // try {
+        //     await confirmCart();
+        //     onPlaceOrder?.();
+        // } catch {
+        //     // Still close so the user isn't stuck
+        // }
+
+        confirmCart();
+
+        onPlaceOrder?.();
         setTimeout(handleClose, 1800);
         onClose();
     };
