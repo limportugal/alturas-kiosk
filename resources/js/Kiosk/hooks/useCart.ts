@@ -40,7 +40,7 @@ export const useCart = () => {
                 const response = await GetActiveCartService();
                 const cart = response.data;
 
-                if (cart?.cart_items?.length > 0) {
+                if (cart?.cart_items?.length) {
                     setCartId(cart.id);
                     setCartNumber(cart.cart_number);
                     setCartItems(cart.cart_items);

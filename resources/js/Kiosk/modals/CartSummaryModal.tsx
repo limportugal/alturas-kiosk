@@ -57,7 +57,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
         } else {
             setVisible(false);
         }
-    }, [open]);
+    }, [open]); 
 
     const handleClose = () => {
         setVisible(false);
@@ -73,6 +73,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
             // Still close so the user isn't stuck
         }
         setTimeout(handleClose, 1800);
+        onClose();
     };
 
     if (!open) return null;
