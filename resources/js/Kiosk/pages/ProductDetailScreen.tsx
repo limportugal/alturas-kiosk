@@ -121,11 +121,11 @@ export default function ProductDetailScreen({
       <MainMenuBtn onClick={onHome} />
 
       {/* ── Stock dropped warning ── */}
-      {stockDropped && (
+      {/* {stockDropped && (
         <div style={{ background: "#fff3cd", color: "#856404", padding: "10px 48px", fontSize: 13, fontWeight: 600, textAlign: "center", flexShrink: 0 }}>
           ⚠ Stock just updated — please review your selection
         </div>
-      )}
+      )} */}
       {/* <div style={{  
           background: "#5a2d82", 
           padding: "16px 48px", 
