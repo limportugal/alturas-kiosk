@@ -40,7 +40,7 @@ export function ConfirmActionModal({
     };
 
     const handleConfirm = async () => {
-        await onConfirm();
+        onConfirm();
         handleClose();
     };
 
