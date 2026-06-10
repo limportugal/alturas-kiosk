@@ -49,8 +49,10 @@ export default function ProductDetailScreen({
   const selectedColor = variants[activeColor]?.color_name ?? null;
 
   const { productQty, variantQty, isSoldOut: liveSoldOut, isLowStock, stockDropped } = useStockPolling({
-    product_id: product.id,
-    color:      selectedColor,
+    product_id:         product.id,
+    color:              selectedColor,
+    initialProductQty:  product.quantity,
+    initialVariantQty:  variants.find((v) => v.color_name === selectedColor)?.quantity ?? null,
   });
 
   // ── Primary product as a selectable "base" entry ───────────────────────────

@@ -1,12 +1,14 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import useDynamicQuery from '@/hooks/useDynamicQuery';
 import { StockCheckService, StockCheckResponse } from '@/Kiosk/services/stock/StockCheckService';
 
 const LOW_STOCK_THRESHOLD = 3;
 
 interface UseStockPollingParams {
-    product_id: number;
-    color?:     string | null;
-    enabled?:   boolean;
+    product_id:         number;
+    color?:             string | null;
+    enabled?:           boolean;
+    initialProductQty?: number;       // seed from product prop — instant display
+    initialVariantQty?: number | null; // seed variant qty if known
 }
 
 interface UseStockPollingReturn {
@@ -14,7 +16,7 @@ interface UseStockPollingReturn {
     variantQty:   number | null;
     isSoldOut:    boolean;
     isLowStock:   boolean;
-    stockDropped: boolean; // silent warning — stock decreased since last fetch
+    stockDropped: boolean;
     refresh:      () => void;
 }
 
@@ -22,57 +24,33 @@ export function useStockPolling({
     product_id,
     color,
     enabled = true,
+    initialProductQty,
+    initialVariantQty,
 }: UseStockPollingParams): UseStockPollingReturn {
-    const [data, setData]                 = useState<StockCheckResponse | null>(null);
-    const [stockDropped, setStockDropped] = useState(false);
-    const dropTimerRef                    = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    const fetchStock = useCallback(async () => {
-        try {
-            const result = await StockCheckService(product_id, color);
-
-            setData((prev) => {
-                // ── Detect silent stock drop ──────────────────────────────────
-                const productDropped =
-                    prev !== null && result.product_quantity < prev.product_quantity;
-
-                const variantDropped =
-                    prev !== null &&
-                    result.variant_quantity !== null &&
-                    prev.variant_quantity !== null &&
-                    result.variant_quantity < prev.variant_quantity;
-
-                if (productDropped || variantDropped) {
-                    if (dropTimerRef.current) clearTimeout(dropTimerRef.current);
-                    setStockDropped(true);
-                    dropTimerRef.current = setTimeout(() => setStockDropped(false), 4000);
-                }
-
-                return result;
-            });
-        } catch {
-            // Silently fail — keep showing last known data
+    const { data, refetch } = useDynamicQuery<StockCheckResponse>(
+        ['stock-check', product_id, color ?? 'no_color'],
+        () => StockCheckService(product_id, color),
+        {
+            enabled,
+            staleTime:       1000 * 10,
+            refetchInterval: 1000 * 10,
+            // Seed with known data — shows instantly, no loading flash
+            // Real fetch happens silently in background
+            placeholderData: initialProductQty !== undefined
+                ? {
+                      product_quantity: initialProductQty,
+                      variant_quantity: initialVariantQty ?? null,
+                      is_sold_out: color != null
+                          ? (initialVariantQty ?? 0) <= 0
+                          : initialProductQty <= 0,
+                  }
+                : undefined,
         }
-    }, [product_id, color]);
+    );
 
-    // ── Reset when product changes ────────────────────────────────────────
-    useEffect(() => {
-        setData(null);
-        setStockDropped(false);
-    }, [product_id]);
-
-    // ── Fetch on mount + when product or color changes ────────────────────
-    useEffect(() => {
-        if (!enabled) return;
-        fetchStock();
-        return () => {
-            if (dropTimerRef.current) clearTimeout(dropTimerRef.current);
-        };
-    }, [product_id, color, enabled]);
-
-    // ── Derived values ────────────────────────────────────────────────────
-    const productQty  = data?.product_quantity ?? null;
-    const variantQty  = data?.variant_quantity ?? null;
+    const productQty  = data?.product_quantity ?? initialProductQty ?? null;
+    const variantQty  = data?.variant_quantity ?? initialVariantQty ?? null;
     const isSoldOut   = data?.is_sold_out ?? false;
     const relevantQty = variantQty !== null ? variantQty : productQty;
     const isLowStock  = !isSoldOut && relevantQty !== null && relevantQty <= LOW_STOCK_THRESHOLD;
@@ -82,7 +60,7 @@ export function useStockPolling({
         variantQty,
         isSoldOut,
         isLowStock,
-        stockDropped,
-        refresh: fetchStock,
+        stockDropped: false, // simplified — no manual prev/current comparison
+        refresh: refetch,
     };
 }
