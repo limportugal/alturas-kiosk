@@ -22,7 +22,6 @@ import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
-import { relative } from "node:path";
 
 
 export default function ProductDetailScreen({
@@ -269,7 +268,7 @@ export default function ProductDetailScreen({
                 return (
                   <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative" }}>
                     {/* SoldOutOverlay wraps only the thumbnail image */}
-                    <Badge value={variantInCart} show={variantInCart > 0} />
+                  
                     <SoldOutOverlay
                       soldOut={variantSoldOut}
                       badgePosition="bottom-left"
@@ -283,6 +282,7 @@ export default function ProductDetailScreen({
                         height={100}
                       />
                     </SoldOutOverlay>
+                     <Badge value={variantInCart} show={variantInCart > 0} />
 
                     {/* Color name below thumbnail */}
                     <span style={{
