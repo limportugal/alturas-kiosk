@@ -238,7 +238,7 @@ export default function ProductDetailScreen({
                 </SoldOutOverlay>
                 <span style={{ fontSize: 14, fontWeight: 600, color: primarySoldOut ? "#aaa" : colors.heading, letterSpacing: 0.5, width: "100%", textAlign: "center", wordBreak: "break-word", lineHeight: 1.4, display: "block" }}>
                   Default
-                  {primarySoldOut && <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>}
+                  {/* {primarySoldOut && <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>} */}
                 </span>
               </div>
               )}
@@ -281,9 +281,9 @@ export default function ProductDetailScreen({
                       display: "block",
                     }}>
                       {variant.color_name}
-                      {variantSoldOut && (
+                      {/* {variantSoldOut && (
                         <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>
-                      )}
+                      )} */}
                     </span>
                   </div>
                 );
