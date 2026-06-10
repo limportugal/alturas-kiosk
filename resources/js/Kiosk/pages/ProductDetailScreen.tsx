@@ -240,7 +240,7 @@ export default function ProductDetailScreen({
               {variants.length > 0 && (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative"}}>
                 <Badge value={getCartQty(null)} show={getCartQty(null) > 0} />
-                <SoldOutOverlay soldOut={primarySoldOut} badgePosition="top-right">
+                <SoldOutOverlay soldOut={primarySoldOut} badgePosition="bottom-left">
                   <ThumbnailButton
                     image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
                     alt="Default"
