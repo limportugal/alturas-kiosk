@@ -15,6 +15,8 @@ import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 import { SoldOutCard, isSoldOut } from "@/Kiosk/components/SoldOutState";
+import { useCartStore } from "@/Kiosk/store/useCartStore";
+import { Badge } from "@/Kiosk/components/UI/Badge";
 
 
 export default function ProductScreen({
@@ -28,7 +30,7 @@ export default function ProductScreen({
   category: CategoryData;
   categoryId: string;
   subId: string;
-  varId: string
+  varId: string;
   onBack: () => void;
   onProduct: (product: ProductItem) => void;
   onHome: () => void;
@@ -53,6 +55,10 @@ export default function ProductScreen({
     ["variations-public-list"],
     ProductVariationsPublicServices
   );
+    const cartItems  = useCartStore((s) => s.cartItems);
+
+
+
 
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const [mounted, setMounted]     = useState(false);
@@ -118,7 +124,7 @@ export default function ProductScreen({
         WebkitOverflowScrolling: "touch",
         }}
         >
-        {(variationsData?.data ?? []).map((tab, i) => (
+        {(variationsData?.data ?? []).map((tab, i) => (    
           <ImageCardButton
             key={tab.name}
             image={tab.image_path ? `/${tab.image_path}` : undefined}
@@ -152,9 +158,15 @@ export default function ProductScreen({
               productQty: product.quantity,
               variantQty,
           });
+             const productInCart = cartItems
+              .filter((i) => i.product_id === product.id)
+              .reduce((sum, i) => sum + i.quantity, 0);
+
 
           return (
               // SoldOutCard handles: gray out, overlay, disable click
+            <div style={{ position: "relative"}}>
+          
             <SoldOutCard
               key={product.id}
               soldOut={productSoldOut}
@@ -232,6 +244,8 @@ export default function ProductScreen({
                 </div>
               </div>    
             </SoldOutCard>
+                <Badge value={productInCart} show={productInCart > 0}/>
+            </div>
           );
         })}
         

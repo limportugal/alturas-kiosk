@@ -9,7 +9,11 @@ import { colors } from "@/Kiosk/utils/colors";
 import { ScrollableGrid } from "@/Kiosk/components/scrollablegrid";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 
+import { Badge } from "@/Kiosk/components/UI/Badge";
+import { useCartStore } from "@/Kiosk/store/useCartStore";
+
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
+import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
 export default function SubCategoryScreen({
   category,
@@ -26,11 +30,29 @@ export default function SubCategoryScreen({
 }) {
   const [mounted, setMounted] = useState(false);
   const [pressed, setPressed] = useState<string | null>(null);
-   const { data: subCategoriesData } = useDynamicQuery(
-    ["sub-category-list"],
+
+  const { data: subCategoriesData } = useDynamicQuery(
+    ["sub-category-public-list"],
     SubCategoriesPublicServices
   );
-  
+
+  const { data: publicData } = useDynamicQuery(
+    ["product-list"],
+    ProductPublicServices
+  );
+
+  const cartItems = useCartStore((s) => s.cartItems);
+
+  // Count cart qty for all products belonging to a specific subcategory
+  const getSubCategoryCartQty = (subCategoryId: string) => {
+    const productIds = publicData?.data
+      ?.filter((p) => String(p.sub_category_id) === subCategoryId)
+      .map((p) => p.id) ?? [];
+    return cartItems
+      .filter((i) => productIds.includes(i.product_id))
+      .reduce((sum, i) => sum + i.quantity, 0);
+  };
+
   const visibleSubCategories =
     subCategoriesData?.data?.filter(
       (subCategory) => String(subCategory.item_category_id) === categoryId
@@ -139,8 +161,10 @@ export default function SubCategoryScreen({
                 opacity: mounted ? 1 : 0,
                 transform: tx,
                 transition: tr,
+                position: "relative",
               }}
             >
+          
               <ImageCardButton
                 image={sub.image_path ? `/${sub.image_path}` : undefined}
                 label={sub.name}
@@ -148,6 +172,7 @@ export default function SubCategoryScreen({
                 onClick={() => handlePress(String(sub.id))}
                 imageHeight={300}
               />
+                  <Badge value={getSubCategoryCartQty(String(sub.id))} show={getSubCategoryCartQty(String(sub.id)) > 0} />
             </div>
           );
         })}

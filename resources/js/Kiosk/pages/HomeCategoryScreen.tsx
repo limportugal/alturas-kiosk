@@ -7,6 +7,9 @@ import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
+import { Badge } from "@/Kiosk/components/UI/Badge";
+import { useCartStore } from "@/Kiosk/store/useCartStore";
+import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
 export default function HomeCategoryScreen({
   onSelect,
@@ -19,9 +22,26 @@ export default function HomeCategoryScreen({
   const [pressed, setPressed] = useState<string | null>(null);
 
   const { data: categories_data } = useDynamicQuery(
-    ["category-list"],
+    ["category-public-list"],
     CategoriesPublicServices
   );
+
+  const { data: publicData } = useDynamicQuery(
+    ["product-list"],
+    ProductPublicServices
+  );
+
+  const cartItems = useCartStore((s) => s.cartItems);
+
+  // Count cart qty for all products belonging to a specific category
+  const getCategoryCartQty = (categoryId: string) => {
+    const productIds = publicData?.data
+      ?.filter((p) => String(p.item_category_id) === categoryId)
+      .map((p) => p.id) ?? [];
+    return cartItems
+      .filter((i) => productIds.includes(i.product_id))
+      .reduce((sum, i) => sum + i.quantity, 0);
+  };
 
   useEffect(() => {
     if (!categories_data?.data?.length) return;
@@ -95,8 +115,10 @@ export default function HomeCategoryScreen({
                   opacity: mounted ? 1 : 0,
                   transform: cardTransform,
                   transition: cardTransition,
+                  position: "relative",
                 }}
               >
+               
                 <ImageCardButton
                   image={cat.image_path ? `/${cat.image_path}` : undefined}
                   label={cat.name}
@@ -104,6 +126,7 @@ export default function HomeCategoryScreen({
                   onClick={() => handlePress(String(cat.id), cat.name)}
                   imageHeight={320}
                 />
+                 <Badge value={getCategoryCartQty(String(cat.id))} show={getCategoryCartQty(String(cat.id)) > 0} />
               </div>
             );
           })} 

@@ -21,6 +21,9 @@ import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
 import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 
 import { useCartStore } from "@/Kiosk/store/useCartStore";
+import { Badge } from "@/Kiosk/components/UI/Badge";
+import { relative } from "node:path";
+
 
 export default function ProductDetailScreen({
   product,
@@ -47,6 +50,9 @@ export default function ProductDetailScreen({
   const variants = product.color_variants ?? [];
   const images = product.images ?? [{image_path: ""}];
   const cartItems = useCartStore((s) => s.cartItems);
+
+
+
 
   // ── Live stock via polling ─────────────────────────────────────────────────
   const selectedColor = variants[activeColor]?.color_name ?? null;
@@ -108,7 +114,15 @@ export default function ProductDetailScreen({
 
   const availableStock = Math.max(0, (displayStock ?? 0) - inCartQty);
 
-
+  //  ── Helper to get cart quantity for a specific color ──
+  const getCartQty = (color: string | null) =>
+  cartItems
+    .filter(
+      (i) =>
+        i.product_id === product.id &&
+        (i.color ?? null) === color
+    )
+    .reduce((sum, i) => sum + i.quantity, 0);
 
 
   return (
@@ -225,7 +239,8 @@ export default function ProductDetailScreen({
 
               {/* ── Primary / base product entry — only show when product has color variants ── */}
               {variants.length > 0 && (
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150 }}>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative"}}>
+                <Badge value={getCartQty(null)} show={getCartQty(null) > 0} />
                 <SoldOutOverlay soldOut={primarySoldOut} badgePosition="top-right">
                   <ThumbnailButton
                     image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
@@ -252,11 +267,12 @@ export default function ProductDetailScreen({
                 const variantSoldOut = (variant.quantity - variantInCart) <= 0 || variant.quantity <= 0;
 
                 return (
-                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150 }}>
+                  <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative" }}>
                     {/* SoldOutOverlay wraps only the thumbnail image */}
+                    <Badge value={variantInCart} show={variantInCart > 0} />
                     <SoldOutOverlay
                       soldOut={variantSoldOut}
-                      badgePosition="top-right"
+                      badgePosition="bottom-left"
                     >
                       <ThumbnailButton
                         image={variant.image_path ? `/${variant.image_path}` : "/images/placeholder.png"}

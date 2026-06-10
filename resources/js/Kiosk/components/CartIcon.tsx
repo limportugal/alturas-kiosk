@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { CartSummaryModal } from "@/Kiosk/modals/CartSummaryModal";
 
+import { Badge } from "@/Kiosk/components/UI/Badge";
+
 function CartBagSvg({ color, size = 28 }: { color: string; size?: number }) {
     return (
         <svg
@@ -33,6 +35,7 @@ interface CartIconProps {
 
 export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty = false }: CartIconProps) {
     const cartItems  = useCartStore((s) => s.cartItems);
+    
     const totalCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
     const [open, setOpen] = useState(false);
@@ -86,7 +89,7 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
         >
             <CartBagSvg color={foreground} />
             VIEW ORDER
-            {totalCount > 0 && (
+            {/* {totalCount > 0 && (
                 <span
                     style={{
                         position: "absolute",
@@ -107,7 +110,8 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
                 >
                     {totalCount > 99 ? "99+" : totalCount}
                 </span>
-            )}
+            )} */}
+            <Badge value={totalCount} show={totalCount > 0} />
         </button>
     );
 
