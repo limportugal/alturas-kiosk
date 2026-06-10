@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Product } from "@/Kiosk/types/types";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 
@@ -22,7 +21,7 @@ export default function OrderModal({
   const [qty, setQty] = useState(1);
   const total = product.price * qty;
 
-  const { addItem, cartItems, getTotalAmount } = useCart();
+  const { addItem } = useCart();
 
   const variants = product.color_variants ?? [];
   const [activeColor, setActiveColor] = useState(0);

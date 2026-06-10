@@ -13,6 +13,9 @@ import { CartSummaryModal } from "@/Kiosk/modals/CartSummaryModal";
 
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
+import { CategoriesPublicServices } from "@/Kiosk/services/category/GetCategoriesListServices";
+import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
+import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 
@@ -33,10 +36,15 @@ export default function MainPage() {
     (c) => c.label.toLowerCase() === (activeCategoryName ?? "").toLowerCase()
   ) ?? null;
 
+  // ── Prefetch all data on mount so child screens load instantly ──────────────
   const { data: subCategoriesData } = useDynamicQuery(
     ["sub-category-public-list"],
     SubCategoriesPublicServices
   );
+  // These results are cached — child screens reuse them without re-fetching
+  useDynamicQuery(["category-public-list"],    CategoriesPublicServices);
+  useDynamicQuery(["product-list"],            ProductPublicServices);
+  useDynamicQuery(["variations-public-list"],  ProductVariationsPublicServices);
 
   const activeSubCategory = subCategoriesData?.data?.find(
     (s) => String(s.id) === activeSubId
