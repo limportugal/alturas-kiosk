@@ -59,6 +59,13 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
         }
     }, [open]); 
 
+
+    useEffect(() => {
+        if (open && cartItems.length === 0) {
+            handleClose();
+        }
+    }, [cartItems.length, open]);
+
     const handleClose = () => {
         setVisible(false);
         setTimeout(onClose, 300);
