@@ -5,6 +5,7 @@ interface SoldOutOverlayProps {
     soldOut: boolean;
     badgePosition?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
     style?: CSSProperties;
+    onClick?: () => void;
 }
 
 const BADGE_POS: Record<NonNullable<SoldOutOverlayProps["badgePosition"]>, CSSProperties> = {
@@ -39,6 +40,7 @@ export function SoldOutOverlay({
     soldOut,
     badgePosition = "top-left",
     style,
+    onClick,
 }: SoldOutOverlayProps) {
     if (!soldOut) return <>{children}</>;
 
@@ -49,11 +51,13 @@ export function SoldOutOverlay({
             </div>
 
             <div
+                onClick={onClick}
                 style={{
                     position: "absolute",
                     inset: 0,
                     background: "rgba(0,0,0,0.18)",
                     borderRadius: "inherit",
+                    cursor: onClick ? "pointer" : "default",
                 }}
             />
 

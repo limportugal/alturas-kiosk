@@ -7,21 +7,25 @@ export function KioskButton({
   onClick,
   children,
   style,
+  disabled = false,
 }: {
   onClick: () => void;
   children: ReactNode;
   style?: CSSProperties;
+  disabled?: boolean;
 }) {
   return (
     <button
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
       style={{
-        background: colors.primary,
+        background: disabled ? "#b0a0c0" : colors.primary,
         border: "none",
         borderRadius: 8,
         padding: "26px 60px",
         color: colors.surface,
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.6 : 1,
         ...typography.button,
         ...style,
       }}

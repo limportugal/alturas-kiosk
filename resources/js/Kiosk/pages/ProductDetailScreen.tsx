@@ -131,6 +131,16 @@ export default function ProductDetailScreen({
 
       const primarySoldOut = primaryAvailable <= 0;
 
+  // ── Is the currently active selection sold out? ────────────────────────────
+  const isSelectedSoldOut = activeColor === -1
+    ? primarySoldOut
+    : (() => {
+        const v = variants[activeColor];
+        if (!v) return false;
+        const inCart = getCartQty(v.color_name);
+        return (v.quantity - inCart) <= 0 || v.quantity <= 0;
+      })();
+
 
   return (
     <div style={KIOSK_STYLE}>
@@ -254,12 +264,12 @@ export default function ProductDetailScreen({
               {/* {variants.length > 0 && ( )} this code is for displaying default product when has color variants */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative"}}>
               
-                <SoldOutOverlay soldOut={primarySoldOut} badgePosition="bottom-left">
+                <SoldOutOverlay soldOut={primarySoldOut} badgePosition="bottom-left" onClick={() => { setActiveColor(-1); setActiveImg(0); }}>
                   <ThumbnailButton
                     image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
                     alt="Default"
                     active={activeColor === -1}
-                    onClick={primarySoldOut ? undefined : () => { setActiveColor(-1); setActiveImg(0); }}
+                    onClick={() => { setActiveColor(-1); setActiveImg(0); }}
                     width={150}
                     height={100}
                   />
@@ -287,12 +297,13 @@ export default function ProductDetailScreen({
                     <SoldOutOverlay
                       soldOut={variantSoldOut}
                       badgePosition="bottom-left"
+                      onClick={() => handleColorSelect(i)}
                     >
                       <ThumbnailButton
                         image={variant.image_path ? `/${variant.image_path}` : "/images/placeholder.png"}
                         alt={variant.color_name}
                         active={activeColor === i}
-                        onClick={variantSoldOut ? undefined : () => handleColorSelect(i)}
+                        onClick={() => handleColorSelect(i)}
                         width={150}
                         height={100}
                       />
@@ -328,7 +339,7 @@ export default function ProductDetailScreen({
       {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
         {/* <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton> */}
-        <KioskButton onClick={handleOpenCart}>ADD TO CART</KioskButton>
+        <KioskButton onClick={handleOpenCart} disabled={isSelectedSoldOut}>ADD TO CART</KioskButton>
           <CartIcon onClick={onViewOrder} grayWhenEmpty />
       </div>
       
