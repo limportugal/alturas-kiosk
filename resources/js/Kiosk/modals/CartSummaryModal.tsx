@@ -3,7 +3,6 @@ import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { CartItem } from "@/Kiosk/types/cart-types";
-import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
@@ -85,6 +84,18 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
         onPlaceOrder?.();
         setTimeout(handleClose, 1800);
         onClose();
+    };
+
+    const handleIncrease = (item: CartItem) => {
+        if (typeof item.stock !== "number") {
+            return;
+        }
+
+        if (item.quantity >= item.stock) {
+            return;
+        }
+
+        void updateQty(item.product_id, item.color ?? null, item.quantity + 1);
     };
 
     if (!open) return null;
@@ -184,6 +195,10 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
                                     {/* ── Variant rows ── */}
                                     {variants.map((item, idx) => (
+                                        (() => {
+                                            const canIncrease = item.stock == null || item.quantity < item.stock;
+
+                                            return (
                                         <div
                                             key={`${item.product_id}-${item.color ?? "none"}`}
                                             style={{
@@ -246,13 +261,13 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                 >−</button>
                                                 <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
                                                 <button
-                                                    disabled={item.quantity >= item.stock}
-                                                    onClick={() => item.quantity < item.stock && updateQty(item.product_id, item.color ?? null, item.quantity + 1)}
+                                                    disabled={!canIncrease}
+                                                    onClick={() => canIncrease && handleIncrease(item)}
                                                     style={{
                                                         width: 32, height: 32, borderRadius: 8,
-                                                        border: `1.5px solid ${colors.primary}`,
-                                                        background: "#fff", color: colors.primary,
-                                                        fontSize: 18, fontWeight: 700, cursor: "pointer",
+                                                        border: `1.5px solid ${canIncrease ? colors.primary : "#ddd"}`,
+                                                        background: "#fff", color: canIncrease ? colors.primary : "#ddd",
+                                                        fontSize: 18, fontWeight: 700, cursor: canIncrease ? "pointer" : "not-allowed",
                                                         display: "flex", alignItems: "center", justifyContent: "center",
                                                     }}
                                                 >+</button>
@@ -272,6 +287,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                 <TrashIcon />
                                             </button>
                                         </div>
+                                            );
+                                        })()
                                     ))}
                                 </div>
                             );

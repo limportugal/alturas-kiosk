@@ -66,9 +66,7 @@ export default function ProductDetailScreen({
   // ── Primary product as a selectable "base" entry ───────────────────────────
   // activeColor === -1  → primary (product_items) is selected
   // activeColor >= 0    → a color variant is selected
-  const primarySoldOut = activeColor === -1
-    ? (productQty !== null ? productQty <= 0 : product.quantity <= 0)
-    : false;
+
 
   // On modal open, if primary is sold out auto-select first available variant
   const handleOpenCart = () => {
@@ -113,6 +111,8 @@ export default function ProductDetailScreen({
 
   const availableStock = Math.max(0, (displayStock ?? 0) - inCartQty);
 
+  
+
   //  ── Helper to get cart quantity for a specific color ──
   const getCartQty = (color: string | null) =>
   cartItems
@@ -122,6 +122,12 @@ export default function ProductDetailScreen({
         (i.color ?? null) === color
     )
     .reduce((sum, i) => sum + i.quantity, 0);
+
+    const primaryInCart = getCartQty(null);
+
+    const primaryAvailable = Math.max(0,(productQty ?? product.quantity) - primaryInCart);
+
+      const primarySoldOut = primaryAvailable <= 0;
 
 
   return (
@@ -237,9 +243,9 @@ export default function ProductDetailScreen({
            <div style={{ display: "flex", gap: 16, marginTop: 16 }}>
 
               {/* ── Primary / base product entry — only show when product has color variants ── */}
-              {variants.length > 0 && (
+              {/* {variants.length > 0 && ( )} this code is for displaying default product when has color variants */}
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6, width: 150, position: "relative"}}>
-                <Badge value={getCartQty(null)} show={getCartQty(null) > 0} />
+              
                 <SoldOutOverlay soldOut={primarySoldOut} badgePosition="bottom-left">
                   <ThumbnailButton
                     image={images[0]?.image_path ? `/${images[0].image_path}` : "/images/placeholder.png"}
@@ -250,12 +256,13 @@ export default function ProductDetailScreen({
                     height={100}
                   />
                 </SoldOutOverlay>
+                  <Badge value={getCartQty(null)} show={getCartQty(null) > 0} />
                 <span style={{ fontSize: 14, fontWeight: 600, color: primarySoldOut ? "#aaa" : colors.heading, letterSpacing: 0.5, width: "100%", textAlign: "center", wordBreak: "break-word", lineHeight: 1.4, display: "block" }}>
                   Default
                   {/* {primarySoldOut && <span style={{ color: "#e53e3e", marginLeft: 4, fontSize: 10 }}>• Sold out</span>} */}
                 </span>
               </div>
-              )}
+             
             
               {variants.map((variant, i) => {
                 // ── Per-variant sold out check — includes items already in cart ──

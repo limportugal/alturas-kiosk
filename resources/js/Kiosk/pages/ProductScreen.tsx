@@ -165,7 +165,10 @@ export default function ProductScreen({
 
           return (
               // SoldOutCard handles: gray out, overlay, disable click
-            <div style={{ position: "relative"}}>
+            <div 
+              key={product.id}  
+              style={{ position: "relative"}}
+            >
           
             <SoldOutCard
               key={product.id}

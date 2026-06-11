@@ -7,6 +7,7 @@ import { CartUpdateService }     from '@/Kiosk/services/cart/CartUpdateService';
 import { CartConfirmService }    from '@/Kiosk/services/cart/CartConfirmService';
 import { CartDeactivateService } from '@/Kiosk/services/cart/CartDeactivateService';
 import { GetActiveCartService }  from '@/Kiosk/services/cart/GetActiveCartService';
+import { StockCheckService }     from '@/Kiosk/services/stock/StockCheckService';
 
 // ── No StockReserveService / StockReleaseService ──────────────────────────────
 // Stock is NOT reserved on add/remove/update.
@@ -41,9 +42,29 @@ export const useCart = () => {
                 const cart = response.data;
 
                 if (cart?.cart_items?.length) {
+                    const cartItemsWithStock = await Promise.all(
+                        cart.cart_items.map(async (item) => {
+                            try {
+                                const stock = await StockCheckService(
+                                    item.product_id,
+                                    item.color ?? null
+                                );
+
+                                return {
+                                    ...item,
+                                    stock: item.color
+                                        ? (stock.variant_quantity ?? stock.product_quantity)
+                                        : stock.product_quantity,
+                                };
+                            } catch {
+                                return item;
+                            }
+                        })
+                    );
+
                     setCartId(cart.id);
                     setCartNumber(cart.cart_number);
-                    setCartItems(cart.cart_items);
+                    setCartItems(cartItemsWithStock);
                     setStatus(cart.status);
                 }
             } catch {
