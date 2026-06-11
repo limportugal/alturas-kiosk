@@ -25,6 +25,8 @@ import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
 
+import { formatMoney } from "@/Kiosk/components/shared"
+
 
 export default function ProductDetailScreen({
   product,
@@ -237,7 +239,7 @@ export default function ProductDetailScreen({
       {/* Details */}
       <div style={{ padding: "24px 48px 0", flexShrink: 0 }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, overflow: "hidden" }}>
-          {[["PRICE:", `₱${product.price.toLocaleString()}.00`], ["STOCK:", `${availableStock}`]].map(([label, value], i) => (
+          {[["PRICE:", formatMoney(product.price)], ["STOCK:", `${availableStock}`]].map(([label, value], i) => (
             <div key={i} style={{ padding: "24px 28px", borderRight: i === 0 ? "2px solid #e0dbd5" : "none" }}>
               <span style={{ ...typography.productDetailsLabel, color:colors.heading }}>{label} </span>
               <span style={{ ...typography.productDetailsSubLabel, color: i === 1 && availableStock <= 0 ? "#e53e3e" : colors.heading }}>{value}</span>

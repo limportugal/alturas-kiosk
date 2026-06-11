@@ -3,6 +3,7 @@ import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 import { Spinner } from "@/Kiosk/components/Spinner";
+import { formatMoney } from "@/Kiosk/components/shared";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface ConfirmOrderModalProps {
@@ -11,10 +12,6 @@ interface ConfirmOrderModalProps {
     onClose: () => void;
     onConfirmed?: () => void;
 }
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-const fmt = (n: number) =>
-    "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: 2 });
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed }: ConfirmOrderModalProps) {
@@ -138,7 +135,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
                         <div>
                             <p style={{ fontSize: 22, fontWeight: 700, color: "#1a1a1a", margin: "0 0 6px" }}>{product.name}</p>
-                            <p style={{ fontSize: 26, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(Number(product.price))}</p>
+                            <p style={{ fontSize: 26, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(Number(product.price))}</p>
                         </div>
 
                         {product.item_description && (
@@ -202,7 +199,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 <div style={{ borderTop: "1px solid #f0ede8", padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#faf9f7" }}>
                     <div>
                         <p style={{ fontSize: 14, color: "#5f5f5fff", fontWeight: 900, margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
-                        <p style={{ fontSize: 28, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(subtotal)}</p>
+                        <p style={{ fontSize: 28, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(subtotal)}</p>
                     </div>
                     <button
                         onClick={handleAddToCart}

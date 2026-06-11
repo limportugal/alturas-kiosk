@@ -75,3 +75,11 @@ export const KIOSK_STYLE: React.CSSProperties = {
   overflow: "hidden",
   position: "relative",
 };
+
+
+export const formatMoney = (amount:number | string) => 
+    new Intl.NumberFormat("en-PH", {
+      style: "currency",
+      currency: "PHP",
+    }).format(Number(amount))
+ 

@@ -20,6 +20,8 @@ import { SoldOutCard, isSoldOut } from "@/Kiosk/components/SoldOutState";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
 
+import { formatMoney } from "@/Kiosk/components/shared"
+
 
 export default function ProductScreen({
   category,
@@ -216,7 +218,7 @@ export default function ProductScreen({
               <div style={{ padding: "16px 18px 20px", flex: 1 }}>
                 <div style={{ fontSize: 22, fontWeight: 800, color: "#111", fontFamily: "Arial, sans-serif" }}>{product.name}</div>
                 {/* <div style={{ fontSize: 18, color: "#555", fontFamily: "Arial, sans-serif", marginTop: 4 }}>{product.subtitle}</div> */}
-                <div style={{ fontSize: 28, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", marginTop: 10 }}>₱{product.price.toLocaleString()}</div>
+                <div style={{ fontSize: 28, fontWeight: 700, color: "#111", fontFamily: "Arial, sans-serif", marginTop: 10 }}>{formatMoney(product.price)}</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6 }}>
                 </div>
 
