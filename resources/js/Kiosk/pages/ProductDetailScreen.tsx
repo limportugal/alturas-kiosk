@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
 
+import { ArrowIcon } from "@/Kiosk/components/UI/ArrowIcon";
+
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ThumbnailButton } from "@/Kiosk/components/buttons/ThumbnailButton";
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
@@ -140,12 +142,18 @@ export default function ProductDetailScreen({
         <KioskButton 
                 onClick={onBack}  
                 style={{
+                  display: "flex",
+                  flexDirection: "row",
                   position: 'absolute',
-                  left: -45,
-                  top: "50%",
-                  transform: "translateY(-50%)",
+                  top: "10%",
+                  left: -25,
+                  height: 95,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
                   }}>
-                    ← BACK
+                      <ArrowIcon direction="left" size={35} label="BACK" />
+                    
               </KioskButton>
       </div>
       <MainMenuBtn onClick={onHome} />

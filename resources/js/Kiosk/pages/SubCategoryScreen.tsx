@@ -3,6 +3,9 @@ import { CategoryData } from "../types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "../components/shared";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 
+import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
+import { ArrowIcon } from "@/Kiosk/components/UI/ArrowIcon";
+
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
@@ -75,7 +78,26 @@ export default function SubCategoryScreen({
   return (
     <div style={KIOSK_STYLE}>
       <HFHeader small />
+      
+      <div style={{ position: "relative" }}>
       <PurpleBanner>{category.label}</PurpleBanner>
+        <KioskButton 
+                      onClick={onBack}  
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        position: 'absolute',
+                        top: "10%",
+                        left: -25,
+                        height: 95,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 6,
+                        }}>
+                          <ArrowIcon direction="left" size={35} label="BACK" />
+                    </KioskButton>
+    </div>
+
       <MainMenuBtn onClick={onBack} />
 
       {/* Hero card */}

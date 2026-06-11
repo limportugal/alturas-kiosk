@@ -5,7 +5,9 @@ import useDynamicQuery from "@/hooks/useDynamicQuery";
 
 import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "@/Kiosk/components/shared";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
+
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
+import { ArrowIcon } from "@/Kiosk/components/UI/ArrowIcon";
 
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
@@ -99,12 +101,17 @@ export default function ProductScreen({
             <KioskButton 
               onClick={onBack}  
               style={{
-                 position: 'absolute',
-                 left: -45,
-                 top: "50%",
-                 transform: "translateY(-50%)", 
+                display: "flex",
+                flexDirection: "row",
+                position: 'absolute',
+                top: "10%",
+                left: -25,
+                height: 95,
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
                  }}>
-                  ← BACK
+                   <ArrowIcon direction="left" size={35} label="BACK" />
             </KioskButton>
     </div>
       <MainMenuBtn onClick={onHome} />
