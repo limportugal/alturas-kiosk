@@ -56,7 +56,7 @@ export function ImageCardButton({
           position: "relative",
           background: active ? "#3d1a5c" : "#5a2d82",
           padding: "14px 16px",
-          height: 60,
+          height: 70,
           boxSizing:"border-box",
           display: "flex",
           justifyContent: "center",
@@ -64,16 +64,27 @@ export function ImageCardButton({
         }}
       >
         {/* centered text */}
-        <span
+        <div
           style={{
             color: "#fff",
             ...typography.button,
             textTransform: "uppercase",
             fontSize: labelFontSize ?? typography.button.fontSize,
+
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+
+            lineHeight: "1.2",
+            maxWidth: showArrow ?? true ? "calc(100% - 50px)" : "100%",
+            textAlign: "center",
+            wordBreak: "break-word",
           }}
         >
           {label}
-        </span>
+        </div>
 
         {/* arrow fixed right */}
         {(showArrow ?? true) && (

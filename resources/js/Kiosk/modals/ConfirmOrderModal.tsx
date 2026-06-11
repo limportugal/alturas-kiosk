@@ -126,7 +126,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                     {/* Product image */}
                     {displayImage && (
                         <div style={{ width: 200, flexShrink: 0, borderRadius: 12, overflow: "hidden", background: "#f5f3f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <img
+                            <img 
                                 src={`/${displayImage}`}
                                 alt={product.name}
                                 style={{ width: "100%", height: 200, objectFit: "cover", display: "block" }}
@@ -142,7 +142,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                         </div>
 
                         {product.item_description && (
-                            <p style={{ fontSize: 15, color: "#5f5f5fff", fontWeight: 500, lineHeight: 1.6, margin: 0 }}>{product.item_description}</p>
+                            <p style={{ fontSize: 15, color: "#5f5f5fff", fontWeight: 800, lineHeight: 1.6, margin: 0 }}>{product.item_description}</p>
                         )}
 
                         {/* Selected color / variant */}
