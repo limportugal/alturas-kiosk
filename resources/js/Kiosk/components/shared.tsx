@@ -40,20 +40,20 @@ export function PurpleBanner({ children, small }: { children: React.ReactNode; s
     </div>
   );
 }
-
+ 
 export function MainMenuBtn({ onClick }: { onClick: () => void }) {
   return (
     <div style={{ display: "flex", justifyContent: "center", padding: "15px 48px 10px", marginTop:"-8px", flexShrink: 0 }}>
       <button
         onClick={onClick}
         style={{
-          background: "transparent",
+          background: "#5a2d82",
           border: "3px solid #5a2d82",
           borderRadius: 8,
           padding: "14px 44px",
           fontSize: 24,
           fontWeight: 700,
-          color: "#5a2d82",
+          color: "#ffffffff",
           letterSpacing: 4,
           cursor: "pointer",
           fontFamily: "Arial, sans-serif",
@@ -64,6 +64,7 @@ export function MainMenuBtn({ onClick }: { onClick: () => void }) {
     </div>
   );
 }
+
 
 export const KIOSK_STYLE: React.CSSProperties = {
   width: 1080,
