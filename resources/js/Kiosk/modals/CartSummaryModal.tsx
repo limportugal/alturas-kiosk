@@ -329,7 +329,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                  </div>
 
                                 <div style={{marginLeft: 48}}>
-                                    <p style={{ fontSize: 14, color: "#5f5f5fff", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
+                                    <p style={{ fontSize: 14, color: "#5f5f5fff", fontWeight: 800, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
                                     <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(totalPrice)}</p>
                                 </div>
                            
