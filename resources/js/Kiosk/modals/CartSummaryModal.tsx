@@ -3,7 +3,8 @@ import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { CartItem } from "@/Kiosk/types/cart-types";
-
+import { RemoveIcon } from "@/Kiosk/components/UI/RemoveIcon";
+ 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmt = (n: number) =>
     "₱" + n.toLocaleString("en-PH", { minimumFractionDigits: 2 });
@@ -223,12 +224,12 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                             <div style={{ flex: 1 }}>
                                                 {item.color ? (
                                                     <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px", display: "flex", alignItems: "center", gap: 6 }}>
-                                                        <span style={{
+                                                        {/* <span style={{
                                                             display: "inline-block", width: 12, height: 12, borderRadius: "50%",
                                                             background: item.color.toLowerCase(),
                                                             border: "1.5px solid rgba(0,0,0,0.15)",
                                                             flexShrink: 0,
-                                                        }} />
+                                                        }} /> */}
                                                         {item.color}
                                                     </p>
                                                 ) : (
@@ -281,10 +282,14 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                             {/* Remove */}
                                             <button
                                                 onClick={() => setRemoveTarget({ product_id: item.product_id, color: item.color ?? null, name: item.name })}
-                                                style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 4, display: "flex", alignItems: "center" }}
+                                                style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 0, display: "flex", alignItems: "center" }}
                                                 aria-label={`Remove ${item.name} ${item.color ?? ""}`}
                                             >
-                                                <TrashIcon />
+                                                <RemoveIcon
+                                                    filled
+                                                    color="#ef4444"
+                                                    size={35}                   
+                                                 />
                                             </button>
                                         </div>
                                             );
@@ -300,17 +305,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                 {cartItems.length > 0 && (
                     <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 32px", background: "#faf9f7", flexShrink: 0 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <div>
-                                <p style={{ fontSize: 12, color: "#999", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
-                                <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(totalPrice)}</p>
-                            </div>
-                            <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                                <button
-                                    onClick={() => setClearConfirmOpen(true)}
-                                    style={{ padding: "14px 24px", borderRadius: 12, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
-                                >
-                                    Clear All
-                                </button>
+                            <div style={{ display: "flex", gap: 12 }}>
                                 <button
                                     onClick={handlePlaceOrder}
                                     disabled={ordered}
@@ -325,7 +320,19 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                 >
                                     {ordered ? "✓ ORDER PLACED!" : "PLACE ORDER"}
                                 </button>
-                            </div>
+                                  <button
+                                    onClick={() => setClearConfirmOpen(true)}
+                                    style={{ padding: "14px 24px", borderRadius: 12, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+                                >
+                                    Clear All
+                                </button>
+                                 </div>
+
+                                <div style={{marginLeft: 48}}>
+                                    <p style={{ fontSize: 12, color: "#999", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
+                                    <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(totalPrice)}</p>
+                                </div>
+                           
                         </div>
                     </div>
                 )}
