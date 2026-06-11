@@ -235,8 +235,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                 ) : (
                                                     <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px" }}>{item.name}</p>
                                                 )}
-                                                <p style={{ fontSize: 13, fontWeight: 600, color: colors.primary, margin: 0 }}>{fmt(item.price)} each</p>
-                                                <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>SKU: {item.sku}</p>
+                                                <p style={{ fontSize: 14, fontWeight: 600, color: colors.primary, margin: 0 }}>{fmt(item.price)} each</p>
+                                                {/* <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>SKU: {item.sku}</p> */}
                                             </div>
 
                                             {/* Quantity controls */}
@@ -311,7 +311,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                     disabled={ordered}
                                     style={{
                                         background: ordered ? "#22c55e" : colors.primary,
-                                        color: "#fff", border: "none", borderRadius: 12,
+                                        color: "#fff", border: "none", borderRadius: 12, 
                                         padding: "14px 40px", fontSize: 15, fontWeight: 700,
                                         letterSpacing: 1.5, cursor: ordered ? "default" : "pointer",
                                         transition: "background 0.25s ease",
@@ -329,7 +329,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                  </div>
 
                                 <div style={{marginLeft: 48}}>
-                                    <p style={{ fontSize: 12, color: "#999", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
+                                    <p style={{ fontSize: 14, color: "#5f5f5fff", margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
                                     <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(totalPrice)}</p>
                                 </div>
                            
