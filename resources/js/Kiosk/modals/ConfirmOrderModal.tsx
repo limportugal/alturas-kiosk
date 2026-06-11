@@ -142,7 +142,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                         </div>
 
                         {product.item_description && (
-                            <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6, margin: 0 }}>{product.item_description}</p>
+                            <p style={{ fontSize: 15, color: "#5f5f5fff", fontWeight: 500, lineHeight: 1.6, margin: 0 }}>{product.item_description}</p>
                         )}
 
                         {/* Selected color / variant */}
@@ -180,7 +180,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
 
                         {/* Quantity */}
                         <div>
-                            <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: "#888", margin: "0 0 8px" }}>QUANTITY</p>
+                            <p style={{ fontSize: 20, fontWeight: 800, letterSpacing: 1.5, color: "#5f5f5fff", margin: "0 0 8px" }}>QUANTITY</p>
                             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                                 <button
                                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -192,7 +192,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                     disabled={quantity >= maxQty}
                                     style={{ width: 40, height: 40, borderRadius: 8, border: `2px solid ${colors.primary}`, background: quantity >= maxQty ? "#eee" : "#fff", color: colors.primary, fontSize: 22, fontWeight: 700, cursor: quantity >= maxQty ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                 >+</button>
-                                <span style={{ fontSize: 12, color: "#999" }}>{maxQty} in stock</span>
+                                <span style={{ fontSize: 20, fontWeight: 800, color: "#5f5f5fff" }}>{maxQty} in stock</span>
                             </div>
                         </div>
                     </div>
@@ -201,7 +201,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 {/* Footer */}
                 <div style={{ borderTop: "1px solid #f0ede8", padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#faf9f7" }}>
                     <div>
-                        <p style={{ fontSize: 12, color: "#999", margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
+                        <p style={{ fontSize: 14, color: "#5f5f5fff", fontWeight: 900, margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
                         <p style={{ fontSize: 28, fontWeight: 800, color: colors.primary, margin: 0 }}>{fmt(subtotal)}</p>
                     </div>
                     <button
