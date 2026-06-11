@@ -347,7 +347,11 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
             confirmLabel="Yes, Clear All"
             cancelLabel="Cancel"
             confirmTone="danger"
-            onConfirm={clearCart}
+            onConfirm={() => {
+                clearCart();
+                setClearConfirmOpen(false);
+                handleClose();
+            }}
             onClose={() => setClearConfirmOpen(false)}
         />
 
