@@ -91,7 +91,7 @@ export default function ProductScreen({
       <div style={{ position: "relative"}}>
       <PurpleBanner>
         <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
-        <span>{cat?.name.toUpperCase() ??  "No Subcategory"}</span>
+        <span>{subcat?.category?.name.toUpperCase() ??  "No Subcategory"}</span>
         {subcat &&(
           <>
           <span style={{opacity: 0.5, fontSize: "0.9em"}}>›</span>

@@ -7,6 +7,10 @@ export interface PublicSubCategory {
     name: string;
     image_path?: string | null;
     status: string;
+    category?: {
+        id: number;
+        name: string;
+    } | null;
 }
 
 export interface PublicSubCategoryListResponse {

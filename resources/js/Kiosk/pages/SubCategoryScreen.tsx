@@ -10,7 +10,7 @@ import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
 import { ScrollableGrid } from "@/Kiosk/components/scrollablegrid";
-import { CartIcon } from "@/Kiosk/components/CartIcon";
+import { CartIcon } from "@/Kiosk/components/CartIcon"; 
 
 import { Badge } from "@/Kiosk/components/UI/Badge";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
