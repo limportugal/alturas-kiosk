@@ -235,7 +235,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                 ) : (
                                                     <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px" }}>{item.name}</p>
                                                 )}
-                                                <p style={{ fontSize: 14, fontWeight: 600, color: colors.primary, margin: 0 }}>{formatMoney(item.price)} each</p>
+                                                <p style={{ fontSize: 20, fontWeight: 600, color: colors.primary, margin: 0 }}>{formatMoney(item.price)} each</p>
                                                 {/* <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>SKU: {item.sku}</p> */}
                                             </div>
 
@@ -275,7 +275,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                             </div>
 
                                             {/* Line total */}
-                                            <p style={{ fontSize: 15, fontWeight: 800, color: "#1a1a1a", minWidth: 90, textAlign: "right", margin: 0 }}>
+                                            <p style={{ fontSize: 20, fontWeight: 800, color: "#1a1a1a", minWidth: 90, textAlign: "right", margin: 0 }}>
                                                 {formatMoney(item.subtotal)}
                                             </p>
 
