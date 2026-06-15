@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\KioskSettingController;
 
 
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ Route::get('/kiosk/sub-categories', [SubCategoryController::class, 'SubCategoryP
 Route::get('/Kiosk/products', [ProductController::class, 'showPublicProduct'])->name('product-public-list');
 Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->name('product-variations-public-list');
 Route::get('/kiosk/stock/check', [CartController::class, 'checkStock'])->name('cart.check-stock');
+Route::get('/kiosk/settings', [KioskSettingController::class, 'show'])->name('kiosk.settings.show');
 
 // Cart routes (no auth required)
 Route::get('/kiosk/cart/active', [CartController::class, 'getActiveCart'])->name('cart.active');
@@ -93,6 +95,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/variation-store',        'store')->name('variation-store');
         Route::put('/{id}/variation-update',   'update')->name('variation-update');
         Route::put('/{id}/variation-status',   'toggleStatus')->name('variation-status');
+    });
+
+    // Kiosk Settings
+    Route::prefix('kiosk-settings')->controller(KioskSettingController::class)->group(function () {
+        Route::get('/screen-saver',  'page')->name('screen-saver');
+        Route::put('/update',        'update')->name('kiosk.settings.update');
     });
 
 });

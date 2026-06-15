@@ -6,6 +6,7 @@ import SubCategoryScreen from "@/Kiosk/pages/SubCategoryScreen";
 import ProductScreen from "@/Kiosk/pages/ProductScreen";
 import ProductDetailScreen from "@/Kiosk/pages/ProductDetailScreen";
 import HomeCategoryScreen from "@/Kiosk/pages/HomeCategoryScreen";
+import { IdleModal } from "@/Components/Modals/IdleModal";
 
 import OrderModal from "@/Kiosk/modals/OrderModal";
 import ConfirmationModal from "@/Kiosk/modals/ConfirmationModal";
@@ -21,7 +22,12 @@ import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 
 // ── ROOT ───────────────────────────────────────────
-export default function MainPage() {
+interface MainPageProps {
+  idleTimeoutMs?: number;
+  onIdleReset: () => void;
+}
+
+export default function MainPage({ idleTimeoutMs, onIdleReset }: MainPageProps) {
   const [screen, setScreen]                   = useState<Screen>("home");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
@@ -110,6 +116,7 @@ export default function MainPage() {
       )}
       {showConfirm && <ConfirmationModal onClose={goHome} />}
       <CartSummaryModal open={summaryOpen} onClose={() => setSummaryOpen(false)} />
+      <IdleModal idleTimeoutMs={idleTimeoutMs} onReset={onIdleReset} />
     </div>
   );
 }

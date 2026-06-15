@@ -37,15 +37,15 @@ const NAV_SECTIONS: NavSection[] = [
       // { icon: "🔔", label: "Alerts",        href: "/alerts",        badge: "12" },
     ],
   },
-  // {
-  //   label: "Management",
-  //   items: [
-  //     // { icon: "🏷️", label: "Categories",     href: "/categories",      badge: null },
-  //     { icon: "🏭", label: "Suppliers",       href: "/suppliers",       badge: null },
-  //     { icon: "📋", label: "Purchase Orders", href: "/purchase-orders", badge: "2"  },
-  //     { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },
-  //   ],
-  // },
+  {
+    label: " 🛠️ Maintenance",
+    items: [
+      { icon: "🌙", label: "Screen Saver", href: route('screen-saver'), badge: null },
+      // { icon: "🏭", label: "Suppliers",       href: "/suppliers",       badge: null },
+      // { icon: "📋", label: "Purchase Orders", href: "/purchase-orders", badge: "2"  },
+      // { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },
+    ],
+  },
   // {
   //   label: "Reports",
   //   items: [
@@ -260,7 +260,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
                 <div
                   style={{
                     padding: "10px 18px 4px",
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 700,
                     color: "#444",
                     letterSpacing: "0.12em",
