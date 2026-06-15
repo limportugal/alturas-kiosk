@@ -5,7 +5,7 @@ import { useEffect, useRef, useCallback } from "react";
  * Pass `undefined` as `timeoutMs` to disable the timer entirely.
  * Resets the timer on mousemove, mousedown, touchstart, or keydown.
  */
-export function useIdleTimer(onIdle: () => void, timeoutMs: number | undefined = 60_000) {
+export function useIdleTimer(onIdle: () => void, timeoutMs?: number) {
     const timer     = useRef<ReturnType<typeof setTimeout> | null>(null);
     const onIdleRef = useRef(onIdle);
 
@@ -18,14 +18,23 @@ export function useIdleTimer(onIdle: () => void, timeoutMs: number | undefined =
     }, [timeoutMs]);
 
     useEffect(() => {
-        if (timeoutMs == null) return; // disabled — don't attach listeners
+        if (timeoutMs == null) {
+            if (timer.current) {
+                clearTimeout(timer.current);
+                timer.current = null;
+            }
+            return; // disabled — don't attach listeners
+        }
         const events = ["mousemove", "mousedown", "touchstart", "keydown"] as const;
         events.forEach((e) => window.addEventListener(e, reset));
         reset();
 
         return () => {
             events.forEach((e) => window.removeEventListener(e, reset));
-            if (timer.current) clearTimeout(timer.current);
+            if (timer.current) {
+                clearTimeout(timer.current);
+                timer.current = null;
+            }
         };
     }, [reset, timeoutMs]);
 }

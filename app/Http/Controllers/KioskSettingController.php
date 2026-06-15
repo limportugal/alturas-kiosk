@@ -12,7 +12,7 @@ class KioskSettingController extends Controller
     public function show()
     {
         return response()->json([
-            'idle_timeout_seconds' => (int) KioskSetting::get('idle_timeout_seconds', 60),
+            'idle_timeout_seconds' => (int) KioskSetting::get('idle_timeout_seconds'),
             'idle_enabled' => filter_var(
                 KioskSetting::get('idle_enabled', true),
                 FILTER_VALIDATE_BOOLEAN

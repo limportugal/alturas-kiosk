@@ -58,6 +58,15 @@ export function IdleModal({
     const stopCountdown = () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
     };
+
+    useEffect(() => {
+        if (idleTimeoutMs != null) return;
+
+        stopCountdown();
+        setVisible(false);
+        setOpen(false);
+        setCountdown(countdownSeconds);
+    }, [idleTimeoutMs, countdownSeconds]);
  
     // ── Open modal when idle ──────────────────────────────────────────────────
     // useIdleTimer is paused (undefined) while modal is open to avoid re-trigger

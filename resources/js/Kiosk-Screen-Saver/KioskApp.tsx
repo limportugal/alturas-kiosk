@@ -9,15 +9,23 @@ const queryClient = new QueryClient();
 
 const KIOSK_W = 1080;
 const KIOSK_H = 1920;
-const FALLBACK_TIMEOUT = 60_000; // used while setting is loading
-
 function ScaledKiosk() {
     const [scale, setScale]     = useState(1);
     const [started, setStarted] = useState(false);
 
-    const { data: settings } = useDynamicQuery(['kiosk-settings'], KioskSettingsPublicService);
-    const idleTimeout = started && settings?.idle_enabled !== false
-        ? (settings?.idle_timeout_seconds ?? 60) * 1000
+    const { data: settings } = useDynamicQuery(
+        ['kiosk-settings'],
+        KioskSettingsPublicService,
+        {
+            staleTime: 0,
+            refetchInterval: 1000 * 5,
+            refetchIntervalInBackground: true,
+            refetchOnWindowFocus: true,
+        }
+    );
+
+    const idleTimeout = started && settings?.idle_enabled === true
+        ? settings.idle_timeout_seconds * 1000
         : undefined; // disabled on screensaver
 
     useEffect(() => {

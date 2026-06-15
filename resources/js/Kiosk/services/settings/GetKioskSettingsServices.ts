@@ -7,6 +7,12 @@ export interface KioskSettings {
 }
 
 export const KioskSettingsPublicService = async (): Promise<KioskSettings> => {
-    const response = await api.get(relativeRoute('kiosk.settings.show'));
+    const response = await api.get(relativeRoute('kiosk.settings.show'), {
+        params: { _t: Date.now() },
+        headers: {
+            'Cache-Control': 'no-cache',
+            Pragma: 'no-cache',
+        },
+    });
     return response.data;
 };
