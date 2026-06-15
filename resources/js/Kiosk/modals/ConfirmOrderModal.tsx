@@ -4,6 +4,7 @@ import { colors } from "@/Kiosk/utils/colors";
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 import { Spinner } from "@/Kiosk/components/Spinner";
 import { formatMoney } from "@/Kiosk/components/shared";
+import { typography } from "@/Kiosk/utils/typography";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface ConfirmOrderModalProps {
@@ -171,13 +172,13 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                     }}>
                                         {selectedColor}
                                     </span>
-                                </div>
+                                </div> 
                             </div>
                         )}
 
                         {/* Quantity */}
                         <div>
-                            <p style={{ fontSize: 20, fontWeight: 800, letterSpacing: 1.5, color: "#5f5f5fff", margin: "0 0 8px" }}>QUANTITY</p>
+                            <p style={{ ...typography.amountFields, letterSpacing: 1.5, margin: "0 0 8px" }}>QUANTITY</p>
                             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                                 <button
                                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -189,7 +190,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                     disabled={quantity >= maxQty}
                                     style={{ width: 40, height: 40, borderRadius: 8, border: `2px solid ${colors.primary}`, background: quantity >= maxQty ? "#eee" : "#fff", color: colors.primary, fontSize: 22, fontWeight: 700, cursor: quantity >= maxQty ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                 >+</button>
-                                <span style={{ fontSize: 20, fontWeight: 800, color: "#5f5f5fff" }}>{maxQty} in stock</span>
+                                <span style={{ ...typography.amountFields}}>{maxQty} in stock</span>
                             </div>
                         </div>
                     </div>
@@ -198,7 +199,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                 {/* Footer */}
                 <div style={{ borderTop: "1px solid #f0ede8", padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#faf9f7" }}>
                     <div>
-                        <p style={{ fontSize: 14, color: "#5f5f5fff", fontWeight: 900, margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
+                        <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
                         <p style={{ fontSize: 28, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(subtotal)}</p>
                     </div>
                     <button

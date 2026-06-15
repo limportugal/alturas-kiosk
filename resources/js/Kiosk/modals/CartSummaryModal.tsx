@@ -5,6 +5,7 @@ import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { CartItem } from "@/Kiosk/types/cart-types";
 import { RemoveIcon } from "@/Kiosk/components/UI/RemoveIcon";
 import { formatMoney } from "@/Kiosk/components/shared"
+import { typography } from "@/Kiosk/utils/typography";
  
 
 
@@ -328,7 +329,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                  </div>
 
                                 <div style={{marginLeft: 48}}>
-                                    <p style={{ fontSize: 14, color: "#5f5f5fff", fontWeight: 800, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
+                                    <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
                                     <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(totalPrice)}</p>
                                 </div>
                            

@@ -8,6 +8,9 @@ export const typography = {
   hero: { fontSize: 38, fontWeight: 700, fontFamily: "Arial, sans-serif" },
   serifBody: { fontSize: 24, fontFamily: "Georgia, serif" },
 
+  // ORDER AND SUMMARY
+  amountFields : {fontSize: 20, fontWeight: 800, color: "#5f5f5fff" },
+
   // TO PRODUCT SCREEN
   productNameStri: { fontSize: 24, fontWeight: 600, letterSpacing: 1, fontFamily: "Arial, sans-serif" },
   productDetailsLabel: { fontSize: 26, fontWeight: 700, fontFamily: "Arial, sans-serif"},
