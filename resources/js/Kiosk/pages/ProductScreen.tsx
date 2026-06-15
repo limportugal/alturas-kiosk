@@ -62,8 +62,6 @@ export default function ProductScreen({
     const cartItems  = useCartStore((s) => s.cartItems);
 
 
-
-
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const [mounted, setMounted]     = useState(false);
 
@@ -80,8 +78,6 @@ export default function ProductScreen({
     return matchesSub && String(p.variation_type_id) === String(selectedVar.id);
   }) ?? [];
 
-
-  const cat = categories_data?.data.find((c) => String(c.id) === subId);
   const subcat = subCategoriesData?.data.find((s) => String(s.id) === subId);
 
  
@@ -91,6 +87,21 @@ export default function ProductScreen({
     const t = setTimeout(() => setMounted(true), 60);
     return () => clearTimeout(t);
   }, [subId]);
+
+  useEffect(() => {
+    if(activeTab !== null) return;
+
+    const firstTabWithProduct = visibleTabs.findIndex(tab =>
+      publicData?.data?.some(
+        p =>
+          String(p.sub_category_id) === subId &&
+          String(p.variation_type_id) === String(tab.id) 
+      )
+    );
+    if (firstTabWithProduct >= 0) {
+      setActiveTab(firstTabWithProduct);
+    }
+  }, [visibleTabs, publicData, subId]);
 
   return (
     <div style={KIOSK_STYLE}>
@@ -154,7 +165,7 @@ export default function ProductScreen({
           />
         ))}
       </div>
-      <PurpleBanner small>{category.subCategoryTabs[activeTab ?? 0]?.label.toUpperCase() ?? ""}</PurpleBanner>
+      <PurpleBanner small>{visibleTabs[activeTab ?? 0]?.name.toUpperCase() ?? "Products coming soon"}</PurpleBanner>
 
       {/* Product grid */}
       <div style={{ flex: 1, overflowY: "auto", padding: "32px 48px", display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 32, alignContent: "start", boxSizing: "border-box" }}>
