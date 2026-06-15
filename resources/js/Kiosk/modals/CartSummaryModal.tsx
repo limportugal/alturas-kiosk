@@ -251,7 +251,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                     }}
                                                     disabled={item.quantity <= 1}
                                                     style={{
-                                                        width: 32, height: 32, borderRadius: 8,
+                                                        width: 36, height: 36, borderRadius: 8,
                                                         border: `1.5px solid ${item.quantity <= 1 ? "#ddd" : colors.primary}`,
                                                         background: "#fff",
                                                         color: item.quantity <= 1 ? "#ddd" : colors.primary,
@@ -260,12 +260,12 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                         display: "flex", alignItems: "center", justifyContent: "center",
                                                     }}
                                                 >−</button>
-                                                <span style={{ fontSize: 16, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
+                                                <span style={{ fontSize: 20, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
                                                 <button
                                                     disabled={!canIncrease}
                                                     onClick={() => canIncrease && handleIncrease(item)}
                                                     style={{
-                                                        width: 32, height: 32, borderRadius: 8,
+                                                        width: 36, height: 36, borderRadius: 8,
                                                         border: `1.5px solid ${canIncrease ? colors.primary : "#ddd"}`,
                                                         background: "#fff", color: canIncrease ? colors.primary : "#ddd",
                                                         fontSize: 18, fontWeight: 700, cursor: canIncrease ? "pointer" : "not-allowed",
