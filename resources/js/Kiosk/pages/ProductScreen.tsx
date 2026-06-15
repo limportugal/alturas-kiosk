@@ -124,7 +124,7 @@ export default function ProductScreen({
                 display: "flex",
                 flexDirection: "row",
                 position: 'absolute',
-                top: "10%",
+                top: "8%",
                 left: -50,
                 height: 95,
                 background: "transparent",
