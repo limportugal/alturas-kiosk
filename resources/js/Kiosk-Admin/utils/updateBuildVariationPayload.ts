@@ -9,9 +9,10 @@ export const buildUpdateVariationPayload = (
     image?: File,
     removeImage?: boolean
 ): UpdateVariationPayload => ({
-    id:           variationId,
-    name:         state.name ?? '',
-    image_path:   image,
-    status:       state.status ?? 'Active',
-    remove_image: removeImage ?? false,
+    id:              variationId,
+    sub_category_id: state.sub_category_id ?? null,
+    name:            state.name ?? '',
+    image_path:      image,
+    status:          state.status ?? 'Active',
+    remove_image:    removeImage ?? false,
 });

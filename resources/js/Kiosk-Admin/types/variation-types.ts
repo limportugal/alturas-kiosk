@@ -1,9 +1,11 @@
 export interface VariationList {
     id: number;
+    sub_category_id?: number | null;
     name: string;
     image_path?: string | null;
     status: string;
     actions?: string;
+    sub_category?: { id: number; name: string } | null;
 }
 
 export interface DropdownVariation {
@@ -13,6 +15,7 @@ export interface DropdownVariation {
 }
 
 export interface VariationPayload {
+    sub_category_id?: number | null;
     name: string;
     image_path?: File | null;
     status: string;

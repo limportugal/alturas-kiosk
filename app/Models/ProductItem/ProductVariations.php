@@ -3,16 +3,23 @@
 namespace App\Models\ProductItem;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SubCategory\SubCategoryModel;
 
 class ProductVariations extends Model
 {
     protected $table = 'product_variations';
 
     protected $fillable = [
+        'sub_category_id',
         'name',
         'image_path',
         'status',
     ];
+
+    public function subCategory()
+    {
+        return $this->belongsTo(SubCategoryModel::class, 'sub_category_id');
+    }
 
     /**
      * Product items that use this variation type.

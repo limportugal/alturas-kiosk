@@ -30,7 +30,7 @@ class ProductListServices
             )
             ->latest('product_items.id')
             ->paginate(10);
-    }
+    } 
 
     public function showPublicProductList(){
         return ProductItemModel::query()

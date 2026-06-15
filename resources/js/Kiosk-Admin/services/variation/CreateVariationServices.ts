@@ -9,6 +9,11 @@ export const CreateVariationServices = async (
 
     formData.append('name',   payload.name);
     formData.append('status', payload.status);
+
+    if (payload.sub_category_id != null) {
+        formData.append('sub_category_id', String(payload.sub_category_id));
+    }
+
     if (payload.image_path instanceof File) {
         formData.append('image_path', payload.image_path);
     }

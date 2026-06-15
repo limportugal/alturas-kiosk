@@ -8,6 +8,8 @@ import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import { useUpdateVariation } from '@/Kiosk-Admin/hooks/variation/useUpdateVariation';
 import { useVariationStore } from '@/Kiosk-Admin/hooks/zustands/use-store-variation';
 import { VariationList } from '@/Kiosk-Admin/types/variation-types';
+import useDynamicQuery from '@/hooks/useDynamicQuery';
+import { getSubCategories } from '@/Kiosk-Admin/services/subcategory/dropdownSubCategoryServices';
 
 interface Props {
     variation: VariationList | null;
@@ -30,6 +32,8 @@ export default function EditVariation({ variation }: Props) {
 
     const { handleSubmit, handleImageChange, handleRemoveImage, image, removeImage, errors, isPending } =
         useUpdateVariation(open ? variation : null);
+
+    const { data: subCategories } = useDynamicQuery(['sub-categories-dropdown'], getSubCategories);
 
     const handleClose = () => {
         setOpen(false);
@@ -73,6 +77,24 @@ export default function EditVariation({ variation }: Props) {
                         helperText={errors.name}
                         sx={INPUT_SX}
                     />
+
+                    {/* Sub-Category */}
+                    <TextField
+                        select
+                        label="Sub-Category (optional)"
+                        value={variationState.sub_category_id ?? ''}
+                        onChange={(e) =>
+                            variationState.setSubCategoryId(
+                                e.target.value ? Number(e.target.value) : null
+                            )
+                        }
+                        sx={INPUT_SX}
+                    >
+                        <MenuItem value="">— None —</MenuItem>
+                        {(subCategories ?? []).map((s) => (
+                            <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>
+                        ))}
+                    </TextField>
 
                     <TextField
                         select

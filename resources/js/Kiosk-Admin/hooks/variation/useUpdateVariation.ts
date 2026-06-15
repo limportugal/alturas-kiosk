@@ -24,6 +24,7 @@ export const useUpdateVariation = (variation: VariationList | null) => {
         variationState.setName(variation.name);
         variationState.setImage_path(variation.image_path ?? '');
         variationState.setStatus(variation.status ?? 'Active');
+        variationState.setSubCategoryId(variation.sub_category_id ?? null);
         setImage(null);
         setRemoveImage(false);
         setErrors({});

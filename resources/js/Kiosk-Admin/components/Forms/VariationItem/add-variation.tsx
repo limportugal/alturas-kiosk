@@ -7,6 +7,8 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import { useCreateVariation } from '@/Kiosk-Admin/hooks/variation/useCreateVariation';
 import { useVariationStore } from '@/Kiosk-Admin/hooks/zustands/use-store-variation';
+import useDynamicQuery from '@/hooks/useDynamicQuery';
+import { getSubCategories } from '@/Kiosk-Admin/services/subcategory/dropdownSubCategoryServices';
 
 const INPUT_SX = {
     '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#7e22ce' } },
@@ -23,7 +25,9 @@ export default function AddVariation() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
     const { handleSubmit, handleImageChange, image, setImage, errors, isPending } = useCreateVariation();
-    const { name, setName, status, setStatus } = useVariationStore();
+    const { name, setName, status, setStatus, sub_category_id, setSubCategoryId } = useVariationStore();
+
+    const { data: subCategories } = useDynamicQuery(['sub-categories-dropdown'], getSubCategories);
 
     useEffect(() => {
         if (!image) { setPreviewUrl(null); return; }
@@ -58,6 +62,20 @@ export default function AddVariation() {
                         helperText={errors.name}
                         sx={INPUT_SX}
                     />
+
+                    {/* Sub-Category */}
+                    <TextField
+                        select
+                        label="Sub-Category (optional)"
+                        value={sub_category_id ?? ''}
+                        onChange={(e) => setSubCategoryId(e.target.value ? Number(e.target.value) : null)}
+                        sx={INPUT_SX}
+                    >
+                        <MenuItem value="">— None —</MenuItem>
+                        {(subCategories ?? []).map((s) => (
+                            <MenuItem key={s.id} value={s.id}>{s.name}</MenuItem>
+                        ))}
+                    </TextField>
 
                     <TextField
                         select

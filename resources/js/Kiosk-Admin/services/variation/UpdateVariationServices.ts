@@ -15,6 +15,10 @@ export const UpdateVariationServices = async ({
     formData.append('status',       data.status);
     formData.append('remove_image', data.remove_image ? '1' : '0');
 
+    if (data.sub_category_id != null) {
+        formData.append('sub_category_id', String(data.sub_category_id));
+    }
+
     if (data.image_path instanceof File) {
         formData.append('image_path', data.image_path);
     }

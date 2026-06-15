@@ -1,30 +1,18 @@
 import { useState } from "react";
 
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
-
 import { ArrowIcon } from "@/Kiosk/components/UI/ArrowIcon";
-
-import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ThumbnailButton } from "@/Kiosk/components/buttons/ThumbnailButton";
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
-
 import { typography } from "@/Kiosk/utils/typography";
 import { colors } from "@/Kiosk/utils/colors";
-
 import { ProductItem } from "@/Kiosk-Admin/types/product-type";
-
-import { ProductVariationsPublicServices } from "@/Kiosk/services/product/GetProductVariationListServices";
-
 import { ConfirmOrderModal } from "@/Kiosk/modals/ConfirmOrderModal";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
-
 import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
-
 import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
-
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
-
 import { formatMoney } from "@/Kiosk/components/shared"
 
 
@@ -40,11 +28,6 @@ export default function ProductDetailScreen({
   onHome: () => void;
   onViewOrder: () => void;
 }) {
-    const { data: variationsData } = useDynamicQuery(
-    ["variations-public-list"],
-    ProductVariationsPublicServices
-  );
-  
   const [activeImg, setActiveImg]         = useState(0);
   const [activeColor, setActiveColor]     = useState(-1);
   const [cartModalOpen, setCartModalOpen] = useState(false);
@@ -92,9 +75,8 @@ export default function ProductDetailScreen({
 
 
 
-  const activeVariationType = variationsData?.data?.find(
-    (v) => v.id === product.variation_type_id
-  ) ?? null;
+  // variation_type is already eager-loaded on the product
+  const variationTypeName = product.variation_type?.name ?? "";
 
 
   const mainDisplayImage = (!userPickedProductImg && selectVariantImage)
@@ -149,7 +131,7 @@ export default function ProductDetailScreen({
       <HFHeader small />
         <div style={{ position: "relative"}}>
       <PurpleBanner>
-        {(activeVariationType?.name ?? "").toUpperCase()}
+        {variationTypeName.toUpperCase()}
       </PurpleBanner>
         <KioskButton 
                 onClick={onBack}  

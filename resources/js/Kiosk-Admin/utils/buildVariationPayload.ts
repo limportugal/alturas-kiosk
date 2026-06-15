@@ -7,7 +7,8 @@ export const buildCreateVariationPayload = (
     state: VariationState,
     image?: File
 ): CreateVariationPayload => ({
-    name:       state.name ?? '',
-    image_path: image,
-    status:     state.status ?? 'Active',
+    sub_category_id: state.sub_category_id ?? null,
+    name:            state.name ?? '',
+    image_path:      image,
+    status:          state.status ?? 'Active',
 });

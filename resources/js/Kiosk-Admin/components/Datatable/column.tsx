@@ -217,6 +217,11 @@ export const VariationItem: Column<VariationList>[] = [
   },
   { id: 'name', label: 'Variation Name' },
   {
+    id: 'sub_category',
+    label: 'Sub-Category',
+    render: (row) => <span>{row.sub_category?.name ?? '—'}</span>,
+  },
+  {
     id: 'actions',
     label: 'Actions',
     render: (row) => (

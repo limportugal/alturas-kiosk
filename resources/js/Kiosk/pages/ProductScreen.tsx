@@ -67,13 +67,20 @@ export default function ProductScreen({
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const [mounted, setMounted]     = useState(false);
 
+  const visibleTabs = (variationsData?.data?? []).filter(
+    (tab) => String(tab.sub_category_id) === subId
+  );
+
   const visibleProducts = publicData?.data?.filter((p) => {
     const matchesSub = String(p.sub_category_id) === subId;
     if (activeTab === null) return matchesSub;
-    const selectedVar = variationsData?.data?.[activeTab as number];
+
+    const selectedVar = visibleTabs[activeTab];
     if (!selectedVar) return matchesSub;
     return matchesSub && String(p.variation_type_id) === String(selectedVar.id);
   }) ?? [];
+
+
   const cat = categories_data?.data.find((c) => String(c.id) === subId);
   const subcat = subCategoriesData?.data.find((s) => String(s.id) === subId);
 
@@ -133,9 +140,9 @@ export default function ProductScreen({
         WebkitOverflowScrolling: "touch",
         }}
         >
-        {(variationsData?.data ?? []).map((tab, i) => (    
+        {visibleTabs.map((tab, i) => (    
           <ImageCardButton
-            key={tab.name}
+            key={tab.id}
             image={tab.image_path ? `/${tab.image_path}` : undefined}
             label={tab.name}
             active={activeTab === i}
@@ -144,7 +151,6 @@ export default function ProductScreen({
             imageHeight={120}
             labelFontSize={14} 
             showArrow={false}
-            
           />
         ))}
       </div>

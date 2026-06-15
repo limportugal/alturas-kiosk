@@ -23,7 +23,9 @@ class VariationController extends Controller
      */
     public function index()
     {
-        $variations = ProductVariations::orderBy('name')->paginate(15);
+        $variations = ProductVariations::with('subCategory:id,name')
+            ->orderBy('name')
+            ->paginate(15);
         return response()->json($variations);
     }
 
@@ -45,9 +47,10 @@ class VariationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'       => ['required', 'string', 'max:255', 'unique:product_variations,name'],
-            'image_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
-            'status'     => ['required', Rule::in(['Active', 'Inactive'])],
+            'name'            => ['required', 'string', 'max:255', 'unique:product_variations,name'],
+            'sub_category_id' => ['nullable', 'integer', 'exists:sub_categories,id'],
+            'image_path'      => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+            'status'          => ['required', Rule::in(['Active', 'Inactive'])],
         ]);
 
         $imagePath = null;
@@ -59,9 +62,10 @@ class VariationController extends Controller
         }
 
         $variation = ProductVariations::create([
-            'name'       => $data['name'],
-            'image_path' => $imagePath,
-            'status'     => $data['status'],
+            'sub_category_id' => $data['sub_category_id'] ?? null,
+            'name'            => $data['name'],
+            'image_path'      => $imagePath,
+            'status'          => $data['status'],
         ]);
 
         return response()->json(['created' => $variation], 201);
@@ -75,10 +79,11 @@ class VariationController extends Controller
         $variation = ProductVariations::findOrFail($id);
 
         $data = $request->validate([
-            'name'         => ['sometimes', 'string', 'max:255', Rule::unique('product_variations', 'name')->ignore($id)],
-            'image_path'   => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
-            'status'       => ['sometimes', Rule::in(['Active', 'Inactive'])],
-            'remove_image' => ['sometimes', 'boolean'],
+            'name'            => ['sometimes', 'string', 'max:255', Rule::unique('product_variations', 'name')->ignore($id)],
+            'sub_category_id' => ['nullable', 'integer', 'exists:sub_categories,id'],
+            'image_path'      => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+            'status'          => ['sometimes', Rule::in(['Active', 'Inactive'])],
+            'remove_image'    => ['sometimes', 'boolean'],
         ]);
 
         // Remove old image if flagged
