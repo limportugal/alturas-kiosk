@@ -57,7 +57,7 @@ export const useCart = () => {
     });
 
     const confirmCartMutation = useDynamicMutation({
-        mutationKey: ['product-list', 'screensaver-products'],
+        mutationKey: ['product-list', 'screensaver-products', 'stock-check'],
         mutationFn: (id: number) => CartConfirmService(id),
     });
 
@@ -158,6 +158,9 @@ export const useCart = () => {
         // Remove the active-cart cache BEFORE clearing store so the
         // useEffect sync doesn't re-populate from stale cache data
         queryClient.removeQueries({ queryKey: ['active-cart'] });
+        // Force immediate stock refetch — don't wait for polling interval
+        await queryClient.invalidateQueries({ queryKey: ['stock-check'] });
+        await queryClient.invalidateQueries({ queryKey: ['product-list'] });
         clearCartStore();
         return result;
     };

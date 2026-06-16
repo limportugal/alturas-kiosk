@@ -10,10 +10,11 @@ import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 import { ConfirmOrderModal } from "@/Kiosk/modals/ConfirmOrderModal";
 import { CartIcon } from "@/Kiosk/components/CartIcon";
 import { SoldOutOverlay } from "@/Kiosk/components/SoldOutState";
-import { useStockPolling } from "@/Kiosk/hooks/useStockPolling";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
-import { formatMoney } from "@/Kiosk/components/shared"
+import { formatMoney } from "@/Kiosk/components/shared";
+import useDynamicQuery from "@/hooks/useDynamicQuery";
+import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
 
 export default function ProductDetailScreen({
@@ -33,7 +34,16 @@ export default function ProductDetailScreen({
   const [cartModalOpen, setCartModalOpen] = useState(false);
   const [userPickedProductImg, setUserPickedProductImg] = useState(false);
 
-  const variants = product.color_variants ?? [];
+  // ── Subscribe to product-list cache so stock updates propagate immediately
+  // after confirmCart invalidates it — no extra network request (reuses cache)
+  const { data: productListData } = useDynamicQuery(
+    ["product-list"],
+    ProductPublicServices,
+    // { staleTime: 1000 * 10, refetchInterval: 1000 * 10 }
+  );
+  const freshProduct = productListData?.data?.find((p) => p.id === product.id) ?? product;
+
+  const variants = freshProduct.color_variants ?? (product.color_variants ?? []);
   const images = product.images ?? [{image_path: ""}];
   const cartItems = useCartStore((s) => s.cartItems);
 
@@ -43,12 +53,10 @@ export default function ProductDetailScreen({
   // ── Live stock via polling ─────────────────────────────────────────────────
   const selectedColor = variants[activeColor]?.color_name ?? null;
 
-  const { productQty, variantQty, isSoldOut: liveSoldOut, isLowStock } = useStockPolling({
-    product_id:         product.id,
-    color:              selectedColor,
-    initialProductQty:  product.quantity,
-    initialVariantQty:  variants.find((v) => v.color_name === selectedColor)?.quantity ?? null,
-  });
+  // Stock comes directly from product-list cache — updates immediately after confirmCart invalidates it
+  const selectedVariant = variants.find((v) => v.color_name === selectedColor) ?? null;
+  const productQty      = freshProduct.quantity;
+  const variantQty      = selectedVariant?.quantity ?? null;
 
   // ── Primary product as a selectable "base" entry ───────────────────────────
   // activeColor === -1  → primary (product_items) is selected
@@ -89,7 +97,7 @@ export default function ProductDetailScreen({
     setActiveColor(i);
     setUserPickedProductImg(false);
   };
-  const displayStock = variantQty !== null ? variantQty : (productQty ?? product.quantity);
+  const displayStock = variantQty !== null ? variantQty : productQty;
 
   const inCartQty = cartItems
       .filter((i) => i.product_id === product.id && (i.color ?? null) === (selectedColor))
@@ -111,7 +119,7 @@ export default function ProductDetailScreen({
 
     const primaryInCart = getCartQty(null);
 
-    const primaryAvailable = Math.max(0,(productQty ?? product.quantity) - primaryInCart);
+    const primaryAvailable = Math.max(0, productQty - primaryInCart);
 
       const primarySoldOut = primaryAvailable <= 0;
 

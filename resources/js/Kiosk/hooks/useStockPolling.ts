@@ -33,24 +33,14 @@ export function useStockPolling({
         () => StockCheckService(product_id, color),
         {
             enabled,
-            staleTime:       1000 * 10,
+            staleTime:       0,
             refetchInterval: 1000 * 10,
-            // Seed with known data — shows instantly, no loading flash
-            // Real fetch happens silently in background
-            placeholderData: initialProductQty !== undefined
-                ? {
-                      product_quantity: initialProductQty,
-                      variant_quantity: initialVariantQty ?? null,
-                      is_sold_out: color != null
-                          ? (initialVariantQty ?? 0) <= 0
-                          : initialProductQty <= 0,
-                  }
-                : undefined,
         }
     );
 
+    // Use live data when available, fall back to seeded props only on first render
     const productQty  = data?.product_quantity ?? initialProductQty ?? null;
-    const variantQty  = data?.variant_quantity ?? initialVariantQty ?? null;
+    const variantQty  = data?.variant_quantity !== undefined ? data.variant_quantity : (initialVariantQty ?? null);
     const isSoldOut   = data?.is_sold_out ?? false;
     const relevantQty = variantQty !== null ? variantQty : productQty;
     const isLowStock  = !isSoldOut && relevantQty !== null && relevantQty <= LOW_STOCK_THRESHOLD;
