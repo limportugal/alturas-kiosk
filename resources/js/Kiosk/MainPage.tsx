@@ -27,7 +27,7 @@ interface MainPageProps {
   onIdleReset: () => void;
   entryProductId?: number | string | null;
   onEntryProductHandled?: () => void;
-  onReturnToScreensaver?:() => void;
+  onReturnToScreensaver:() => void;
 }
 
 export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, onEntryProductHandled, onReturnToScreensaver }: MainPageProps) {
@@ -59,6 +59,8 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
     (s) => String(s.id) === activeSubId
   ) ?? null;
 
+  
+
   const goHome = () => {
     setScreen("home");
     setActiveCategoryId(null);
@@ -69,6 +71,17 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
     setShowConfirm(false);
     setSummaryOpen(false);
   };
+
+  const handleOrderPlaced = () => {
+    setSummaryOpen(false);
+    setShowConfirm(true);
+  };
+
+   const handleConfirmationClose = () => {
+  setShowConfirm(false);
+  onReturnToScreensaver();
+  };
+ 
 
   useEffect(() => {
     if (!entryProductId || activeProduct) return;
@@ -142,11 +155,11 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
           onCancel={() => setOrderProduct(null)}
         />
       )}
-      {showConfirm && <ConfirmationModal onClose={goHome} />}
+      {showConfirm && <ConfirmationModal onClose={handleConfirmationClose} />}
       <CartSummaryModal 
             open={summaryOpen} 
             onClose={() => setSummaryOpen(false)} 
-            onPlaceOrder={onReturnToScreensaver}
+            onPlaceOrder={handleOrderPlaced}
         />
       <IdleModal idleTimeoutMs={idleTimeoutMs} onReset={onIdleReset} />
     </div>

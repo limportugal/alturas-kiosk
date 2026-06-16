@@ -7,7 +7,7 @@ export default function ConfirmationModal({ onClose }: { onClose: () => void }) 
         </div>
         <div style={{ padding: "60px 60px 40px", textAlign: "center" }}>
           <p style={{ fontSize: 38, fontWeight: 700, color: "#5a2d82", lineHeight: 1.5, margin: "0 0 48px", fontFamily: "Arial, sans-serif", letterSpacing: 1 }}>
-            PLEASE CLAIM YOUR ORDER STAB AND PRESENT IT TO THE CASHIER FOR PAYMENT.
+            PLEASE CLAIM YOUR ORDER RECIEPT AND PRESENT IT TO THE CASHIER.
           </p>
           <p style={{ fontSize: 38, fontWeight: 700, color: "#5a2d82", lineHeight: 1.5, margin: 0, fontFamily: "Arial, sans-serif", letterSpacing: 1 }}>
             THANK YOU FOR USING OUR KIOSK ORDERING SYSTEM.
