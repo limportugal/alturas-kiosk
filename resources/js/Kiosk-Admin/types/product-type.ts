@@ -32,6 +32,7 @@ export interface ProductItem {
   sub_category_name?: string | null;
   price: number;
   quantity: number;
+  variant_quantity: number;
   item_description?: string;
   variation_type_id?: number | null;
   variation_type?: ProductVariationType | null;

@@ -33,7 +33,9 @@ export const Proditem: Column<ProductItem>[] = [
     id: 'images',
     label: 'Images',
     render: (row) => (
-      <MultiplePreviewImage images={row.images} productName={row.name} />
+      <div style={{ position: 'relative', display: 'inline-block', width: 48 }}>
+        <MultiplePreviewImage images={row.images} productName={row.name} />
+      </div>
     ),
   },
   { id: 'category_name', label: 'Category' },
@@ -58,7 +60,40 @@ export const Proditem: Column<ProductItem>[] = [
         [];
 
       if (!variants.length) return <span style={{ color: '#aaa' }}>—</span>;
-      return <span>{variants.length} variant{variants.length > 1 ? 's' : ''}</span>;
+      return <span>{variants.length} variant Available{variants.length > 1 ? 's' : ''}</span>;
+    },
+  },
+  {
+    id: 'variant_quantity',
+    label: 'Quantity Variants',
+    render: (row) => {
+      const variants = row.color_variants ?? [];
+      if (!variants.length) return <span style={{ color: '#aaa' }}>—</span>;
+
+      const totalQuantity = variants.reduce((sum, v) => sum + v.quantity, 0);
+      const soldOut = totalQuantity <= 0;
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+          <span style={{ color: soldOut ? '#ef4444' : 'inherit', fontWeight: soldOut ? 700 : 400 }}>
+            {totalQuantity}
+          </span>
+          {soldOut && (
+            <span style={{
+              background: '#ef4444',
+              color: '#fff',
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: 1,
+              padding: '2px 8px',
+              borderRadius: 4,
+              whiteSpace: 'nowrap',
+            }}>
+              SOLD OUT
+            </span>
+          )}
+        </div>
+      );
     },
   },
   {
