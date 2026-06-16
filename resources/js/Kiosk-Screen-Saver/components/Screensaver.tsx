@@ -56,7 +56,6 @@ export default function Screensaver({ onStart, onProductSelect }: ScreensaverPro
                 onDismiss={onStart}
                 onProductSelect={(product) => {
                     onProductSelect?.(product.id);
-                    onStart();
                 }}
                 products={products}
             />

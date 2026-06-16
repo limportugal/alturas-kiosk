@@ -12,6 +12,7 @@ const KIOSK_H = 1920;
 function ScaledKiosk() {
     const [scale, setScale]     = useState(1);
     const [started, setStarted] = useState(false);
+    const [entryProductId, setEntryProductId] = useState<number | string | null>(null);
 
     const { data: settings } = useDynamicQuery(
         ['kiosk-settings'],
@@ -60,9 +61,20 @@ function ScaledKiosk() {
                     <MainPage
                         idleTimeoutMs={idleTimeout}
                         onIdleReset={() => setStarted(false)}
+                        entryProductId={entryProductId}
+                        onEntryProductHandled={() => setEntryProductId(null)}
                     />
                 ) : (
-                    <Screensaver onStart={() => setStarted(true)} />
+                    <Screensaver
+                        onStart={() => {
+                            setEntryProductId(null);
+                            setStarted(true);
+                        }}
+                        onProductSelect={(productId) => {
+                            setEntryProductId(productId);
+                            setStarted(true);
+                        }}
+                    />
                 )}
             </div>
         </div>

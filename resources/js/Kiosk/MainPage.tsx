@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Screen, Product } from "@/Kiosk/types/types";
 import { CATEGORIES } from "@/Kiosk/data";
@@ -25,9 +25,11 @@ import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 interface MainPageProps {
   idleTimeoutMs?: number;
   onIdleReset: () => void;
+  entryProductId?: number | string | null;
+  onEntryProductHandled?: () => void;
 }
 
-export default function MainPage({ idleTimeoutMs, onIdleReset }: MainPageProps) {
+export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, onEntryProductHandled }: MainPageProps) {
   const [screen, setScreen]                   = useState<Screen>("home");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
@@ -48,8 +50,8 @@ export default function MainPage({ idleTimeoutMs, onIdleReset }: MainPageProps) 
     SubCategoriesPublicServices
   );
   // These results are cached — child screens reuse them without re-fetching
-  useDynamicQuery(["category-public-list"],    CategoriesPublicServices);
-  useDynamicQuery(["product-list"],            ProductPublicServices);
+  const { data: categoriesData } = useDynamicQuery(["category-public-list"], CategoriesPublicServices);
+  const { data: productsData }   = useDynamicQuery(["product-list"], ProductPublicServices);
   useDynamicQuery(["variations-public-list"],  ProductVariationsPublicServices);
 
   const activeSubCategory = subCategoriesData?.data?.find(
@@ -66,6 +68,31 @@ export default function MainPage({ idleTimeoutMs, onIdleReset }: MainPageProps) 
     setShowConfirm(false);
     setSummaryOpen(false);
   };
+
+  useEffect(() => {
+    if (!entryProductId || activeProduct) return;
+
+    const selectedProduct = productsData?.data?.find(
+      (product) => String(product.id) === String(entryProductId)
+    );
+
+    if (!selectedProduct) return;
+
+    const selectedCategory = categoriesData?.data?.find(
+      (category) => category.id === selectedProduct.item_category_id
+    );
+
+    setActiveProduct(selectedProduct);
+    setActiveSubId(
+      selectedProduct.sub_category_id != null
+        ? String(selectedProduct.sub_category_id)
+        : null
+    );
+    setActiveCategoryId(String(selectedProduct.item_category_id));
+    setActiveCategoryName(selectedCategory?.name ?? null);
+    setScreen("product");
+    onEntryProductHandled?.();
+  }, [entryProductId, productsData, categoriesData, activeProduct, onEntryProductHandled]);
 
   return (
     <div style={{ position: "relative", width: 1080, height: 1920, overflow: "hidden" }}>

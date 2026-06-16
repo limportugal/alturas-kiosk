@@ -123,6 +123,7 @@ export function ScreenSaverFallback({
                     position: "relative",
                     zIndex: 1,
                     width: "100%",
+             
                     overflow: "hidden",
                     padding: "8px 0",
                     maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)",
@@ -132,9 +133,10 @@ export function ScreenSaverFallback({
                 <div
                     style={{
                         display: "flex",
-                        gap: 16,
-                        padding: "0 32px",
+                        gap: 28,
+                        padding: "0 56px",
                         width: "max-content",
+                        
                         animation: `hf-slide-left ${Math.max(18, duplicated.length * 1.8)}s linear infinite`,
                     }}
                 >
@@ -152,15 +154,15 @@ export function ScreenSaverFallback({
                 style={{
                     position: "relative",
                     zIndex: 1,
-                    marginTop: 28,
+                    marginTop: 34,
                     display: "flex",
                     alignItems: "center",
-                    gap: 10,
+                    gap: 12,
                     animation: "hf-ss-pulse 2.5s ease-in-out infinite",
                 }}
             >
                 <div style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", letterSpacing: 3, margin: 0 }}>
+                <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)", letterSpacing: 3.5, margin: 0 }}>
                     TAP A PRODUCT TO BROWSE
                 </p>
                 <div style={{ width: 5, height: 5, borderRadius: "50%", background: "rgba(255,255,255,0.3)" }} />
@@ -182,17 +184,17 @@ function ProductCard({
             onClick={onClick}
             style={{
                 flexShrink: 0,
-                width: 130,
+                width: 235,
                 background: "rgba(255,255,255,0.07)",
                 border: "0.5px solid rgba(255,255,255,0.12)",
-                borderRadius: 12,
+                borderRadius: 18,
                 overflow: "hidden",
                 cursor: "pointer",
             }}
         >
             <div
                 style={{
-                    height: 96,
+                    height: 176,
                     background: "rgba(255,255,255,0.05)",
                     display: "flex",
                     alignItems: "center",
@@ -220,13 +222,13 @@ function ProductCard({
                 )}
             </div>
 
-            <div style={{ padding: "10px 12px 12px" }}>
+            <div style={{ padding: "16px 18px 18px" }}>
                 <p
                     style={{
-                        fontSize: 12,
-                        fontWeight: 500,
+                        fontSize: 18,
+                        fontWeight: 600,
                         color: "rgba(255,255,255,0.9)",
-                        margin: "0 0 3px",
+                        margin: "0 0 7px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -234,19 +236,19 @@ function ProductCard({
                 >
                     {product.name}
                 </p>
-                <p style={{ fontSize: 11, color: "rgba(255,255,255,0.45)", margin: "0 0 6px" }}>
+                <p style={{ fontSize: 15, color: "rgba(255,255,255,0.45)", margin: "0 0 12px" }}>
                     {fmt(product.price)}
                 </p>
                 {product.category && (
                     <span
                         style={{
-                            fontSize: 9,
-                            fontWeight: 500,
+                            fontSize: 11,
+                            fontWeight: 600,
                             background: `${colors.primary}99`,
                             color: "rgba(255,255,255,0.85)",
-                            padding: "2px 7px",
-                            borderRadius: 4,
-                            letterSpacing: 0.5,
+                            padding: "5px 9px",
+                            borderRadius: 6,
+                            letterSpacing: 0.9,
                             display: "inline-block",
                         }}
                     >
