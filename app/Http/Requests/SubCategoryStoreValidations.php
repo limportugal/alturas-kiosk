@@ -16,7 +16,7 @@ class SubCategoryStoreValidations extends FormRequest
         return [
             'item_category_id' => ['required', 'integer', 'exists:item_categories,id'],
             'name'             => ['required', 'string', 'max:50'],
-            'image_path'       => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+            'image_path'       => ['required', 'file', 'mimes:png,avif', 'max:2048'],
             'status'           => ['nullable', 'string'],
         ];
     }

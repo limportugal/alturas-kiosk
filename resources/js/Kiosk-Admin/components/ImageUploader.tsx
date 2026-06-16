@@ -135,7 +135,7 @@ export default function ImageUploader({
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*"
+          accept="image/png,image/avif"
           multiple={multiple}
           hidden
           onChange={(e) => {

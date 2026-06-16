@@ -16,7 +16,7 @@ class SubCategoryUpdateValidations extends FormRequest
         return [
             'item_category_id' => ['sometimes', 'integer', 'exists:item_categories,id'],
             'name'             => ['sometimes', 'nullable', 'string'],
-            'image_path'       => ['sometimes', 'nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+            'image_path'       => ['sometimes', 'nullable', 'file', 'mimes:png,avif', 'max:2048'],
             'remove_image'     => ['sometimes', 'boolean'],
         ];
     }

@@ -1,5 +1,4 @@
 import imageCompression from 'browser-image-compression';
-import { option } from 'framer-motion/client';
 
 type CompressionImageOptions = {
     maxWidthOrHeight?: number;
@@ -15,14 +14,14 @@ export const compressionImage = async (
         maxWidthOrHeight: options?.maxWidthOrHeight ?? 500,
         maxSizeMB: options?.maxSizeMB ?? 0.3,
         useWebWorker: true,
-        fileType: options?.fileType ?? 'image/webp',
+        fileType: options?.fileType ?? 'image/png',
     });
     
     return new File(
         [compressedBlob],
-        imageFile.name.replace(/\.[^/.]+$/, '.webp'),
+        imageFile.name.replace(/\.[^/.]+$/, '.png'),
         { 
-            type: options?.fileType ?? 'image/webp',
+            type: options?.fileType ?? 'image/png',
             lastModified: Date.now(),
          }
     );

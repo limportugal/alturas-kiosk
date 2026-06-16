@@ -67,7 +67,7 @@ export const useUpdateCategory = (category: CategoryList | null) => {
     const compressed = await compressionImage(selected, {
       maxWidthOrHeight: 500,
       maxSizeMB: 0.3,
-      fileType: 'image/webp',
+      fileType: 'image/png',
     });
 
     setImage(compressed);

@@ -157,7 +157,7 @@ export function NewVariantRow({ variant, index, errorIndex, onNameChange, onQuan
       <input
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept="image/png,image/avif"
         hidden
         onChange={(e) => {
           const file = e.target.files?.[0] ?? null;

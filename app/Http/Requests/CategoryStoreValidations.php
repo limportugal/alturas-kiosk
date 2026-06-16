@@ -17,7 +17,7 @@ class CategoryStoreValidations extends FormRequest{
     public function rules(): array{
         return[
         'name' => 'required|string|max:50',
-         'image_path'  => ['sometimes', 'nullable','file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+         'image_path'  => ['sometimes', 'nullable','file', 'mimes:png,avif', 'max:2048'],
         'status' => ['nullable', 'string'],
         ]; 
     }

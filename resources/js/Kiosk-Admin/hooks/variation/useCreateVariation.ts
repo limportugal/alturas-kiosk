@@ -53,7 +53,7 @@ export const useCreateVariation = () => {
             const compressed = await compressionImage(selected, {
                 maxWidthOrHeight: 500,
                 maxSizeMB:        0.3,
-                fileType:         'image/webp',
+                fileType:         'image/png',
             });
             setImage(compressed);
             setErrors((prev) => ({ ...prev, image_path: undefined }));
