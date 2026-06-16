@@ -131,10 +131,11 @@ export const useCart = () => {
     // Final stock validation happens here on the backend
     const confirmCart = async () => {
         const currentCartId = getCartId();
-        if (currentCartId === null) return;
+        if (currentCartId === null) return null;
 
-        await CartConfirmService(currentCartId);
+        const result = await CartConfirmService(currentCartId);
         clearCart();
+        return result;
     };
 
     // ── clearCartWithDB ───────────────────────────────────────────────────────

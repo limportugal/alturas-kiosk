@@ -27,9 +27,10 @@ interface MainPageProps {
   onIdleReset: () => void;
   entryProductId?: number | string | null;
   onEntryProductHandled?: () => void;
+  onReturnToScreensaver?:() => void;
 }
 
-export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, onEntryProductHandled }: MainPageProps) {
+export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, onEntryProductHandled, onReturnToScreensaver }: MainPageProps) {
   const [screen, setScreen]                   = useState<Screen>("home");
   const [activeCategoryId, setActiveCategoryId] = useState<string | null>(null);
   const [activeCategoryName, setActiveCategoryName] = useState<string | null>(null);
@@ -142,7 +143,11 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
         />
       )}
       {showConfirm && <ConfirmationModal onClose={goHome} />}
-      <CartSummaryModal open={summaryOpen} onClose={() => setSummaryOpen(false)} />
+      <CartSummaryModal 
+            open={summaryOpen} 
+            onClose={() => setSummaryOpen(false)} 
+            onPlaceOrder={onReturnToScreensaver}
+        />
       <IdleModal idleTimeoutMs={idleTimeoutMs} onReset={onIdleReset} />
     </div>
   );

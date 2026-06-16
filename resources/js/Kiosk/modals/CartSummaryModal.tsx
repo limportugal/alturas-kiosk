@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import axios from "axios";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
@@ -6,6 +7,7 @@ import { CartItem } from "@/Kiosk/types/cart-types";
 import { RemoveIcon } from "@/Kiosk/components/UI/RemoveIcon";
 import { formatMoney } from "@/Kiosk/components/shared"
 import { typography } from "@/Kiosk/utils/typography";
+import { generateReceiptFromCart, printReceipt } from "@/Kiosk/utils/receiptPrinter";
  
 
 
@@ -31,8 +33,11 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
     const [visible, setVisible] = useState(false);
     const [ordered, setOrdered] = useState(false);
+    const [placingOrder, setPlacingOrder] = useState(false);
+    const [placeOrderError, setPlaceOrderError] = useState("");
     const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
     const [removeTarget, setRemoveTarget] = useState<{ product_id: number; color: string | null; name: string } | null>(null);
+    const [placeConfirmOpen, setPlaceConfirmOpen] = useState(false);
    
 
     const totalCount = cartItems.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
@@ -53,6 +58,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
     useEffect(() => {
         if (open) {
             setOrdered(false);
+            setPlacingOrder(false);
+            setPlaceOrderError("");
             requestAnimationFrame(() => setVisible(true));
         } else {
             setVisible(false);
@@ -72,19 +79,37 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
     };
 
     const handlePlaceOrder = async () => {
-        setOrdered(true);
-        // try {
-        //     await confirmCart();
-        //     onPlaceOrder?.();
-        // } catch {
-        //     // Still close so the user isn't stuck
-        // }
+        if (placingOrder) {
+            return;
+        }
 
-        confirmCart();
+        setPlacingOrder(true);
+        setPlaceOrderError("");
 
-        onPlaceOrder?.();
-        setTimeout(handleClose, 1800);
-        onClose();
+        try {
+            const result = await confirmCart();
+
+            if (!result?.data) {
+                throw new Error("Unable to confirm the cart.");
+            }
+
+            const receiptContent = generateReceiptFromCart(result.data);
+            printReceipt(receiptContent);
+
+            setOrdered(true);
+            onPlaceOrder?.();
+            setTimeout(handleClose, 1800);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const stockError = error.response?.data?.errors?.stock?.[0];
+                const message = error.response?.data?.message;
+                setPlaceOrderError(stockError || message || "Unable to place the order.");
+            } else {
+                setPlaceOrderError(error instanceof Error ? error.message : "Unable to place the order.");
+            }
+        } finally {
+            setPlacingOrder(false);
+        }
     };
 
     const handleIncrease = (item: CartItem) => {
@@ -307,13 +332,13 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div style={{ display: "flex", gap: 12 }}>
                                 <button
-                                    onClick={handlePlaceOrder}
-                                    disabled={ordered}
+                                    onClick={() => setPlaceConfirmOpen(true)}
+                                    disabled={ordered || placingOrder}
                                     style={{
                                         background: ordered ? "#22c55e" : colors.primary,
                                         color: "#fff", border: "none", borderRadius: 12, 
                                         padding: "14px 40px", fontSize: 15, fontWeight: 700,
-                                        letterSpacing: 1.5, cursor: ordered ? "default" : "pointer",
+                                        letterSpacing: 1.5, cursor: ordered || placingOrder ? "default" : "pointer",
                                         transition: "background 0.25s ease",
                                         display: "flex", alignItems: "center", gap: 8,
                                     }}
@@ -328,16 +353,35 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                 </button>
                                  </div>
 
-                                <div style={{marginLeft: 48}}>
-                                    <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
-                                    <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(totalPrice)}</p>
-                                </div>
-                           
-                        </div>
-                    </div>
-                )}
+	                                <div style={{marginLeft: 48}}>
+	                                    <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
+	                                    <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(totalPrice)}</p>
+	                                </div>
+	                           
+	                        </div>
+                            {placeOrderError && (
+                                <p style={{ margin: "14px 0 0", color: "#dc2626", fontSize: 14, fontWeight: 600 }}>
+                                    {placeOrderError}
+                                </p>
+                            )}
+	                    </div>
+	                )}
             </div>
         </div>
+
+        {/* ---- Place Order ----*/}
+        <ConfirmActionModal
+            open={placeConfirmOpen}
+            title="Place Order"
+            message="Are you sure you want to place this order?"
+            confirmLabel="Yes, Place Order"
+            cancelLabel="Cancel"
+            onConfirm={() => {
+                setPlaceConfirmOpen(false);
+                handlePlaceOrder();
+            }}
+            onClose={() => setPlaceConfirmOpen(false)}
+        />
 
         {/* ── Clear All confirmation ── */}
         <ConfirmActionModal

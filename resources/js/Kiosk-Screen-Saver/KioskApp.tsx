@@ -63,6 +63,7 @@ function ScaledKiosk() {
                         onIdleReset={() => setStarted(false)}
                         entryProductId={entryProductId}
                         onEntryProductHandled={() => setEntryProductId(null)}
+                        onReturnToScreensaver={() => setStarted(false)}
                     />
                 ) : (
                     <Screensaver
