@@ -3,15 +3,18 @@ import { ProductItem } from '@/Kiosk-Admin/types/product-type';
 import { CategoryList } from '@/Kiosk-Admin/types/category-types';
 import { SubCategoryList } from '@/Kiosk-Admin/types/subcategory-types';
 import { VariationList } from '@/Kiosk-Admin/types/variation-types';
+import { AdsList } from '@/Kiosk-Admin/types/ads-types';
 
 import CategoryToggleStatus from '@/Kiosk-Admin/components/CategoryToggleStatus';
 import SubCategoryToggleStatus from '@/Kiosk-Admin/components/SubCategoryToggleStatus';
 import ProductToggleStatus from '@/Kiosk-Admin/components/ProductToggleStatus';
 import VariationToggleStatus from '@/Kiosk-Admin/components/VariationToggleStatus';
+import AdsToggleStatus from '@/Kiosk-Admin/components/AdsToggleStatus';
 import EditProduct from '@/Kiosk-Admin/components/Forms/Product-Item/edit-product';
 import EditCategory from '@/Kiosk-Admin/components/Forms/CatergoryItem/edit-category';
 import EditSubCategory from '@/Kiosk-Admin/components/Forms/SubCategoryItem/edit-subcategory';
 import EditVariation from '@/Kiosk-Admin/components/Forms/VariationItem/edit-variation';
+import EditAd from '@/Kiosk-Admin/components/Forms/AdsItem/edit-ad';
 import ImagePreviewCell from '@/Kiosk-Admin/components/Buttons/ImagePreviewCell';
 import MultiplePreviewImage from '@/Kiosk-Admin/components/Buttons/MultiplePreviewImage';
 
@@ -263,6 +266,37 @@ export const VariationItem: Column<VariationList>[] = [
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <VariationToggleStatus id={row.id} status={row.status === 'Active'} />
         <EditVariation variation={row} />
+      </div>
+    ),
+  },
+];
+
+export const AdsItem: Column<AdsList>[] = [
+  {
+    id: 'file_path',
+    label: 'Preview',
+    render: (row) =>
+      row.type === 'image' ? (
+        <ImagePreviewCell imagePath={`/${row.file_path}`} alt={row.title} />
+      ) : (
+        <video
+          src={`/${row.file_path}`}
+          style={{ width: 64, height: 48, objectFit: 'cover', borderRadius: 4, border: '1px solid #e5e7eb' }}
+          muted
+        />
+      ),
+  },
+  { id: 'title',      label: 'Title' },
+  { id: 'type',       label: 'Type' },
+  { id: 'sort_order', label: 'Order' },
+  { id: 'duration',   label: 'Duration (s)' },
+  {
+    id: 'actions',
+    label: 'Actions',
+    render: (row) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <AdsToggleStatus id={row.id} status={row.status === 'Active'} />
+        <EditAd ad={row} />
       </div>
     ),
   },

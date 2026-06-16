@@ -40,7 +40,8 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: " 🛠️ Maintenance",
     items: [
-      { icon: "🌙", label: "Screen Saver", href: route('screen-saver'), badge: null },
+      { icon: "🎬", label: "Ads Management", href: route('ads'),          badge: null },
+      { icon: "🌙", label: "Screen Saver",   href: route('screen-saver'), badge: null },
       // { icon: "🏭", label: "Suppliers",       href: "/suppliers",       badge: null },
       // { icon: "📋", label: "Purchase Orders", href: "/purchase-orders", badge: "2"  },
       // { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },

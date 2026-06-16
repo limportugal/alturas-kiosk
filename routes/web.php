@@ -7,6 +7,7 @@ use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\VariationController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\KioskSettingController;
+use App\Http\Controllers\AdsController;
 
 
 use Illuminate\Foundation\Application;
@@ -25,6 +26,7 @@ Route::get('/Kiosk/products', [ProductController::class, 'showPublicProduct'])->
 Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->name('product-variations-public-list');
 Route::get('/kiosk/stock/check', [CartController::class, 'checkStock'])->name('cart.check-stock');
 Route::get('/kiosk/settings', [KioskSettingController::class, 'show'])->name('kiosk.settings.show');
+Route::get('/kiosk/ads', [AdsController::class, 'publicList'])->name('ads.public-list');
 
 // Cart routes (no auth required)
 Route::get('/kiosk/cart/active', [CartController::class, 'getActiveCart'])->name('cart.active');
@@ -101,6 +103,16 @@ Route::middleware('auth')->group(function () {
     Route::prefix('kiosk-settings')->controller(KioskSettingController::class)->group(function () {
         Route::get('/screen-saver',  'page')->name('screen-saver');
         Route::put('/update',        'update')->name('kiosk.settings.update');
+    });
+
+    // Ads Management
+    Route::prefix('ads')->controller(AdsController::class)->group(function () {
+        Route::get('/ads-page',           'page')->name('ads');
+        Route::get('/ads-list',           'index')->name('ads-list');
+        Route::post('/ads-store',         'store')->name('ads-store');
+        Route::put('/{id}/ads-update',    'update')->name('ads-update');
+        Route::put('/{id}/ads-status',    'toggleStatus')->name('ads-status');
+        Route::delete('/{id}/ads-delete', 'destroy')->name('ads-delete');
     });
 
 });
