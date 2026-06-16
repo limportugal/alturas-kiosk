@@ -1,18 +1,16 @@
 import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import useDynamicQuery from '@/hooks/useDynamicQuery';
+import { useDynamicMutation } from '@/hooks/useDynamicMutation';
 import { useCartStore } from '@/Kiosk/store/useCartStore';
 import { CartItem } from '@/Kiosk/types/cart-types';
 
-import { CartStoreService }      from '@/Kiosk/services/cart/CartStoreService';
-import { CartUpdateService }     from '@/Kiosk/services/cart/CartUpdateService';
-import { CartConfirmService }    from '@/Kiosk/services/cart/CartConfirmService';
+import { CartStoreService } from '@/Kiosk/services/cart/CartStoreService';
+import { CartUpdateService } from '@/Kiosk/services/cart/CartUpdateService';
+import { CartConfirmService } from '@/Kiosk/services/cart/CartConfirmService';
 import { CartDeactivateService } from '@/Kiosk/services/cart/CartDeactivateService';
-import { GetActiveCartService }  from '@/Kiosk/services/cart/GetActiveCartService';
-import { StockCheckService }     from '@/Kiosk/services/stock/StockCheckService';
-
-// ── No StockReserveService / StockReleaseService ──────────────────────────────
-// Stock is NOT reserved on add/remove/update.
-// Stock is only validated on Place Order (backend final check).
-// Stock display is kept fresh via useStockPolling (silent background fetch).
+import { GetActiveCartService } from '@/Kiosk/services/cart/GetActiveCartService';
+import { StockCheckService } from '@/Kiosk/services/stock/StockCheckService';
 
 export const useCart = () => {
     const {
@@ -27,125 +25,149 @@ export const useCart = () => {
         addItem: storeAddItem,
         removeItem,
         updateItemQty,
-        clearCart,
+        clearCart: clearCartStore,
         getTotalAmount,
     } = useCartStore();
 
-    const getItems  = () => useCartStore.getState().cartItems;
+    const queryClient = useQueryClient();
+
+    const getItems = () => useCartStore.getState().cartItems;
     const getCartId = () => useCartStore.getState().cartId;
 
-    // Restore active cart on mount
+    const { data: activeCartResponse } = useDynamicQuery(
+        ['active-cart'],
+        GetActiveCartService,
+        {
+            enabled: cartId === null,
+            staleTime: 0,
+            refetchInterval: false,
+            refetchOnWindowFocus: false,
+        }
+    );
+
+    const storeCartMutation = useDynamicMutation({
+        mutationKey: ['active-cart'],
+        mutationFn: (items: CartItem[]) => CartStoreService(items),
+    });
+
+    const updateCartMutation = useDynamicMutation({
+        mutationKey: ['active-cart'],
+        mutationFn: ({ id, items }: { id: number; items: CartItem[] }) =>
+            CartUpdateService(id, items),
+    });
+
+    const confirmCartMutation = useDynamicMutation({
+        mutationKey: ['product-list', 'screensaver-products'],
+        mutationFn: (id: number) => CartConfirmService(id),
+    });
+
+    const deactivateCartMutation = useDynamicMutation({
+        mutationKey: ['active-cart'],
+        mutationFn: (id: number) => CartDeactivateService(id),
+    });
+
     useEffect(() => {
-        const fetchActiveCart = async () => {
+        const syncActiveCart = async () => {
+            const cart = activeCartResponse?.data;
+            if (!cart?.cart_items?.length || cartId !== null) return;
+
             try {
-                const response = await GetActiveCartService();
-                const cart = response.data;
+                const cartItemsWithStock = await Promise.all(
+                    cart.cart_items.map(async (item) => {
+                        try {
+                            const stock = await StockCheckService(
+                                item.product_id,
+                                item.color ?? null
+                            );
 
-                if (cart?.cart_items?.length) {
-                    const cartItemsWithStock = await Promise.all(
-                        cart.cart_items.map(async (item) => {
-                            try {
-                                const stock = await StockCheckService(
-                                    item.product_id,
-                                    item.color ?? null
-                                );
+                            return {
+                                ...item,
+                                stock: item.color
+                                    ? (stock.variant_quantity ?? stock.product_quantity)
+                                    : stock.product_quantity,
+                            };
+                        } catch {
+                            return item;
+                        }
+                    })
+                );
 
-                                return {
-                                    ...item,
-                                    stock: item.color
-                                        ? (stock.variant_quantity ?? stock.product_quantity)
-                                        : stock.product_quantity,
-                                };
-                            } catch {
-                                return item;
-                            }
-                        })
-                    );
-
-                    setCartId(cart.id);
-                    setCartNumber(cart.cart_number);
-                    setCartItems(cartItemsWithStock);
-                    setStatus(cart.status);
-                }
+                setCartId(cart.id);
+                setCartNumber(cart.cart_number);
+                setCartItems(cartItemsWithStock);
+                setStatus(cart.status);
             } catch {
                 // No active cart, start fresh
             }
         };
 
-        if (cartId === null) fetchActiveCart();
-    }, []);
+        void syncActiveCart();
+    }, [activeCartResponse, cartId, setCartId, setCartNumber, setCartItems, setStatus]);
 
-    // ── addItem ───────────────────────────────────────────────────────────────
-    // No stock reserve — just update store and sync cart to DB
     const addItem = async (item: CartItem) => {
         storeAddItem(item);
 
-        const currentItems  = getItems();
+        const currentItems = getItems();
         const currentCartId = getCartId();
 
         try {
             if (currentCartId === null) {
-                const result = await CartStoreService(currentItems);
+                const result = await storeCartMutation.mutateAsync(currentItems);
                 setCartId(result.data.id);
                 setCartNumber(result.data.cart_number);
             } else {
-                await CartUpdateService(currentCartId, currentItems);
+                await updateCartMutation.mutateAsync({ id: currentCartId, items: currentItems });
             }
         } catch {
             // Keep local cart state
         }
     };
 
-    // ── removeCartItem ────────────────────────────────────────────────────────
-    // No stock release — just remove from store and sync cart to DB
     const removeCartItem = async (product_id: number, color: string | null) => {
         removeItem(product_id, color);
 
-        const updatedItems  = getItems();
+        const updatedItems = getItems();
         const currentCartId = getCartId();
 
         if (currentCartId !== null) {
             if (updatedItems.length === 0) {
-                await CartDeactivateService(currentCartId);
-                clearCart();
+                await deactivateCartMutation.mutateAsync(currentCartId);
+                clearCartStore();
             } else {
-                await CartUpdateService(currentCartId, updatedItems);
+                await updateCartMutation.mutateAsync({ id: currentCartId, items: updatedItems });
             }
         }
     };
 
-    // ── updateQty ─────────────────────────────────────────────────────────────
-    // No stock reserve/release — just update store and sync cart to DB
     const updateQty = async (product_id: number, color: string | null, quantity: number) => {
         updateItemQty(product_id, color, quantity);
 
-        const updatedItems  = getItems();
+        const updatedItems = getItems();
         const currentCartId = getCartId();
 
         if (currentCartId !== null) {
-            await CartUpdateService(currentCartId, updatedItems);
+            await updateCartMutation.mutateAsync({ id: currentCartId, items: updatedItems });
         }
     };
 
-    // ── confirmCart ───────────────────────────────────────────────────────────
-    // Final stock validation happens here on the backend
     const confirmCart = async () => {
         const currentCartId = getCartId();
         if (currentCartId === null) return null;
 
-        const result = await CartConfirmService(currentCartId);
-        clearCart();
+        const result = await confirmCartMutation.mutateAsync(currentCartId);
+        // Remove the active-cart cache BEFORE clearing store so the
+        // useEffect sync doesn't re-populate from stale cache data
+        queryClient.removeQueries({ queryKey: ['active-cart'] });
+        clearCartStore();
         return result;
     };
 
-    // ── clearCartWithDB ───────────────────────────────────────────────────────
-    // No stock release needed — stock was never reserved
     const clearCartWithDB = async () => {
         const currentCartId = getCartId();
         if (currentCartId !== null) {
-            await CartDeactivateService(currentCartId);
+            await deactivateCartMutation.mutateAsync(currentCartId);
         }
-        clearCart();
+        clearCartStore();
     };
 
     return {
@@ -154,10 +176,10 @@ export const useCart = () => {
         cartItems,
         status,
         addItem,
-        removeItem:  removeCartItem,
+        removeItem: removeCartItem,
         updateQty,
         confirmCart,
-        clearCart:   clearCartWithDB,
+        clearCart: clearCartWithDB,
         getTotalAmount,
     };
 };
