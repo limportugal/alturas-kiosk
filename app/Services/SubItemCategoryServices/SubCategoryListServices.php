@@ -12,7 +12,7 @@ class SubCategoryListServices
             ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
             ->with('category:id,name')
             ->latest('id')
-            ->paginate(10);
+            ->get();
     }
 
      public function getPublicSubCategoryList()

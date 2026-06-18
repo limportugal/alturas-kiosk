@@ -29,7 +29,7 @@ class ProductListServices
                 'product_items.status'
             )
             ->latest('product_items.id')
-            ->paginate(10);
+            ->get();
     } 
 
     public function showPublicProductList(){

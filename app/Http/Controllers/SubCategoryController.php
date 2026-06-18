@@ -30,7 +30,8 @@ class SubCategoryController extends Controller
     public function SubCategoryList(SubCategoryListServices $service)
     {
         $subcategory = $service->getSubCategoryList();
-        return response()->json($subcategory);
+        return response()->json([
+            'data' => $subcategory]); 
     }
 
     

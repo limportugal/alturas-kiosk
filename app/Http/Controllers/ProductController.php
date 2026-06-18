@@ -28,8 +28,9 @@ class ProductController extends Controller {
 
     public function list(ProductListServices $service){
         $products = $service->showProductList();
-        return response()->json($products);
-    }
+        return response()->json([
+            'data' => $products]);
+    } 
 
     public function showPublicProduct(ProductListServices $service){
         $product = $service->showPublicProductList();
