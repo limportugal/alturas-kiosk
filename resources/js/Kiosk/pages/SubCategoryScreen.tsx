@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { CategoryData } from "../types/types";
 import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "../components/shared";
+import { PurpleBannerV2 } from "@/Kiosk/components/UI/PurpleBanner";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
 
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
@@ -80,7 +81,7 @@ export default function SubCategoryScreen({
       <HFHeader small />
       
       <div style={{ position: "relative" }}>
-      <PurpleBanner>{category.label}</PurpleBanner>
+      <PurpleBannerV2 marquee={true}>{category.label}</PurpleBannerV2>
         <KioskButton 
                       onClick={onBack}  
                       style={{

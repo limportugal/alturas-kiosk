@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.purple-banner-marquee {
+    animation: purpleBannerMarquee 4s ease-in-out infinite alternate;
+}
+
+@keyframes purpleBannerMarquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(calc(var(--purple-banner-marquee-distance) * -1));
+    }
+}

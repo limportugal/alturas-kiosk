@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { HFHeader, PurpleBanner, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
+import { HFHeader, MainMenuBtn, KIOSK_STYLE } from "@/Kiosk/components/shared";
+import { PurpleBannerV2 } from "@/Kiosk/components/UI/PurpleBanner";
 import { ArrowIcon } from "@/Kiosk/components/UI/ArrowIcon";
 import { ThumbnailButton } from "@/Kiosk/components/buttons/ThumbnailButton";
 import { KioskButton } from "@/Kiosk/components/buttons/KioskButton";
@@ -138,9 +139,9 @@ export default function ProductDetailScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
         <div style={{ position: "relative"}}>
-      <PurpleBanner>
+      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={48}>
         {variationTypeName.toUpperCase()}
-      </PurpleBanner>
+      </PurpleBannerV2>
         <KioskButton 
                 onClick={onBack}  
                 style={{

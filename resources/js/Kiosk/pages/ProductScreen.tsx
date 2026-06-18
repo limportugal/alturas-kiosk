@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CategoryData} from "../types/types";
 
-import useDynamicQuery from "@/hooks/useDynamicQuery";
+import useDynamicQuery from "@/hooks/useDynamicQuery"; 
 
 import { HFHeader, PurpleBanner, MainMenuBtn, Stars, KIOSK_STYLE } from "@/Kiosk/components/shared";
 import { ImageCardButton } from "@/Kiosk/components/buttons/ImageCardButton";
@@ -21,6 +21,8 @@ import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { Badge } from "@/Kiosk/components/UI/Badge";
 
 import { formatMoney } from "@/Kiosk/components/shared"
+
+import { PurpleBannerV2 } from "@/Kiosk/components/UI/PurpleBanner";
 
 
 export default function ProductScreen({
@@ -107,7 +109,7 @@ export default function ProductScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
       <div style={{ position: "relative"}}>
-      <PurpleBanner>
+      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={68}>
         <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
         <span>{subcat?.category?.name.toUpperCase() ??  "No Subcategory"}</span>
         {subcat &&(
@@ -117,14 +119,14 @@ export default function ProductScreen({
           </>
         )}
         </div>
-      </PurpleBanner>
+      </PurpleBannerV2>
             <KioskButton 
               onClick={onBack}  
               style={{
                 display: "flex",
                 flexDirection: "row",
                 position: 'absolute',
-                top: "35%",
+                top: "8%",
                 left: -50,
                 height: 95,
                 background: "transparent",
