@@ -22,6 +22,7 @@ export const useCart = () => {
         setCartNumber,
         setCartItems,
         setStatus,
+        setIsClearing,
         addItem: storeAddItem,
         removeItem,
         updateItemQty,
@@ -69,6 +70,8 @@ export const useCart = () => {
     useEffect(() => {
         const syncActiveCart = async () => {
             const cart = activeCartResponse?.data;
+            // Don't repopulate while a clear is in progress
+            if (useCartStore.getState().isClearing) return;
             if (!cart?.cart_items?.length || cartId !== null) return;
 
             try {
@@ -165,12 +168,21 @@ export const useCart = () => {
         return result;
     };
 
-    const clearCartWithDB = async () => {
+    const clearCartWithDB = () => {
         const currentCartId = getCartId();
+        // Set isClearing FIRST to block the sync useEffect from
+        // repopulating the store when cartId becomes null after clear.
+        setIsClearing(true);
+        clearCartStore(); // wipes items/cartId immediately — isClearing stays true via setIsClearing above
+        queryClient.removeQueries({ queryKey: ['active-cart'] });
         if (currentCartId !== null) {
-            await deactivateCartMutation.mutateAsync(currentCartId);
+            // Deactivate in background; reset isClearing flag when done
+            void deactivateCartMutation.mutateAsync(currentCartId).finally(() => {
+                setIsClearing(false);
+            });
+        } else {
+            setIsClearing(false);
         }
-        clearCartStore();
     };
 
     return {

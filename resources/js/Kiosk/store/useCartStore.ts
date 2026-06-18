@@ -9,11 +9,13 @@ interface CartStore {
     cartNumber: string;
     cartItems:  CartItem[];
     status:     string;
+    isClearing: boolean;
 
     setCartId:     (cartId: number | null)  => void;
     setCartNumber: (cartNumber: string)     => void;
     setCartItems:  (cartItems: CartItem[])  => void;
     setStatus:     (status: string)         => void;
+    setIsClearing: (isClearing: boolean)    => void;
 
     addItem: (item: CartItem) => void;
     removeItem: (product_id: number, color: string | null) => void;
@@ -27,11 +29,13 @@ export const useCartStore = create<CartStore>((set, get) => ({
     cartNumber: '',
     cartItems: [],
     status: 'active',
+    isClearing: false,
 
-    setCartId:     (cartId)     => set((state) => ({ ...state, cartId })),
-    setCartNumber: (cartNumber) => set((state) => ({ ...state, cartNumber })),
-    setCartItems:  (cartItems)  => set((state) => ({ ...state, cartItems })),
-    setStatus:     (status)     => set((state) => ({ ...state, status })),
+    setCartId:     (cartId)         => set((state) => ({ ...state, cartId })),
+    setCartNumber: (cartNumber)     => set((state) => ({ ...state, cartNumber })),
+    setCartItems:  (cartItems)      => set((state) => ({ ...state, cartItems })),
+    setStatus:     (status)         => set((state) => ({ ...state, status })),
+    setIsClearing: (isClearing)     => set((state) => ({ ...state, isClearing })),
 
     addItem: (item) =>
         set((state) => {
