@@ -222,7 +222,7 @@ export default function DataTable<T extends { id: number }>({
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
         onPageChange={(_, newPage) =>
-          setPage(newPage)
+          setPage(newPage) 
         }
         onRowsPerPageChange={(e) => {
           setRowsPerPage(parseInt(e.target.value, 10));

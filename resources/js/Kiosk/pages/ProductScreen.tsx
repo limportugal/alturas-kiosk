@@ -124,7 +124,7 @@ export default function ProductScreen({
                 display: "flex",
                 flexDirection: "row",
                 position: 'absolute',
-                top: "8%",
+                top: "35%",
                 left: -50,
                 height: 95,
                 background: "transparent",
@@ -159,7 +159,7 @@ export default function ProductScreen({
             label={tab.name}
             active={activeTab === i}
             onClick={() => setActiveTab(activeTab === i ? null : i)}
-            width={180} 
+            width={183} 
             imageHeight={120}
             labelFontSize={14} 
             showArrow={false}
