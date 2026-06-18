@@ -18,6 +18,8 @@ import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
 
+
+
 export default function ProductDetailScreen({
   product,
   onBack,
@@ -139,7 +141,7 @@ export default function ProductDetailScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
         <div style={{ position: "relative"}}>
-      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={48}>
+      <PurpleBannerV2>
         {variationTypeName.toUpperCase()}
       </PurpleBannerV2>
         <KioskButton 
@@ -148,8 +150,8 @@ export default function ProductDetailScreen({
                   display: "flex",
                   flexDirection: "row",
                   position: 'absolute',
-                  top: "10%",
-                  left: -25,
+                  top: "8%",
+                  left: -50,
                   height: 95,
                   alignItems: "center",
                   justifyContent: "center",

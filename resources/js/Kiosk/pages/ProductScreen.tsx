@@ -219,6 +219,7 @@ export default function ProductScreen({
                 textAlign: "left",
                 display: "flex",
                 flexDirection: "column",
+                height:560,
                 boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
               }}
             >

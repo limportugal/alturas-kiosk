@@ -9,6 +9,7 @@ export function ImageCardButton({
   onClick,
   width,
   imageHeight = 120,
+  cardHeight,
   labelFontSize,
   showArrow,
 }: {
@@ -18,6 +19,7 @@ export function ImageCardButton({
   onClick: () => void;
   width?: number;
   imageHeight?: number;
+  cardHeight?: number;
   labelFontSize?: number;
   showArrow?: boolean;
 }) {
@@ -39,6 +41,7 @@ export function ImageCardButton({
           ? "0 4px 20px rgba(90,45,130,0.35)"
           : "0 4px 16px rgba(0,0,0,0.10)",
         transition: "all 0.2s ease",
+        height: cardHeight,
       }}
     >
       {/* Image */}

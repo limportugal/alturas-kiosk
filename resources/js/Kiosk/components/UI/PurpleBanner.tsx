@@ -85,6 +85,7 @@ useEffect(() => {
                     fontWeight: 700,
                     fontFamily: 'Arial, sans-serif',
                     display: 'inline-block',
+              
                     ['--purple-banner-marquee-distance' as string]: `${marqueeDistance}px`,
                     }}
                 >
@@ -98,6 +99,7 @@ useEffect(() => {
                         fontSize: small ? 26 : 36,
                         fontWeight: 700,
                         margin: 0,
+                        
                         // fontFamily: 'monospace',
                         fontFamily: "Arial, sans-serif",
                     }}

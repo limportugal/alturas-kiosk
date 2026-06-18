@@ -19,6 +19,8 @@ import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
+
+
 export default function SubCategoryScreen({
   category,
   categoryId,
@@ -81,15 +83,15 @@ export default function SubCategoryScreen({
       <HFHeader small />
       
       <div style={{ position: "relative" }}>
-      <PurpleBannerV2 marquee={true}>{category.label}</PurpleBannerV2>
+      <PurpleBannerV2>{category.label}</PurpleBannerV2>
         <KioskButton 
                       onClick={onBack}  
                       style={{
                         display: "flex",
                         flexDirection: "row",
                         position: 'absolute',
-                        top: "10%",
-                        left: -25,
+                        top: "8%",
+                        left: -50,
                         height: 95,
                         alignItems: "center",
                         justifyContent: "center",
