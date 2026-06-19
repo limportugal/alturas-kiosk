@@ -46,10 +46,12 @@ export function ImageCardButton({
     >
       {/* Image */}
       <div style={{ width: "100%", height: imageHeight, overflow: "hidden", background: colors.background }}>
+      {/* <div style={{ width: "100%", height: imageHeight, overflow: "hidden", background: "#ffffffff", }}> */}
         <img
           src={image ?? undefined}
           alt={label}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          //  style={{ width: "100%", height: "100%", objectFit: "contain", boxSizing: "border-box" }}
         />
       </div>
 
@@ -59,7 +61,7 @@ export function ImageCardButton({
           position: "relative",
           background: active ? "#3d1a5c" : "#5a2d82",
           padding: "14px 16px",
-          height: 70,
+          height: 60,
           boxSizing:"border-box",
           display: "flex",
           justifyContent: "center",
