@@ -21,6 +21,7 @@ import { ProductItem } from "@/Kiosk-Admin/types/product-type";
 
 
 
+
 // ── ROOT ───────────────────────────────────────────
 interface MainPageProps {
   idleTimeoutMs?: number;
@@ -41,9 +42,7 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
   const [showConfirm, setShowConfirm]           = useState(false);
   const [summaryOpen, setSummaryOpen]           = useState(false);
 
-  const activeCategory = CATEGORIES.find(
-    (c) => c.label.toLowerCase() === (activeCategoryName ?? "").toLowerCase()
-  ) ?? null;
+
 
   // ── Prefetch all data on mount so child screens load instantly ──────────────
   const { data: subCategoriesData } = useDynamicQuery(
@@ -58,6 +57,23 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
   const activeSubCategory = subCategoriesData?.data?.find(
     (s) => String(s.id) === activeSubId
   ) ?? null;
+
+    const selectedDbCategory = categoriesData?.data?.find(
+    (category) => String(category.id) === activeCategoryId
+  );
+
+  const activeCategory = selectedDbCategory ? {
+    id: String(selectedDbCategory.id),
+    label: selectedDbCategory.name,
+    image: selectedDbCategory.image_path
+      ? `${selectedDbCategory.image_path}`
+      : "/images/placeholder.png", 
+    description: selectedDbCategory.description ?? "", 
+    subCategories: [],
+    subCategoryTabs: [],
+    products: {},
+  } : null ;
+
 
   
 

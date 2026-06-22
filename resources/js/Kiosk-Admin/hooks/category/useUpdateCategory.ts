@@ -22,6 +22,7 @@ export const useUpdateCategory = (category: CategoryList | null) => {
     if (!category) return;
 
     categoryState.setName(category.name);
+    categoryState.setDescription(category.description);
     categoryState.setImage_path(category.image_path ?? "");
     categoryState.setStatus(category.status ?? "Active");
     setImage(null);
@@ -37,6 +38,7 @@ export const useUpdateCategory = (category: CategoryList | null) => {
     try {
       CategoryUpdateValidationSchema.parse({
         name: categoryState.name ?? "",
+        description: categoryState.description ?? "",
         image_path: image,
       });
 

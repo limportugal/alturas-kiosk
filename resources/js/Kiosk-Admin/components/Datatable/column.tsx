@@ -207,6 +207,7 @@ export const CatItem: Column<CategoryList>[] = [
     ),
   },
   { id: 'name', label: 'Category Name' },
+  { id: 'description', label: 'Description'},
   {
     id: 'actions',
     label: 'Actions',

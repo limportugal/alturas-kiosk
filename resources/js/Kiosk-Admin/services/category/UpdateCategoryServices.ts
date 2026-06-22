@@ -7,13 +7,15 @@ export const UpdateCategoryServices = async ({ id,data}:
         const formData = new FormData();
 
         formData.append('name', data.name);
+
+        formData.append('description', data.description);
+                // console.log('is active:', data.description);
         formData.append('status', data.status);
         formData.append('remove_image', data.remove_image ? '1' : '0');
 
         if (data.image_path && data.image_path instanceof File) {
-
             console.log('image_path:', data.image_path);
-console.log('is File:', data.image_path instanceof File);
+
             formData.append('image_path', data.image_path);
         }
 

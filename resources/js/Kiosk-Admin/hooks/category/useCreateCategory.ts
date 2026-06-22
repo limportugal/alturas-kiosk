@@ -30,6 +30,7 @@ export const useCreateCategory = () => {
             try {
               CategoryValidationSchema.parse({
                 name: CategoryState.name ?? "",
+                description: CategoryState.description ?? "",
                 image_path: image,
               });
               setErrors({});

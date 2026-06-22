@@ -45,6 +45,7 @@ class CategoryStoreServices {
 
             $category = ItemCategoryModel::create([
                 'name' => $data['name'],
+                'description' => $data['description'],
                 'image_path' => $imagePath,
                 'status' => $data['status'] ?? 'Active',
             ]); 

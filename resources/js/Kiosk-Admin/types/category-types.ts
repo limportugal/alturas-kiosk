@@ -7,6 +7,7 @@ export interface DropdownCategory
 export interface CategoryList { 
     id: number;
     name: string;
+    description: string;
     image_path?: string;
     status: string;
     actions?: string;
@@ -14,6 +15,7 @@ export interface CategoryList {
 
 export interface CategoryPayload {
   name: string;
+  description: string
   image_path?: File | null; // or File | null
   status: string;
 }

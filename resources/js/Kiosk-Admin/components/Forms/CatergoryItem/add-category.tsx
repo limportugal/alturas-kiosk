@@ -17,8 +17,8 @@ export default function AddCategory() {
   const [open, setOpen]           = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const { handleSubmit, handleImageChange, image, setImage, errors, isPending } = useCreateCategory();
-  const { name, setName } = useCategoryStore();
+  const { handleSubmit, handleImageChange, image, setImage, errors, isPending, isSuccess } = useCreateCategory();
+  const { name, setName, description, setDescription } = useCategoryStore();
 
   // Create/revoke object URL when image changes
   useEffect(() => {
@@ -33,6 +33,16 @@ export default function AddCategory() {
     setPreviewUrl(null);
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      setName('');
+      setDescription('');
+      setImage(null);
+      setPreviewUrl(null);
+      handleClose();
+    }
+  }, [isSuccess, setName, setDescription, setImage]);
+  
   return (
     <div>
       <Button
@@ -53,6 +63,17 @@ export default function AddCategory() {
             error={!!errors.name}
             helperText={errors.name}
           />
+
+          <TextField
+            label="Description Name"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            // error={!!errors.name}
+            // helperText={errors.name}   
+          />
+          <p className="text-sm text-yellow-600">
+          Optional: Leaving this blank will also show a blank description on the kiosk.
+        </p>
 
           <ImageUploader
             previews={image && previewUrl ? [{ file: image, previewUrl }] : []}

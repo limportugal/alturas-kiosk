@@ -61,6 +61,7 @@ class CategoryUpdateServices{
 
                 $category->update([
                         'name' => $data['name'] ?? $category->name,
+                        'description' => $data['description'] ?? $category->description,
                         'image_path' => $imagePath,
                         'status' => $data['status'] ?? $category->status,
                 ]);

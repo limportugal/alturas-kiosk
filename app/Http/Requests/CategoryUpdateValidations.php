@@ -24,6 +24,7 @@ class CategoryUpdateValidations extends FormRequest {
     {
         return [
              'name'         => ['sometimes', 'nullable', 'string'],
+             'description' =>  ['sometimes','nullable','string'],
              'image_path'   => ['sometimes', 'nullable','file', 'mimes:png,avif', 'max:2048'],
              'remove_image' => ['sometimes', 'boolean'],
         ];

@@ -11,6 +11,7 @@ export const buildUpdateCategoryPayload = (
 ): UpdateCategoryPayload => ({
   id: categoryId,
   name: state.name ?? "",
+  description: state.description ?? "",
   image_path: image,
   status: state.status ?? "Active",
   remove_image: removeImage ?? false,

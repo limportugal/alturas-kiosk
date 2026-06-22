@@ -8,6 +8,7 @@ export const buildCreateCategoryPayload = (
   image?: File
 ): CreateCategoryPayload => ({
   name: state.name ?? "",
+  description:state.description ?? "",
   image_path: image,
   status: state.status ?? "Active",
 });

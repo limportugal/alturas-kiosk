@@ -2,6 +2,11 @@ import { z } from 'zod';
 
 export const CategoryValidationSchema = z.object({
   name: z.string().min(1, 'Name is required'),
+  description: z
+    .string()
+    .optional()
+    .or(z.literal('')),
+    
   image_path: z.instanceof(File, {
     message: "Image is required"
   }),

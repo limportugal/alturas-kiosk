@@ -25,6 +25,7 @@ export default function EditCategory({ category }: Props) {
     image,
     removeImage,
     errors,
+    isSuccess,
     isPending,
   } = useUpdateCategory(open ? category : null);
 
@@ -33,6 +34,12 @@ export default function EditCategory({ category }: Props) {
     categoryState.resetForm();
     setPreviewUrl(null);
   };
+
+    useEffect(() => {
+    if(isSuccess){
+      handleClose();
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (!image) {
@@ -99,6 +106,18 @@ export default function EditCategory({ category }: Props) {
             helperText={errors.name}
             sx={INPUT_SX}
           />
+
+          <TextField
+            label="Description Name"
+            value={categoryState.description ?? ''}
+            onChange={(e) => categoryState.setDescription(e.target.value)}
+            // error={!!errors.name}
+            // helperText={errors.name}
+            sx={INPUT_SX}
+          />
+            <p className="text-sm text-yellow-600">
+          Optional: Leaving this blank will also show a blank description on the kiosk.
+         </p>
 
           <ImageUploader
             existingImages={existingImages}

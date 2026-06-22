@@ -6,6 +6,7 @@ export const CreateCategortServices = async (payload: CreateCategoryPayload): Pr
     const formData = new FormData();
     
     formData.append('name', payload.name);
+    formData.append('description', payload.description);
 
     if (payload.image_path instanceof File) {
         formData.append('image_path', payload.image_path);

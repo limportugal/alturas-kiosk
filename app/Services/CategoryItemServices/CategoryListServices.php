@@ -9,6 +9,7 @@ class CategoryListServices{
             ->select([
                 'id',
                 'name',
+                'description',
                 'image_path',
                 'status'
         ])
@@ -22,6 +23,7 @@ class CategoryListServices{
             ->select([
                 'id',
                 'name',
+                'description',
                 'image_path',
                 'status'
         ])
