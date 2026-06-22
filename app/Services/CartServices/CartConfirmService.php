@@ -2,6 +2,7 @@
 
 namespace App\Services\CartServices;
 
+use App\Services\Printer\ReceiptPrinterService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -12,7 +13,8 @@ use App\Models\ProductItem\ProductColorVariant;
 class CartConfirmService
 {
     public function __construct(
-        private StockCheckService $stockCheck = new StockCheckService()
+        private StockCheckService $stockCheck = new StockCheckService(),
+        private ?ReceiptPrinterService $receiptPrinter = null,
     ) {}
 
     public function confirm(int $id): array
@@ -30,10 +32,22 @@ class CartConfirmService
             }
 
             $cart->update(['status' => 'confirmed']);
+            $confirmedCart = $cart->refresh();
+
+            try{
+                ($this->receiptPrinter ?? app(ReceiptPrinterService::class))
+                    ->printConfirmedCart($confirmedCart);
+            } catch (\Throwable $e) {
+                 \Log::error('Confirmed cart print dispatch failed', [
+                    'cart_id' => $cart->id,
+                    'cart_number' => $cart->cart_number,
+                    'error' => $e->getMessage(),
+                ]);
+            }
 
             return [
                 'message' => 'Cart confirmed successfully',
-                'data'    => $cart->fresh(),
+                'data'    => $confirmedCart,
             ];
         });
     }

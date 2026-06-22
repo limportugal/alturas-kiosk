@@ -7,7 +7,7 @@ import { CartItem } from "@/Kiosk/types/cart-types";
 import { RemoveIcon } from "@/Kiosk/components/UI/RemoveIcon";
 import { formatMoney } from "@/Kiosk/components/shared"
 import { typography } from "@/Kiosk/utils/typography";
-import { generateReceiptFromCart, printReceipt } from "@/Kiosk/utils/receiptPrinter";
+// import { generateReceiptFromCart, printReceipt } from "@/Kiosk/utils/receiptPrinter";
  
 
 
@@ -93,8 +93,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                 throw new Error("Unable to confirm the cart.");
             }
 
-            const receiptContent = generateReceiptFromCart(result.data);
-            printReceipt(receiptContent);
+            // const receiptContent = generateReceiptFromCart(result.data);
+            // printReceipt(receiptContent);
 
             setOrdered(true);
             onPlaceOrder?.();
