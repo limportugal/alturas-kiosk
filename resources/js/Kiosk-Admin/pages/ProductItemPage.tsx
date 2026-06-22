@@ -30,6 +30,7 @@ export default function ProductItemPage() {
         // loading= {isPending_product_data}
         columns={Proditem}
         renderExpandedRow={renderProductExpandedRow}
+        groupBy={(row) => row.sub_category_name ?? 'No Sub Category'}
         searchable ={true}
         actions={<AddProduct />}
       />

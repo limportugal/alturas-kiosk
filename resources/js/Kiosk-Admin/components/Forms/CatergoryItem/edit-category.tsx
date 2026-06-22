@@ -113,6 +113,9 @@ export default function EditCategory({ category }: Props) {
             onChange={(e) => categoryState.setDescription(e.target.value)}
             // error={!!errors.name}
             // helperText={errors.name}
+              multiline
+            fullWidth
+            rows={4}
             sx={INPUT_SX}
           />
             <p className="text-sm text-yellow-600">

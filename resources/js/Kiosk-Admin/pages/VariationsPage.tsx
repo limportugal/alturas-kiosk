@@ -20,6 +20,7 @@ export default function VariationsPage() {
                 title="Variations"
                 rows={variations_data?.data ?? []}
                 columns={VariationItem}
+                groupBy={(row) => row.sub_category?.name ?? 'No Sub Category'}
                 actions={<AddVariation />}
                 searchable={true}
             />

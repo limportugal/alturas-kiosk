@@ -1,7 +1,7 @@
 import useDynamicQuery from '@/hooks/useDynamicQuery';
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { SubCategoriesServices } from '@/Kiosk-Admin/services/subcategory/GetSubCategoryListServices';
-import { SubCatItem } from '@/Kiosk-Admin/components/Datatable/column';
+import { SubCatItem, renderProductExpandedRow  } from '@/Kiosk-Admin/components/Datatable/column';
 import AddSubCategory from '@/Kiosk-Admin/components/Forms/SubCategoryItem/add-subcategory';
 
 export default function SubCategoriesPage() {
@@ -20,6 +20,7 @@ export default function SubCategoriesPage() {
                 title="Sub-Categories"
                 rows={subcategories_data?.data ?? []}
                 columns={SubCatItem}
+                groupBy={(row) => row.category?.name ?? 'No Category'}
                 actions={<AddSubCategory />}
                 searchable ={true}
             />

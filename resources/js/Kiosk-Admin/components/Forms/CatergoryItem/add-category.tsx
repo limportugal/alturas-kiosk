@@ -65,9 +65,13 @@ export default function AddCategory() {
           />
 
           <TextField
+            id="outlined-textarea"
             label="Description Name"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            multiline
+            fullWidth
+            minRows={4}
             // error={!!errors.name}
             // helperText={errors.name}   
           />

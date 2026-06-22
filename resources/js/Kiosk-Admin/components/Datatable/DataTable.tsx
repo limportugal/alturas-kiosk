@@ -28,6 +28,7 @@ interface Props<T> {
   defaultOrder?: Order,
   defaultOrderBy?: keyof T;
   renderExpandedRow?: (row: T) => React.ReactNode;
+  groupBy?: (row: T) => string;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -54,12 +55,13 @@ export default function DataTable<T extends { id: number }>({
   defaultOrder = 'desc',
   defaultOrderBy = 'id' as keyof T,
   renderExpandedRow,
+  groupBy,
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>(defaultOrder);
   const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
   const [search, setSearch] = React.useState('');
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [expandedRowId, setExpandedRowId] = React.useState<number | null>(null);
 
   const handleRequestSort = (property: keyof T) => {
@@ -83,12 +85,25 @@ export default function DataTable<T extends { id: number }>({
 
   const visibleRows = React.useMemo(() => {
     return [...fillterRows]
-      .sort(getComparator(order, orderBy))
+      .sort((a, b) => {
+        if (groupBy) {
+          const groupCompare = groupBy(a).localeCompare(groupBy(b));
+
+          if (groupCompare !== 0) {
+            return groupCompare;
+          }
+        }
+
+        return getComparator(order, orderBy)(a, b);
+      })
       .slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       );
-  }, [fillterRows, order, orderBy, page, rowsPerPage]);
+  }, [fillterRows, groupBy, order, orderBy, page, rowsPerPage]);
+
+  let currentGroup = '';
+  const hasExpandedRows = typeof renderExpandedRow === 'function';
 
   return (
     <Paper sx={{ width: '100%' }}>
@@ -142,7 +157,7 @@ export default function DataTable<T extends { id: number }>({
         >
           <TableHead>
             <TableRow>
-              {renderExpandedRow && <TableCell sx={{ width: 56 }} />}
+              {hasExpandedRows && <TableCell sx={{ width: 56 }} />}
               {columns.map((column) => (
                 <TableCell
                   key={String(column.id)}
@@ -165,13 +180,37 @@ export default function DataTable<T extends { id: number }>({
           </TableHead>
 
           <TableBody>
+
             {visibleRows.map((row) => {
               const isExpanded = expandedRowId === row.id;
+              const groupName = groupBy?.(row) ?? '';
+              const showGroupHeader = !!groupBy && groupName !== currentGroup;
+
+              if (showGroupHeader) {
+                currentGroup = groupName;
+              }
 
               return (
                 <React.Fragment key={row.id}>
+                  {showGroupHeader && (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length + (hasExpandedRows ? 1 : 0)}
+                        sx={{
+                          backgroundColor: '#f3eef8',
+                          color: '#5a2d82',
+                          fontWeight: 800,
+                          letterSpacing: 1,
+                          py:0.5
+                        }}
+                      >
+                        {groupName || 'No Sub Category'}
+                      </TableCell>
+                    </TableRow>
+                  )}
+
                   <TableRow>
-                    {renderExpandedRow && (
+                    {hasExpandedRows && (
                       <TableCell sx={{ width: 56 }}>
                         <IconButton
                           size="small"
@@ -201,10 +240,10 @@ export default function DataTable<T extends { id: number }>({
                     ))}
                   </TableRow>
 
-                  {renderExpandedRow && isExpanded && (
+                  {hasExpandedRows && isExpanded && (
                     <TableRow>
                       <TableCell colSpan={columns.length + 1} sx={{ backgroundColor: '#faf8fc', py: 2 }}>
-                        {renderExpandedRow(row)}
+                        {renderExpandedRow?.(row)}
                       </TableCell>
                     </TableRow>
                   )}
