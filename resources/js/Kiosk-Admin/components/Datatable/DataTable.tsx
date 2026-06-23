@@ -106,7 +106,14 @@ export default function DataTable<T extends { id: number }>({
   const hasExpandedRows = typeof renderExpandedRow === 'function';
 
   return (
-    <Paper sx={{ width: '100%' }}>
+    <Paper 
+      sx={{ 
+        width: '100%',
+        height: 'calc(100vh - 180px)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        }}>
         {title && (
         <Box
            sx={{
@@ -145,12 +152,14 @@ export default function DataTable<T extends { id: number }>({
       <TableContainer
          sx={{
             width: '100%',
+            flex: 1,
             overflowX: 'auto',
           }}
 
           >
         <Table
             // size="small"
+            stickyHeader
            sx={{
             width: '100%',
           }}
@@ -259,13 +268,19 @@ export default function DataTable<T extends { id: number }>({
         count={fillterRows.length}
         page={page}
         rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 20, 25]}
         onPageChange={(_, newPage) =>
           setPage(newPage) 
         }
         onRowsPerPageChange={(e) => {
           setRowsPerPage(parseInt(e.target.value, 10));
           setPage(0);
+        }}
+        sx={{
+          flexShrink: 0,
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          backgroundColor: 'background.paper',
         }}
       />
     </Paper>
