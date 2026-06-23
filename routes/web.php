@@ -54,8 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
     //Product
+Route::middleware(['auth', 'permission:manage products'])->group(function () {
     Route::prefix('product')->controller(ProductController::class)->group(function () {
         Route::get('/product-item','index')->name('products');
         Route::get('/product-list','list')->name('product-list');
@@ -65,7 +67,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}','update');
         Route::delete('/{id}','destroy');
     });
+});
+
     //Category
+Route::middleware(['auth', 'permission:manage categories'])->group(function () {
     Route::prefix('category')->controller(CategoryController::class)->group(function () {
         Route::get('/categories', 'index')->name('categories');
         Route::get('/category-list', 'CategoriesList')->name('category-list');
@@ -78,8 +83,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
     });
+});
+
 
      //Sub-Category
+Route::middleware(['auth', 'permission:manage sub categories'])->group(function () {
     Route::prefix('sub-category')->controller(SubCategoryController::class)->group(function () {
         Route::get('/sub-categories',              'index')->name('sub-categories');
         Route::get('/sub-category-list',           'SubCategoryList')->name('sub-category-list');
@@ -88,8 +96,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}/sub-category-update',    'updateSubCategory')->name('sub-category-update');
         Route::put('/{id}/sub-category-status',    'SubCatToggleStatus')->name('sub-category-status');
     });
+});
 
     // Variation Types
+Route::middleware(['auth', 'permission:manage variations'])->group(function () {
     Route::prefix('variation')->controller(VariationController::class)->group(function () {
         Route::get('/variations',              'page')->name('variations');
         Route::get('/variation-list',          'index')->name('variation-list');
@@ -98,14 +108,18 @@ Route::middleware('auth')->group(function () {
         Route::put('/{id}/variation-update',   'update')->name('variation-update');
         Route::put('/{id}/variation-status',   'toggleStatus')->name('variation-status');
     });
+});
 
     // Kiosk Settings
+Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('kiosk-settings')->controller(KioskSettingController::class)->group(function () {
         Route::get('/screen-saver',  'page')->name('screen-saver');
         Route::put('/update',        'update')->name('kiosk.settings.update');
     });
+});
 
     // Ads Management
+Route::middleware(['auth', 'permission:manage ads'])->group(function () {
     Route::prefix('ads')->controller(AdsController::class)->group(function () {
         Route::get('/ads-page',           'page')->name('ads');
         Route::get('/ads-list',           'index')->name('ads-list');
@@ -116,5 +130,7 @@ Route::middleware('auth')->group(function () {
     });
 
 });
+
+
 
 require __DIR__.'/auth.php';

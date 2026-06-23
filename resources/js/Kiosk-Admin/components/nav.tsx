@@ -47,16 +47,16 @@ const NAV_SECTIONS: NavSection[] = [
       // { icon: "🔄", label: "Transfers",       href: "/transfers",       badge: null },
     ],
   },
-  // {
-  //   label: "Reports",
-  //   items: [
-  //     // { icon: "📊", label: "Analytics", href: "/analytics", badge: null },
-  //     // { icon: "📉", label: "Low Stock",  href: "/low-stock", badge: "7"  },
-  //     { icon: "📅", label: "History",    href: "/history",   badge: null },
-  //     { icon: "⬇️", label: "Import",     href: "/import",    badge: null },
-  //     // { icon: "⬇️", label: "Export",     href: "/export",    badge: null },
-  //   ],
-  // },
+   {
+    label: "Reports",
+    items: [
+      // { icon: "📊", label: "Analytics", href: "/analytics", badge: null },
+      // { icon: "📉", label: "Low Stock",  href: "/low-stock", badge: "7"  },
+      { icon: "📅", label: "User Log",    href: "/history",   badge: null },
+      // { icon: "⬇️", label: "Import",     href: "/import",    badge: null },
+      // { icon: "⬇️", label: "Export",     href: "/export",    badge: null },
+    ],
+  },
   // {
   //   label: "Discover",
   //   items: [

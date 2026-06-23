@@ -18,10 +18,20 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('@dmin05/04/26'),
+        $this->call([
+            RolePermissionSeeder::class,
         ]);
+
+        $admin = User::firstOrCreate(
+            ['name' => 'admin'],
+            ['email' => 'admin@gmail.com',
+            'password' => Hash::make('@dmin05/04/26')],
+        
+    );
+
+        if(! $admin->hasRole('admin')) {
+            $admin->assignRole('admin');
+        }
+
     }
 }
