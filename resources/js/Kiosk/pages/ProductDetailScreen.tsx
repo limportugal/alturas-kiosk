@@ -225,7 +225,7 @@ export default function ProductDetailScreen({
       {/* Product name strip */}
       <div style={{ background: colors.primary, margin: "20px 48px 0", borderRadius: 8, padding: "14px 24px", flexShrink: 0 }}>
         <span style={{ color: colors.surface, ...typography.productNameStri}}>
-          {product.name} &nbsp; {product.item_description}
+          {product.name}
         </span>
       </div>
 

@@ -105,6 +105,22 @@ export default function DataTable<T extends { id: number }>({
   let currentGroup = '';
   const hasExpandedRows = typeof renderExpandedRow === 'function';
 
+  const toggleExpandedRow = (rowId: number) => {
+    if (!hasExpandedRows) return;
+
+    setExpandedRowId((prev) => (prev === rowId ? null : rowId));
+  };
+
+  const handleRowClick = (event: React.MouseEvent<HTMLTableRowElement>, rowId: number) => {
+    const target = event.target as HTMLElement;
+
+    if (target.closest('button, a, input, textarea, select, [role="button"]')) {
+      return;
+    }
+
+    toggleExpandedRow(rowId);
+  };
+
   return (
     <Paper 
       sx={{ 
@@ -166,7 +182,7 @@ export default function DataTable<T extends { id: number }>({
         >
           <TableHead>
             <TableRow>
-              {hasExpandedRows && <TableCell sx={{ width: 56 }} />}
+              {/* {hasExpandedRows && <TableCell sx={{ width: 56 }} />} */}
               {columns.map((column) => (
                 <TableCell
                   key={String(column.id)}
@@ -218,14 +234,19 @@ export default function DataTable<T extends { id: number }>({
                     </TableRow>
                   )}
 
-                  <TableRow>
-                    {hasExpandedRows && (
+                  <TableRow
+                    hover={hasExpandedRows}
+                    onClick={(event) => handleRowClick(event, row.id)}
+                    sx={{
+                      cursor: hasExpandedRows ? 'pointer' : 'default',
+                    }}
+                  >
+                    {/* {hasExpandedRows && (
                       <TableCell sx={{ width: 56 }}>
                         <IconButton
                           size="small"
-                          onClick={() =>
-                            setExpandedRowId((prev) => (prev === row.id ? null : row.id))
-                          }
+                          onClick={() => toggleExpandedRow(row.id)}
+                          aria-label={isExpanded ? 'Hide variants' : 'Show variants'}
                         >
                           {isExpanded ? (
                             <KeyboardArrowUpOutlinedIcon fontSize="small" />
@@ -234,7 +255,7 @@ export default function DataTable<T extends { id: number }>({
                           )}
                         </IconButton>
                       </TableCell>
-                    )}
+                    )} */}
                     {columns.map((column) => (
                       <TableCell
                         key={String(column.id)}
