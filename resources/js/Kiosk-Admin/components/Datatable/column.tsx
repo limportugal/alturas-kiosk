@@ -4,6 +4,7 @@ import { CategoryList } from '@/Kiosk-Admin/types/category-types';
 import { SubCategoryList } from '@/Kiosk-Admin/types/subcategory-types';
 import { VariationList } from '@/Kiosk-Admin/types/variation-types';
 import { AdsList } from '@/Kiosk-Admin/types/ads-types';
+import { UserListItem } from '@/Kiosk-Admin/types/user-types';
 
 import CategoryToggleStatus from '@/Kiosk-Admin/components/CategoryToggleStatus';
 import SubCategoryToggleStatus from '@/Kiosk-Admin/components/SubCategoryToggleStatus';
@@ -18,17 +19,33 @@ import EditAd from '@/Kiosk-Admin/components/Forms/AdsItem/edit-ad';
 import ImagePreviewCell from '@/Kiosk-Admin/components/Buttons/ImagePreviewCell';
 import MultiplePreviewImage from '@/Kiosk-Admin/components/Buttons/MultiplePreviewImage';
 
-export interface User {
-  id: number;
-  name: string;
-  email: string;
-  age: number;
-}
-
-export const userColumns: Column<User>[] = [
+export const userColumns: Column<UserListItem>[] = [
   { id: 'name', label: 'Name' },
   { id: 'email', label: 'Email' },
-  { id: 'age', label: 'Age', numeric: true },
+  {
+    id: 'role',
+    label: 'Role',
+    render: (row) => <span style={{ textTransform: 'capitalize' }}>{row.role ?? '—'}</span>,
+  },
+  { id: 'status', label: 'Status' },
+  {
+    id: 'permissions',
+    label: 'Permissions',
+    render: (row) => (
+      <span>
+        {row.role === 'admin'
+          ? 'All Access'
+          : row.permissions.length
+            ? row.permissions.join(', ')
+            : '—'}
+      </span>
+    ),
+  },
+  {
+    id: 'created_at',
+    label: 'Created At',
+    render: (row) => <span>{row.created_at ?? '—'}</span>,
+  },
 ];
 
 export const Proditem: Column<ProductItem>[] = [

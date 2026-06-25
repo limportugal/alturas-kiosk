@@ -8,6 +8,7 @@ use App\Http\Controllers\VariationController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\KioskSettingController;
 use App\Http\Controllers\AdsController;
+use App\Http\Controllers\UserController;
 
 
 use Illuminate\Foundation\Application;
@@ -129,6 +130,16 @@ Route::middleware(['auth', 'permission:manage ads'])->group(function () {
         Route::delete('/{id}/ads-delete', 'destroy')->name('ads-delete');
     });
 
+});
+
+  // Users Management
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/page', 'index')->name('users');
+        Route::get('/list', 'list')->name('users.list');
+        Route::post('/store', 'store')->name('users.store');
+        Route::put('/{id}/update', 'update')->name('users.update');
+    });
 });
 
 

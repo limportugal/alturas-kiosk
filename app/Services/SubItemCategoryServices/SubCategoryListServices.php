@@ -23,5 +23,5 @@ class SubCategoryListServices
             ->with('category:id,name') 
             ->latest('id')
             ->get();
-    }
+    } 
 }
