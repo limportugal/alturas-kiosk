@@ -3,6 +3,7 @@ import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { VariationListServices } from '@/Kiosk-Admin/services/variation/GetVariationListServices';
 import { VariationItem } from '@/Kiosk-Admin/components/Datatable/column';
 import AddVariation from '@/Kiosk-Admin/components/Forms/VariationItem/add-variation';
+import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
 
 export default function VariationsPage() {
     const {
@@ -14,10 +15,18 @@ export default function VariationsPage() {
         VariationListServices
     );
 
+        if (isPending_variations) {
+            return (
+                <div className="m-4">
+                    <AdminTableSkeleton />
+                </div>
+            );
+        }
+
     return (
         <div className="m-4">
             <DataTable
-                title="Variations"
+                title="VARIATIONS"
                 rows={variations_data?.data ?? []}
                 columns={VariationItem}
                 groupBy={(row) => row.sub_category?.name ?? 'No Sub Category'}

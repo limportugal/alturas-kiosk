@@ -9,6 +9,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\KioskSettingController;
 use App\Http\Controllers\AdsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityLogController;
 
 
 use Illuminate\Foundation\Application;
@@ -139,6 +140,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/list', 'list')->name('users.list');
         Route::post('/store', 'store')->name('users.store');
         Route::put('/{id}/update', 'update')->name('users.update');
+    });
+});
+
+// Activiy Logs
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('activity-log')->controller(ActivityLogController::class)->group(function () {
+        Route::get('/page', 'page')->name('activity-log');
+        Route::get('/list', 'list')->name('activity-log.list');
     });
 });
 

@@ -2,6 +2,7 @@ import useDynamicQuery from '@/hooks/useDynamicQuery';
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { userColumns } from '@/Kiosk-Admin/components/Datatable/column';
 import AddUser from '@/Kiosk-Admin/components/Forms/UsersItem/add-user';
+import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
 import { GetUsersListServices } from '@/Kiosk-Admin/services/users/GetUsersListServices';
 
 interface UsersPageProps {
@@ -9,12 +10,20 @@ interface UsersPageProps {
 }
 
 export default function UsersPage({ permissions }: UsersPageProps) {
-    const { data: usersData } = useDynamicQuery(['user-list'], GetUsersListServices);
+    const { data: usersData, isPending } = useDynamicQuery(['user-list'], GetUsersListServices);
+
+    if (isPending) {
+        return (
+            <div className="m-4">
+                <AdminTableSkeleton />
+            </div>
+        );
+    }
 
     return (
         <div className="m-4">
             <DataTable
-                title="Users"
+                title="USERS"
                 rows={usersData?.data ?? []}
                 columns={userColumns}
                 actions={<AddUser permissions={permissions} />}

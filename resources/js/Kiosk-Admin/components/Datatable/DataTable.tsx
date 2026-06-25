@@ -129,6 +129,7 @@ export default function DataTable<T extends { id: number }>({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        borderRadius: '3',
         }}>
         {title && (
         <Box
@@ -140,9 +141,24 @@ export default function DataTable<T extends { id: number }>({
               alignItems: 'center',
               borderBottom: '1px solid',
               borderColor: 'divider',
+
             }}
         >
+        <Box
+          component="span"
+          sx={{
+            backgroundColor: '#5a2d82',
+            color: '#fff',
+            px: 2,
+            py: 0.8,
+            borderRadius: 2,
+            fontWeight: 700,
+            fontSize: 14,
+        }}
+        >
           {title}
+
+       </Box>
         <Box
           sx={{
               display: 'flex',

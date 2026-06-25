@@ -5,6 +5,7 @@ import { SubCategoryList } from '@/Kiosk-Admin/types/subcategory-types';
 import { VariationList } from '@/Kiosk-Admin/types/variation-types';
 import { AdsList } from '@/Kiosk-Admin/types/ads-types';
 import { UserListItem } from '@/Kiosk-Admin/types/user-types';
+import { ActivityLog } from '@/Kiosk-Admin/types/activity-type';
 
 import CategoryToggleStatus from '@/Kiosk-Admin/components/CategoryToggleStatus';
 import SubCategoryToggleStatus from '@/Kiosk-Admin/components/SubCategoryToggleStatus';
@@ -318,4 +319,13 @@ export const AdsItem: Column<AdsList>[] = [
       </div>
     ),
   },
+];
+
+
+export const UsersLogs: Column<ActivityLog>[] = [
+  { id: 'created_at', label: 'DATE & TIME' },
+  { id: 'user_name', label: 'User' },
+  { id: 'action', label: 'Action' },
+  // { id: 'module', label: 'Table' },
+  { id: 'description', label: 'Description' },
 ];

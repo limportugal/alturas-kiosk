@@ -52,7 +52,7 @@ const NAV_SECTIONS: NavSection[] = [
     items: [
       // { icon: "📊", label: "Analytics", href: "/analytics", badge: null },
       // { icon: "📉", label: "Low Stock",  href: "/low-stock", badge: "7"  },
-      { icon: "📅", label: "User Log",    href: "/history",   badge: null },
+      { icon: "📅", label: "User Log",      href: route('activity-log'),   badge: null },
       // { icon: "⬇️", label: "Import",     href: "/import",    badge: null },
       // { icon: "⬇️", label: "Export",     href: "/export",    badge: null },
     ],

@@ -3,6 +3,7 @@ import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { CategoriesServices } from '@/Kiosk-Admin/services/category/GetCategoriesListServices';
 import { CatItem } from '@/Kiosk-Admin/components/Datatable/column';
 import AddCategory from "../components/Forms/CatergoryItem/add-category";
+import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
 
 
 export default function CategoriesPage() {
@@ -16,11 +17,20 @@ export default function CategoriesPage() {
         CategoriesServices
     )
 
+       if (isPending_categories_data) {
+            return (
+                <div className="m-4">
+                    <AdminTableSkeleton />
+                </div>
+            );
+        }
+    
+
     return(
         
         <div className="m-4">
             <DataTable 
-                title='Categories'
+                title='CATEGORIES'
                 rows={categories_data?.data ?? []}
                 columns={CatItem}
                 actions={<AddCategory/>}

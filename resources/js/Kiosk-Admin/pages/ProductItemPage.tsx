@@ -4,7 +4,8 @@ import  useDynamicQuery  from "@/hooks/useDynamicQuery";
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { Proditem, renderProductExpandedRow } from '@/Kiosk-Admin/components/Datatable/column';
 import AddProduct from '@/Kiosk-Admin/components/Forms/Product-Item/add-product';
-import { ProductsServices } from '@/Kiosk-Admin/services/products/GetProductServices'
+import { ProductsServices } from '@/Kiosk-Admin/services/products/GetProductServices';
+import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
 
 export default function ProductItemPage() {
   
@@ -17,6 +18,15 @@ export default function ProductItemPage() {
         ProductsServices  
     )
 
+
+      if (isPending_product_data) {
+          return (
+              <div className="m-4">
+                  <AdminTableSkeleton />
+              </div>
+          );
+      }
+    
  
   return (
     
@@ -25,7 +35,7 @@ export default function ProductItemPage() {
     <AddProduct />
       </div> */}
       <DataTable 
-        title={'Products'}
+        title={'PRODUCTS'}
         rows={product_data?.data ?? []}
         // loading= {isPending_product_data}
         columns={Proditem}
