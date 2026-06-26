@@ -3,6 +3,7 @@ import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
 import { userColumns } from '@/Kiosk-Admin/components/Datatable/column';
 import AddUser from '@/Kiosk-Admin/components/Forms/UsersItem/add-user';
 import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
+import CanAccess from '@/Kiosk-Admin/components/auth/CanAccess';
 import { GetUsersListServices } from '@/Kiosk-Admin/services/users/GetUsersListServices';
 
 interface UsersPageProps {
@@ -26,7 +27,11 @@ export default function UsersPage({ permissions }: UsersPageProps) {
                 title="USERS"
                 rows={usersData?.data ?? []}
                 columns={userColumns}
-                actions={<AddUser permissions={permissions} />}
+                actions={(
+                    <CanAccess adminOnly>
+                        <AddUser permissions={permissions} />
+                    </CanAccess>
+                )}
                 searchable={true}
             />
         </div>

@@ -15,16 +15,10 @@ class ActivityLogController extends Controller {
     }
     
    public function list() {
-    $logs = ActivityLog::orderBy('created_at', 'desc')->paginate(50);
+    $logs = ActivityLog::orderBy('id', 'desc')->get();
 
-    return response()->json([
-        'data' => $logs->items(),
-        'meta' => [
-            'current_page' => $logs->currentPage(),
-            'last_page' => $logs->lastPage(),
-            'per_page' => $logs->perPage(),
-            'total' => $logs->total(),
-        ],
-    ]);
-}
+        return response()->json([
+            'data' => $logs,
+        ]);
+    }
 }

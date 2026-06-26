@@ -6,11 +6,13 @@ declare global {
         name: string;
         email: string;
         email_verified_at: string | null;
+        role?: string | null;
+        permission?: string[];
     }
 
     interface SharedPageProps extends InertiaPageProps {
         auth: {
-            user: User;
+            user: User | null;
         };
     }
 

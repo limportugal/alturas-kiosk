@@ -16,6 +16,6 @@ class ProductToggleStatusService
         $product->save();
 
         
-       return $product->fresh();
+       return $product->fresh(); 
     }
 }

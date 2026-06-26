@@ -13,7 +13,7 @@ export interface UserListItem {
     name: string;
     email: string;
     role: string | null;
-    status: 'Active' | 'Inactive';
+    status: 'active' | 'inactive';
     permissions: string[];
     created_at?: string | null;
 }

@@ -6,6 +6,7 @@ export interface ActivityLog {
     module: string;       // 'Category' | 'Product' | etc.
     description: string;
     created_at: string;
+    sort_order: number;
 }
 
 

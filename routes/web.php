@@ -140,6 +140,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/list', 'list')->name('users.list');
         Route::post('/store', 'store')->name('users.store');
         Route::put('/{id}/update', 'update')->name('users.update');
+        Route::patch('/{id}/toggle', 'toggle')->name('user.toggle');
     });
 });
 

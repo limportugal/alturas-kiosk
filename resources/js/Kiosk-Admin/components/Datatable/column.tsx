@@ -12,6 +12,7 @@ import SubCategoryToggleStatus from '@/Kiosk-Admin/components/SubCategoryToggleS
 import ProductToggleStatus from '@/Kiosk-Admin/components/ProductToggleStatus';
 import VariationToggleStatus from '@/Kiosk-Admin/components/VariationToggleStatus';
 import AdsToggleStatus from '@/Kiosk-Admin/components/AdsToggleStatus';
+import UserToggleStatus from '@/Kiosk-Admin/components/UserToggleStatus';
 import EditProduct from '@/Kiosk-Admin/components/Forms/Product-Item/edit-product';
 import EditCategory from '@/Kiosk-Admin/components/Forms/CatergoryItem/edit-category';
 import EditSubCategory from '@/Kiosk-Admin/components/Forms/SubCategoryItem/edit-subcategory';
@@ -28,7 +29,6 @@ export const userColumns: Column<UserListItem>[] = [
     label: 'Role',
     render: (row) => <span style={{ textTransform: 'capitalize' }}>{row.role ?? '—'}</span>,
   },
-  { id: 'status', label: 'Status' },
   {
     id: 'permissions',
     label: 'Permissions',
@@ -46,6 +46,17 @@ export const userColumns: Column<UserListItem>[] = [
     id: 'created_at',
     label: 'Created At',
     render: (row) => <span>{row.created_at ?? '—'}</span>,
+  },
+    { 
+    id: 'status', 
+    label: 'Status',
+     render: (row) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <UserToggleStatus id={row.id} status={row.status === 'active'} />
+        {/* <EditProduct product={row} /> */}
+      </div>
+    ),
+  
   },
 ];
 

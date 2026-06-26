@@ -12,6 +12,7 @@ use App\Services\UsersServices\UsersIndexServices;
 use App\Services\UsersServices\UsersListServices;
 use App\Services\UsersServices\UsersStoreServices;
 use App\Services\UsersServices\UsersUpdateServices;
+use App\Services\UsersServices\UsersToggleStatusServices;
 
 class UserController extends Controller
 {
@@ -49,6 +50,13 @@ class UserController extends Controller
 
         return response()->json([
             'updated' => $user,
+        ]);
+    }
+
+    public function toggle(UsersToggleStatusServices $service, $id){
+        $userToggle = $service->toggleStatus($id);
+        return response()->json([
+            'toggle' => $userToggle
         ]);
     }
 }

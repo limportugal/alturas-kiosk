@@ -57,7 +57,7 @@ export default function AddUser({ permissions }: AddUserProps) {
             <BaseModal open={open} onClose={handleClose} title="Add New User" width={640}>
                 <Stack spacing={2} sx={{ mt: 1 }}>
                     <TextField
-                        label="Name"
+                        label="Full Name"
                         value={form.name}
                         onChange={(e) => setField('name', e.target.value)}
                         error={!!errors.name}
@@ -98,7 +98,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                         <MenuItem value="staff">Staff</MenuItem>
                     </TextField>
 
-                    <TextField
+                    {/* <TextField
                         select
                         label="Status"
                         value={form.status}
@@ -109,7 +109,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                     >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Inactive">Inactive</MenuItem>
-                    </TextField>
+                    </TextField> */}
 
                     {form.role === 'staff' ? (
                         <Box

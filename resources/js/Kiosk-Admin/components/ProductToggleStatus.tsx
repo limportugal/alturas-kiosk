@@ -13,7 +13,7 @@ export default function  ProductToggleStatus({id, status}: Props) {
         <Toggle
             checked={status}
             disabled={isPending}
-            onChange={() => mutate(id)}
+            onChange={() => mutate(id)} 
         />
     )
 }

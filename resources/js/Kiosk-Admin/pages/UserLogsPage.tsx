@@ -26,8 +26,7 @@ export default function UserLogsPage() {
                 columns={UsersLogs} 
                 rows={user_logs_data?.data ?? []} 
                 searchable={true}
-                // defaultOrderBy="sort_order"
-                defaultOrder="asc"
+                defaultOrder="desc"
                 />
         </div>
     );
