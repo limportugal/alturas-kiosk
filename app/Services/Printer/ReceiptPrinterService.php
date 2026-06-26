@@ -151,14 +151,106 @@ class ReceiptPrinterService
         ];
     }
 
+
+    
+    // private function printOrderSlip(Printer $printer, array $receiptData): void {
+
+      
+    //     $printer->setEmphasis(true);
+    //     $printer->setJustification(Printer::JUSTIFY_CENTER);
+    //     $printer->text(trim($receiptData['companyName']) . "\n");
+    //     $printer->setJustification(Printer::JUSTIFY_LEFT);
+    //     $printer->setEmphasis(false);
+    //     $printer->text($this->centerText($receiptData['storeName']));
+    //     $printer->text($this->centerText('ORDER SLIP'));
+    //     $printer->feed();
+
+    //     $printer->setTextSize(2, 2);
+    //     $printer->text("ORDER NO.\n");
+    //     $printer->text($receiptData['orderSlipNo'] . "\n");
+    //     $printer->setTextSize(1, 1);
+    //     $printer->feed();
+
+    //     $printer->setJustification(Printer::JUSTIFY_LEFT);
+    //     $printer->text($this->formatLine('DATE', $receiptData['dateTime']));
+    //     $printer->text($this->formatLine('STATUS', $receiptData['status']));
+    //     $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
+
+    //     foreach ($receiptData['items'] as $item) {
+    //         $label = $item['productName'];
+    //         if (!empty($item['color'])) {
+    //             $label .= ' (' . $item['color'] . ')';
+    //         }
+
+    //         $printer->text($item['quantity'] . 'x ' . Str::limit($label, $this->receiptWidth - 4, '') . "\n");
+    //     }
+
+    //     $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
+    //     $printer->text($this->formatLine('TOTAL ITEMS', (string) $receiptData['totalItems']));
+
+    //     $printer->setJustification(Printer::JUSTIFY_CENTER);
+    //     $printer->feed();
+    //     $printer->text("THIS SLIP IS REQUIRED FOR CLAIMING.\n");
+    // }
+
+    // private function printFullReceipt(Printer $printer, array $receiptData): void {
+
+    //     $printer->setJustification(Printer::JUSTIFY_CENTER);
+    //     $printer->setEmphasis(true);
+    //    $printer->setJustification(Printer::JUSTIFY_CENTER);
+    //     $printer->text(trim($receiptData['companyName']) . "\n");
+    //     $printer->setJustification(Printer::JUSTIFY_LEFT);
+    //     $printer->setEmphasis(false);
+    //     $printer->text($this->centerText($receiptData['storeName']));
+    //     $printer->text($this->centerText('ORDER RECEIPT'));
+    //     $printer->feed();
+
+    //     $printer->setJustification(Printer::JUSTIFY_LEFT);
+    //     $printer->text($this->formatLine('RECEIPT NO.', $receiptData['receiptNo']));
+    //     $printer->text($this->formatLine('TXN NO.', $receiptData['txnNumber']));
+    //     $printer->text($this->formatLine('ORDER NO.', $receiptData['orderSlipNo']));
+    //     $printer->text($this->formatLine('DATE', $receiptData['dateTime']));
+    //     $printer->text($this->formatLine('CASHIER', $receiptData['cashier']));
+    //     $printer->text($this->formatLine('STATUS', $receiptData['status']));
+    //     $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
+
+    //     foreach ($receiptData['items'] as $item) {
+    //         $label = $item['productName'];
+    //         if (!empty($item['color'])) {
+    //             $label .= ' (' . $item['color'] . ')';
+    //         }
+
+    //         $printer->text(Str::limit($label, $this->receiptWidth, '') . "\n");
+    //         $printer->text(
+    //             $this->formatLine(
+    //                 '  ' . $item['quantity'] . ' @ ' . number_format((float) $item['price'], 2),
+    //                 number_format((float) $item['total'], 2)
+    //             )
+    //         );
+    //     }
+
+    //     $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
+    //     $printer->text($this->formatLine('TOTAL ITEMS', (string) $receiptData['totalItems']));
+
+    //     $printer->setEmphasis(true);
+    //     $printer->text($this->formatLine('TOTAL', number_format((float) $receiptData['total'], 2)));
+    //     $printer->setEmphasis(false);
+
+    //     $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
+    //     $printer->setJustification(Printer::JUSTIFY_CENTER);
+    //     $printer->text($this->centerText($receiptData['footerMessage']));
+    // }
+
     private function printOrderSlip(Printer $printer, array $receiptData): void {
 
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->setEmphasis(true);
-        $printer->text($this->centerText($receiptData['companyName']));
-        $printer->setEmphasis(false);
-        $printer->text($this->centerText($receiptData['storeName']));
-        $printer->text($this->centerText('ORDER SLIP'));
+      
+        // $printer->setEmphasis(true);
+        // $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $this->printCentered($printer, $receiptData['companyName'], true, true);
+        // $printer->setJustification(Printer::JUSTIFY_LEFT);
+        // $printer->setEmphasis(false);
+        $this->printCentered($printer, $receiptData['storeName']);
+        $this->printCentered ($printer,'ORDER SLIP', true, true);
         $printer->feed();
 
         $printer->setTextSize(2, 2);
@@ -191,12 +283,10 @@ class ReceiptPrinterService
 
     private function printFullReceipt(Printer $printer, array $receiptData): void {
 
-        $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->setEmphasis(true);
-        $printer->text($this->centerText($receiptData['companyName']));
-        $printer->setEmphasis(false);
-        $printer->text($this->centerText($receiptData['storeName']));
-        $printer->text($this->centerText('ORDER RECEIPT'));
+   
+        $this->printCentered($printer, $receiptData['companyName'], true, true);
+        $this->printCentered($printer, $receiptData['storeName']);
+        $this->printCentered($printer, 'ORDER RECEIPT', true, true);
         $printer->feed();
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
@@ -232,7 +322,7 @@ class ReceiptPrinterService
 
         $printer->text(str_repeat('-', $this->receiptWidth) . "\n");
         $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->text($this->centerText($receiptData['footerMessage']));
+        $this->printCentered($printer, $receiptData['footerMessage']);
     }
 
     private function formatLine(string $left, string $right): string
@@ -252,4 +342,29 @@ class ReceiptPrinterService
         $padding = (int) floor(($this->receiptWidth - strlen($text)) / 2);
         return str_repeat(' ', max(0, $padding)) . $text . "\n";
     }
+
+    private function printCentered(
+            Printer $printer,
+            string $text,
+            bool $emphasis = false,
+            bool $doubleStrike = false
+        ): void {
+            // Left justification para manual spacing ang susundin
+            $printer->setJustification(Printer::JUSTIFY_LEFT);
+
+            $printer->setEmphasis($emphasis);
+
+            if ($doubleStrike && method_exists($printer, 'setDoubleStrike')) {
+                $printer->setDoubleStrike(true);
+            }
+
+            // Important: ito dapat, hindi trim($text)
+            $printer->text($this->centerText($text));
+
+            if ($doubleStrike && method_exists($printer, 'setDoubleStrike')) {
+                $printer->setDoubleStrike(false);
+            }
+
+            $printer->setEmphasis(false);
+        }
 }
