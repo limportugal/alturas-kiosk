@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
+use App\Models\ActivityLog;
 use App\Models\Category\ItemCategoryModel;
 use App\Models\ProductItem\ProductItemModel;
 use App\Models\SubCategory\SubCategoryModel;
@@ -36,8 +37,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
+    public function boot(): void {
         Vite::prefetch(concurrency: 3);
         ItemCategoryModel::observe(CategoryObserver::class);
         ProductItemModel::observe(ProductObserver::class);
@@ -46,5 +46,23 @@ class AppServiceProvider extends ServiceProvider
         KioskSetting::observe(ScreenSaverObserver::class);
         User::observe(UsersObserver::class);
         Ad::observe(AdsObserver::class);
+
+
+    \Event::listen(\Illuminate\Auth\Events\Login::class, function ($event) {
+        ActivityLog::record(
+            'login',
+            'Auth',
+            "User logged in: {$event->user->name}"
+        );
+    });
+
+    \Event::listen(\Illuminate\Auth\Events\Logout::class, function ($event) {
+    ActivityLog::record(
+        'logout',
+        'Auth',
+        "User log out: {$event->user->name}"
+        );
+    });
+
     }
 }

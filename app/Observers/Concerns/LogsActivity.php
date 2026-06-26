@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 trait LogsActivity
 {
     // Fields to skip in change logs
-    protected array $skipFields = ['image_path', 'updated_at', 'created_at'];
+    protected array $skipFields = ['image_path', 'updated_at', 'created_at', 'remember_token', 'password'];
 
     protected function buildChanges(Model $model): string
     {
@@ -30,9 +30,11 @@ trait LogsActivity
 
     protected function logUpdated(Model $model, string $module): void
     {
-        $changes     = $this->buildChanges($model);
+        $changes = $this->buildChanges($model);
+        // Skip if only skipped fields changed (e.g. remember_token on login)
+        if (!$changes) return;
         $description = "Updated {$module}: {$model->name}";
-        if ($changes) $description .= " | {$changes}";
+        $description .= " | {$changes}";
         ActivityLog::record('updated', $module, $description);
     }
 
