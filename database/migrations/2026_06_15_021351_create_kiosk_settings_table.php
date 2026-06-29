@@ -16,12 +16,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Seed default idle timeout: 60 seconds
+        // Seed defaults
         DB::table('kiosk_settings')->insert([
-            'key'        => 'idle_timeout_seconds',
-            'value'      => '60',
-            'created_at' => now(),
-            'updated_at' => now(),
+            [
+                'key'        => 'idle_timeout_seconds',
+                'value'      => '60',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'key'        => 'idle_enabled',
+                'value'      => '1',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 

@@ -147,7 +147,7 @@ export default function AddProduct() {
             />
             <TextField
               label="Quantity" type="number" fullWidth
-              value={quantity ?? ""}
+              value={quantity === 0 ? "" : quantity}
               onChange={(e) => {
                 const value = e.target.value
                 setQuantity(value === "" ? 0 : Number(value))
