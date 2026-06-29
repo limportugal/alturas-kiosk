@@ -35,7 +35,7 @@ export default function ColumnSelector({
         startIcon={<ViewColumnOutlinedIcon />}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       >
-        Toggle 
+        Toggle Columns
       </Button>
 
       <Menu
