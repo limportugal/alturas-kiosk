@@ -137,10 +137,10 @@ export default function AddProduct() {
           <Stack direction="row" spacing={2}>
             <TextField
               label="Price" type="number" fullWidth
-              value={price ?? ""}
+              value={price === 0 ? "" : price}
               onChange={(e) => {
                 const value = e.target.value
-                setPrice(value === "" ? "" : Number(value))
+                setPrice(value === "" ? 0 : Number(value))
               }}
               error={!!errors.price} helperText={errors.price}
               sx={INPUT_SX}
@@ -150,7 +150,7 @@ export default function AddProduct() {
               value={quantity ?? ""}
               onChange={(e) => {
                 const value = e.target.value
-                setQuantity(value === "" ? "" : Number(value))
+                setQuantity(value === "" ? 0 : Number(value))
               }}
               error={!!errors.quantity} helperText={errors.quantity}
               sx={INPUT_SX}

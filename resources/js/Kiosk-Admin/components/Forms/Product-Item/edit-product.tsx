@@ -178,7 +178,7 @@ export default function EditProduct({ product }: Props) {
               value={productState.price ?? ""}
               onChange={(e) => {
                 const value = e.target.value
-                productState.setPrice(value === "" ? "" : Number(value))
+                productState.setPrice(value === "" ? 0 : Number(value))
               }}
               error={!!errors.price}
               helperText={errors.price}
@@ -191,7 +191,7 @@ export default function EditProduct({ product }: Props) {
               value={productState.quantity ?? ""}
                onChange={(e) => {
                 const value = e.target.value
-                productState.setQuantity(value === "" ? "" : Number(value))
+                productState.setQuantity(value === "" ? 0 : Number(value))
               }}
               error={!!errors.quantity}
               helperText={errors.quantity}
