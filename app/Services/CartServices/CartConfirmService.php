@@ -34,6 +34,7 @@ class CartConfirmService
             $cart->update(['status' => 'confirmed']);
             $confirmedCart = $cart->refresh();
 
+            if (config('printing.enable')){
             try{
                 ($this->receiptPrinter ?? app(ReceiptPrinterService::class))
                     ->printConfirmedCart($confirmedCart);
@@ -44,6 +45,7 @@ class CartConfirmService
                     'error' => $e->getMessage(),
                 ]);
             }
+        }
 
             return [
                 'message' => 'Cart confirmed successfully',
