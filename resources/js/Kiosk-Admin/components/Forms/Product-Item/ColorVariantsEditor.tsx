@@ -257,7 +257,7 @@ export default function ColorVariantsEditor({
             '&:hover': { borderColor: '#6d28d9', background: '#faf5ff' },
           }}
         >
-          Add Variant
+          Add Color Variant
         </Button>
       </Stack>
 

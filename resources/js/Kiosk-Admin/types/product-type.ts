@@ -30,8 +30,8 @@ export interface ProductItem {
   sub_category_id?: number | null;
   category_name?: string;
   sub_category_name?: string | null;
-  price: number;
-  quantity: number;
+  price: number | "";
+  quantity: number | "";
   variant_quantity: number;
   item_description?: string;
   variation_type_id?: number | null;

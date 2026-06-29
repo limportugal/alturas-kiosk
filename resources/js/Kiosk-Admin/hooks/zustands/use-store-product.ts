@@ -10,8 +10,8 @@ interface ProductTypeStore {
     item_category_id?: number;
     sub_category_id?: number | null;
     variation_type_id?: number | null;
-    price?: number;
-    quantity?: number;
+    price?: number | "";
+    quantity?: number | "";
     item_description: string;
     status : string;
     image_path: string;
@@ -21,8 +21,8 @@ interface ProductTypeStore {
     setItemCode: (item_code: string) => void;
     setName: (name: string) => void;
     setSku: (sku: string) => void;
-    setPrice: (price: number) => void;
-    setQuantity: (quantity: number) => void;
+    setPrice: (price: number | "") => void;
+    setQuantity: (quantity: number | "") => void;
     setItemCategoryId: (item_category_id: number) => void;
     setSubCategoryId: (sub_category_id: number | null) => void;
     setVariationTypeId: (variation_type_id: number | null) => void;
@@ -37,8 +37,8 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
     item_code: null,
     name: '',
     sku: '',
-    price: 0,
-    quantity: 0,
+    price: '',
+    quantity: '',
     item_category_id: 0,
     sub_category_id: null,
     variation_type_id: null,
@@ -68,8 +68,8 @@ export const useProductStore = create<ProductTypeStore>((set) => ({
         item_code: null,
         name: '',
         sku: '',
-        price: 0,
-        quantity: 0,
+        price: '',
+        quantity: '',
         item_category_id: 1,
         sub_category_id: null,
         variation_type_id: null,

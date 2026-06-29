@@ -176,7 +176,10 @@ export default function EditProduct({ product }: Props) {
               fullWidth
               type="number"
               value={productState.price ?? ""}
-              onChange={(e) => productState.setPrice(Number(e.target.value))}
+              onChange={(e) => {
+                const value = e.target.value
+                productState.setPrice(value === "" ? "" : Number(value))
+              }}
               error={!!errors.price}
               helperText={errors.price}
               sx={INPUT_SX}
@@ -186,7 +189,10 @@ export default function EditProduct({ product }: Props) {
               fullWidth
               type="number"
               value={productState.quantity ?? ""}
-              onChange={(e) => productState.setQuantity(Number(e.target.value))}
+               onChange={(e) => {
+                const value = e.target.value
+                productState.setQuantity(value === "" ? "" : Number(value))
+              }}
               error={!!errors.quantity}
               helperText={errors.quantity}
               sx={INPUT_SX}

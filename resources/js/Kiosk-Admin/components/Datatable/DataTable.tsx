@@ -16,6 +16,7 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 
 import TableSearch from '@/Kiosk-Admin/components/Datatable/TableSearch';
+import ColumnSelector from '@/Kiosk-Admin/components/Datatable/columnSelector';
 
 import { Column, Order } from './types';
 
@@ -29,6 +30,7 @@ interface Props<T> {
   defaultOrderBy?: keyof T;
   renderExpandedRow?: (row: T) => React.ReactNode;
   groupBy?: (row: T) => string;
+  hiddenColumns?: string[];
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -56,6 +58,7 @@ export default function DataTable<T extends { id: number }>({
   defaultOrderBy = 'id' as keyof T,
   renderExpandedRow,
   groupBy,
+  hiddenColumns: defaultHiddenColumns = [],
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>(defaultOrder);
   const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
@@ -63,6 +66,13 @@ export default function DataTable<T extends { id: number }>({
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [expandedRowId, setExpandedRowId] = React.useState<number | null>(null);
+  const [hiddenColumns, setHiddenColumns] = React.useState<string[]>(
+    defaultHiddenColumns
+  );
+
+  React.useEffect(() => {
+  setHiddenColumns(defaultHiddenColumns);
+}, [defaultHiddenColumns]);
 
   const handleRequestSort = (property: keyof T) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -121,6 +131,26 @@ export default function DataTable<T extends { id: number }>({
     toggleExpandedRow(rowId);
   };
 
+  
+  const toggleColumn = (id : string) => {
+    setHiddenColumns((prev) => 
+    prev.includes(id)
+      ? prev.filter((c) => c !== id)
+      : [...prev, id]
+    )
+  };
+
+  const visibleColumns = React.useMemo(() => {
+  return columns.filter(
+    (column) => !hiddenColumns.includes(String(column.id))
+  );
+}, [columns, hiddenColumns]);
+
+// const visibleColumns = columns.filter(
+//   (col) => !hiddenColumns.includes(String(col.id))
+// );
+
+
   return (
     <Paper 
       sx={{ 
@@ -176,6 +206,14 @@ export default function DataTable<T extends { id: number }>({
             />
  
           )}
+          <ColumnSelector
+            columns={columns.map((c) => ({
+              id: String(c.id),
+              label: c.label,
+            }))}
+            hiddenColumns={hiddenColumns}
+            onToggle={toggleColumn}
+          />
           {actions}
           </Box>
         </Box>
@@ -199,7 +237,7 @@ export default function DataTable<T extends { id: number }>({
           <TableHead>
             <TableRow>
               {/* {hasExpandedRows && <TableCell sx={{ width: 56 }} />} */}
-              {columns.map((column) => (
+              {visibleColumns.map((column) => (
                 <TableCell
                   key={String(column.id)}
                   align={column.numeric ? 'right' : 'left'}
@@ -236,7 +274,7 @@ export default function DataTable<T extends { id: number }>({
                   {showGroupHeader && (
                     <TableRow>
                       <TableCell
-                        colSpan={columns.length + (hasExpandedRows ? 1 : 0)}
+                        colSpan={visibleColumns.length + (hasExpandedRows ? 1 : 0)}
                         sx={{
                           backgroundColor: '#f3eef8',
                           color: '#5a2d82',
@@ -272,7 +310,7 @@ export default function DataTable<T extends { id: number }>({
                         </IconButton>
                       </TableCell>
                     )} */}
-                    {columns.map((column) => (
+                    {visibleColumns.map((column) => (
                       <TableCell
                         key={String(column.id)}
                         align={
@@ -288,7 +326,7 @@ export default function DataTable<T extends { id: number }>({
 
                   {hasExpandedRows && isExpanded && (
                     <TableRow>
-                      <TableCell colSpan={columns.length + 1} sx={{ backgroundColor: '#faf8fc', py: 2 }}>
+                      <TableCell colSpan={visibleColumns.length} sx={{ backgroundColor: '#faf8fc', py: 2 }}>
                         {renderExpandedRow?.(row)}
                       </TableCell>
                     </TableRow>

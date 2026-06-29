@@ -6,4 +6,6 @@ export interface Column<T> {
   numeric?: boolean;
   width?: number;
   render?: (row: T) => React.ReactNode;
+
+  hideable?: boolean;
 }

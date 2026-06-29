@@ -43,6 +43,7 @@ export default function ProductItemPage() {
         groupBy={(row) => row.sub_category_name ?? 'No Sub Category'}
         searchable ={true}
         actions={<AddProduct />}
+        hiddenColumns={['name', 'item_code']}
       />
      
   </div>

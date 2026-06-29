@@ -38,6 +38,13 @@ export default function ReusableSelect({
         value={String(value)}
         label={label}
         onChange={handleChange}
+        // MenuProps={{
+        //   slotProps: {
+        //     paper: {
+        //       style: {maxHeight: 800},
+        //     },
+        //   },
+        // }}
       >
         {options.map((option) => (
           <MenuItem
