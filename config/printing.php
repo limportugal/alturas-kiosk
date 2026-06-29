@@ -64,5 +64,5 @@ return [
     | Printing Options
     |--------------------------------------------------------------------------
     */
-    'partial_cut' => env('PRINTER_PARTIAL_CUT', 'ON'),
+    'partial_cut' => env('PRINTER_PARTIAL_CUT', true),
 ];

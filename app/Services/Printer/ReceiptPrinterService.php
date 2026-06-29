@@ -46,7 +46,10 @@ class ReceiptPrinterService
 
 
     public function printConfirmedCart(CartModel $cart): void {
-
+        \Log::info('printConfirmedCart called');
+            \Log::info('Printing enabled?', [
+    'enabled' => config('printing.enabled'),
+]);
             if (!config('printing.enabled', true)) {
                 return;
             }
@@ -57,19 +60,20 @@ class ReceiptPrinterService
                 $printer = $this->makePrinter();
                 $receiptData = $this->buildReceiptDataFromCart($cart);
 
+                // Print Order Slip lang
                 $this->printOrderSlip($printer, $receiptData);
 
-                $printer->feed(2);
+                // $printer->feed(2);
 
-                if (strtoupper(config('printing.partial_cut')) === 'OFF') {
-                    $printer->cut(Printer::CUT_PARTIAL);
-                } else {
-                    $printer->cut();
-                }
+                // if (config('printing.partial_cut')) {
+                //     $printer->cut(Printer::CUT_PARTIAL);
+                // } else {
+                //     $printer->cut();
+                // }
 
-                $printer->feed(1);
+                // $printer->feed(1);
 
-                $this->printFullReceipt($printer, $receiptData);
+                // $this->printFullReceipt($printer, $receiptData);
                 $printer->feed(3);
                 $printer->cut();
             } catch (\Throwable $e) {
