@@ -245,13 +245,33 @@ export default function ProductDetailScreen({
             </div>
           ))}
         </div>
-        <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
-          <span style={{ ...typography.productDetailsLabel }}>
-            <AutoShrinkText>
-            SKU: 
-            </AutoShrinkText>
+        <div style={{ 
+        
+          background: colors.surface, 
+          border: "2px solid #e0dbd5", 
+          borderRadius: 12, 
+          padding: "22px 28px",
+          marginTop: 16,
+
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+  
+        }}>
+          <span style={{ ...typography.productDetailsLabel, flexShrink: 0 }}> SKU: 
             </span>
-          <span style={{ ...typography.productDetailsSubLabel }}>{product.sku}</span>
+          <div style={{ 
+              ...typography.productDetailsSubLabel, 
+              flex: 1,
+              minWidth: 0,
+              display: "flex",
+              alignItems: "center",
+              overflow: "visible",
+              }}>
+          <AutoShrinkText  minFontSize={14} maxFontSize={26} singleLine={true}>
+            {product.sku}
+          </AutoShrinkText>
+          </div>
         </div>
         <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
           <span style={{ ...typography.productDetailsLabel }}>COLOR VARIANTS: </span>

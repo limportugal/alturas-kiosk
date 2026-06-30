@@ -14,6 +14,7 @@ declare global {
         auth: {
             user: User | null;
         };
+        [key: string]: unknown;
     }
 
     function route(...args: any[]): any;
