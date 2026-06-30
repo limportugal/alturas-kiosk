@@ -18,9 +18,9 @@ interface NavSection {
 }
 
 interface Props {
-  children: React.ReactNode;
+  children: React.ReactNode; 
   auth?: {
-    user?: {
+    user?: { 
       name: string;
       role?: string;
     };

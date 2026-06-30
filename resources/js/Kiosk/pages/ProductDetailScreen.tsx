@@ -17,7 +17,7 @@ import { formatMoney } from "@/Kiosk/components/shared";
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
-
+import  AutoShrinkText  from "@/Kiosk/components/AutoShrinkText";
 
 export default function ProductDetailScreen({
   product,
@@ -246,7 +246,11 @@ export default function ProductDetailScreen({
           ))}
         </div>
         <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
-          <span style={{ ...typography.productDetailsLabel }}>SKU: </span>
+          <span style={{ ...typography.productDetailsLabel }}>
+            <AutoShrinkText>
+            SKU: 
+            </AutoShrinkText>
+            </span>
           <span style={{ ...typography.productDetailsSubLabel }}>{product.sku}</span>
         </div>
         <div style={{ background: colors.surface, border: "2px solid #e0dbd5", borderRadius: 12, padding: "22px 28px", marginTop: 16 }}>
