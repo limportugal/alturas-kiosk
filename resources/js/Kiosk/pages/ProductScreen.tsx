@@ -101,7 +101,7 @@ export default function ProductScreen({
       )
     );
     if (firstTabWithProduct >= 0) {
-      setActiveTab(firstTabWithProduct);
+      setActiveTab(firstTabWithProduct); 
     }
   }, [visibleTabs, publicData, subId]);
 

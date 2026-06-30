@@ -19,7 +19,6 @@ import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListSe
 
 
 
-
 export default function ProductDetailScreen({
   product,
   onBack,
@@ -141,8 +140,10 @@ export default function ProductDetailScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
         <div style={{ position: "relative"}}>
-      <PurpleBannerV2>
+      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={68}>
+          <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
         {variationTypeName.toUpperCase()}
+        </div>
       </PurpleBannerV2>
         <KioskButton 
                 onClick={onBack}  

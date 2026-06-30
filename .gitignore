@@ -17,6 +17,14 @@
 /public/build
 /public/hot
 /public/storage
+/public/ads
+/public/categories
+/public/color-variants
+/public/images
+/public/products
+/public/sub-categories
+/public/variations
+/public/videos
 /storage/*.key
 /storage/pail
 /vendor
