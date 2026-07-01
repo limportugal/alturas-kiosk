@@ -61,7 +61,7 @@ export function ResumeSessionModal({
                     textAlign:   "center",
                 }}>
                     <p style={{ color: "#fff", fontSize: 18, fontWeight: 800, letterSpacing: 1.5, margin: 0 }}>
-                        PREVIOUS SESSION FOUND
+                        PREVIOUS ORDER FOUND
                     </p>
                     <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, margin: "6px 0 0" }}>
                         You left {cartItems.length} item{cartItems.length !== 1 ? "s" : ""} in your cart
@@ -177,7 +177,7 @@ export function ResumeSessionModal({
                             letterSpacing: 0.5,
                         }}
                     >
-                        Resume Session
+                        Continue Shopping
                     </button>
                 </div>
             </div>
