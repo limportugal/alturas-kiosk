@@ -14,6 +14,7 @@ import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown';
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
 
+
 const INPUT_SX = {
   '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#7e22ce' } },
   '& .MuiInputLabel-root.Mui-focused': { color: '#7e22ce' },

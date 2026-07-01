@@ -63,9 +63,9 @@ export function ResumeSessionModal({
                     <p style={{ color: "#fff", fontSize: 18, fontWeight: 800, letterSpacing: 1.5, margin: 0 }}>
                         PREVIOUS ORDER FOUND
                     </p>
-                    <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, margin: "6px 0 0" }}>
+                    {/* <p style={{ color: "rgba(255,255,255,0.8)", fontSize: 14, margin: "6px 0 0" }}>
                         You left {cartItems.length} item{cartItems.length !== 1 ? "s" : ""} in your cart
-                    </p>
+                    </p> */}
                 </div>
 
                 {/* Cart items list */}
@@ -121,7 +121,7 @@ export function ResumeSessionModal({
 
                             {/* Qty × price */}
                             <div style={{ textAlign: "right", flexShrink: 0 }}>
-                                <p style={{ fontSize: 13, color: "#888", margin: 0 }}>×{item.quantity}</p>
+                                <p style={{ fontSize: 15, color: "#000", margin: 0 }}>×{item.quantity}</p>
                                 <p style={{ fontSize: 15, fontWeight: 700, color: colors.primary, margin: "2px 0 0" }}>
                                     {formatMoney(item.subtotal)}
                                 </p>
