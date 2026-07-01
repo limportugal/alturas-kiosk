@@ -11,15 +11,23 @@ import { Badge } from "@/Kiosk/components/UI/Badge";
 import { useCartStore } from "@/Kiosk/store/useCartStore";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
 
+import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
+import { useCart } from "@/Kiosk/hooks/useCart";
+
 export default function HomeCategoryScreen({
   onSelect,
   onViewOrder,
+  onReturnToScreensaver,
 }: {
   onSelect: (id: string, name: string) => void;
   onViewOrder: () => void;
+  onReturnToScreensaver: () => void;
 }) {
   const [mounted, setMounted] = useState(false);
   const [pressed, setPressed] = useState<string | null>(null);
+
+  const [ConfirmOpen, setConfirmOpen] = useState(false);
+  const { clearCart }             = useCart();
 
   const { data: categories_data } = useDynamicQuery(
     ["category-public-list"],
@@ -68,9 +76,12 @@ export default function HomeCategoryScreen({
         boxShadow: "0 4px 24px rgba(0,0,0,0.06)",
         flexShrink: 0,
       }}>
-        <a href="/" style={{ display: "inline-block" }}>
-          <img src="/images/H&F-Logo.png" alt="H&F Department Store" style={{ width: 420, height: "auto" }} />
-        </a>
+        <div
+          onClick={() => setConfirmOpen(true)}
+          style={{ display: "inline-block", cursor: "pointer" }}
+        >
+            <img src="/images/H&F-Logo.png" alt="H&F Department Store" style={{ width: 420, height: "auto" }} />
+        </div>
       </div>
 
       {/* Banner */}
@@ -132,6 +143,25 @@ export default function HomeCategoryScreen({
           })} 
       </div>
       <CartIcon onClick={onViewOrder} hideWhenEmpty />
+
+      <ConfirmActionModal
+        open={ConfirmOpen}
+        title="Return to Screen Saver"
+        message={
+          cartItems.length > 0
+            ? "This will CLEAR your current cart. Continue?"
+            : "Do you want to return to the screen saver?"
+        }
+        confirmLabel="Yes, Return"
+        cancelLabel="Cancel"
+        confirmTone={cartItems.length > 0 ? "danger" : "primary"}
+        onConfirm={() => {
+          if (cartItems.length > 0) clearCart();
+          setConfirmOpen(false);
+          onReturnToScreensaver();
+        }}
+        onClose={() => setConfirmOpen(false)}
+        />
     </div>
   );
 }

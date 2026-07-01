@@ -9,7 +9,8 @@ interface IdleModalProps {
     /** Countdown seconds after modal appears before auto-reset (default: 30) */
     countdownSeconds?: number;
     /** Called after clear cart + reset — navigate to main menu */
-    onReset:           () => void;
+    onResetSession:           () => void;
+    onAutoReturnToScreensaver:() => void;
 }
 
 function CountdownRing({ seconds, total }: { seconds: number; total: number }) {
@@ -46,8 +47,9 @@ function CountdownRing({ seconds, total }: { seconds: number; total: number }) {
 
 export function IdleModal({
     idleTimeoutMs,
-    countdownSeconds = 30,
-    onReset,
+    countdownSeconds = 5,
+    onResetSession,
+    onAutoReturnToScreensaver,
 }: IdleModalProps) {
     const { clearCart }             = useCart();
     const [open, setOpen]           = useState(false);
@@ -84,7 +86,7 @@ export function IdleModal({
             setCountdown((prev) => {
                 if (prev <= 1) {
                     stopCountdown();
-                    handleAutoReset();
+                    handleAutoClose();
                     return 0;
                 }
                 return prev - 1;
@@ -94,14 +96,24 @@ export function IdleModal({
         return stopCountdown;
     }, [open]);
  
-    // ── Auto reset — clear cart + go to main menu ─────────────────────────────
-    const handleAutoReset = async () => {
+    // ── Auto close — go to main menu ─────────────────────────────
+    const handleAutoClose = () => {
+        stopCountdown();
+        setVisible(false);
+        setTimeout(() => {
+            setOpen(false);
+            onAutoReturnToScreensaver();
+        });
+    }
+
+    // ── Manual reset — clear cart + go to main menu ─────────────────────────────
+    const handleManualReset = async () => {
         stopCountdown();
         await clearCart();
         setVisible(false);
         setTimeout(() => {
             setOpen(false);
-            onReset();
+            onResetSession();
         }, 280);
     };
  
@@ -158,21 +170,20 @@ export function IdleModal({
                     <p style={{ fontSize: 22, fontWeight: 700, color: "#1a1a1a", margin: "0 0 10px", lineHeight: 1.3 }}>
                         Are you still there?
                     </p>
-                    <p style={{ fontSize: 14, color: "#888", margin: "0 0 28px", lineHeight: 1.6 }}>
-                        Your session will reset and your cart will be cleared in{" "}
+                    <p style={{ fontSize: 16, color: "#000000ff", margin: "0 0 28px", lineHeight: 1.6 }}>
+                    Tap 'Yes, I'm Still Here' to continue, or 'Reset Session' to clear the current session and return to the screensaver.{" "}
                         <span style={{ fontWeight: 700, color: countdown <= 5 ? "#e53e3e" : colors.primary }}>
                             {countdown} second{countdown !== 1 ? "s" : ""}
                         </span>{" "}
-                        due to inactivity.
                     </p>
  
                     <div style={{ display: "flex", gap: 12 }}>
                         <button
-                            onClick={handleAutoReset}
+                            onClick={handleManualReset}
                             style={{
                                 flex: 1, padding: "14px 0", borderRadius: 12,
                                 border: "2px solid #e0dbd5", background: "#fff",
-                                color: "#888", fontSize: 14, fontWeight: 600, cursor: "pointer",
+                                color: "#000000ff", fontSize: 14, fontWeight: 600, cursor: "pointer",
                             }}
                         >
                             Reset session

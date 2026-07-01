@@ -130,6 +130,7 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
         <HomeCategoryScreen
           onSelect={(id, name) => { setActiveCategoryId(id); setActiveCategoryName(name); setScreen("category"); }}
           onViewOrder={() => setSummaryOpen(true)}
+          onReturnToScreensaver={onReturnToScreensaver}
         />
       )}
       {screen === "category" && activeCategory && (
@@ -177,7 +178,11 @@ export default function MainPage({ idleTimeoutMs, onIdleReset, entryProductId, o
             onClose={() => setSummaryOpen(false)} 
             onPlaceOrder={handleOrderPlaced}
         />
-      <IdleModal idleTimeoutMs={idleTimeoutMs} onReset={onIdleReset} />
+      <IdleModal 
+        idleTimeoutMs={idleTimeoutMs} 
+        onResetSession={onIdleReset} 
+        onAutoReturnToScreensaver={onReturnToScreensaver}
+        />
     </div>
   );
 }

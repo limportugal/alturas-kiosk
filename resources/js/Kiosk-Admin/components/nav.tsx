@@ -53,12 +53,12 @@ const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-const SHORTCUTS = [
-  { icon: '📬', label: 'Gmail' },
-  { icon: '🐙', label: 'GitHub' },
-  { icon: '🤖', label: 'ChatGPT' },
-  { icon: '🍊', label: 'Stack' },
-];
+// const SHORTCUTS = [
+//   { icon: '📬', label: 'Gmail' },
+//   { icon: '🐙', label: 'GitHub' },
+//   { icon: '🤖', label: 'ChatGPT' },
+//   { icon: '🍊', label: 'Stack' },
+// ];
 
 export default function SideNavDrawer({ children, auth }: Props) {
   const [open, setOpen] = useState(true);

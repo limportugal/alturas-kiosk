@@ -5,6 +5,11 @@ import MainPage from '@/Kiosk/MainPage';
 import useDynamicQuery from '@/hooks/useDynamicQuery';
 import { KioskSettingsPublicService } from '@/Kiosk/services/settings/GetKioskSettingsServices';
 
+import { ResumeSessionModal } from '@/Kiosk/modals/ResumeSessionModal';
+import { useCartStore } from '@/Kiosk/store/useCartStore';
+import { useCart } from '@/Kiosk/hooks/useCart';
+
+
 const queryClient = new QueryClient();
 
 const KIOSK_W = 1080;
@@ -13,6 +18,10 @@ function ScaledKiosk() {
     const [scale, setScale]     = useState(1);
     const [started, setStarted] = useState(false);
     const [entryProductId, setEntryProductId] = useState<number | string | null>(null);
+
+    const [showResumeModal, setShowResumeModal] = useState(false);
+    const cartItems = useCartStore((s) => s.cartItems);
+    const { clearCart } = useCart();
 
     const { data: settings } = useDynamicQuery(
         ['kiosk-settings'],
@@ -39,6 +48,14 @@ function ScaledKiosk() {
         window.addEventListener('resize', update);
         return () => window.removeEventListener('resize', update);
     }, []);
+
+    const handleScreenSaverTap = () => {
+        if(cartItems.length > 0) {
+            setShowResumeModal(true);
+        } else {
+            setStarted(true);
+        }
+    };
 
     return (
         <div style={{
@@ -67,10 +84,7 @@ function ScaledKiosk() {
                     />
                 ) : (
                     <Screensaver
-                        onStart={() => {
-                            setEntryProductId(null);
-                            setStarted(true);
-                        }}
+                        onStart={handleScreenSaverTap}
                         onProductSelect={(productId) => {
                             setEntryProductId(productId);
                             setStarted(true);
@@ -78,9 +92,24 @@ function ScaledKiosk() {
                     />
                 )}
             </div>
-        </div>
-    );
+
+            <ResumeSessionModal
+                open={showResumeModal}
+                cartItems={cartItems}
+                onResume={() => {
+                    setShowResumeModal(false);
+                    setStarted(true);
+                }}
+                onNew={() => {
+                    clearCart();
+                    setShowResumeModal(false);
+                    setStarted(true);
+                }}
+            />
+        </div>  
+    );   
 }
+
 
 export default function KioskApp() {
     return (

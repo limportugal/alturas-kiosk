@@ -10,6 +10,7 @@ interface ConfirmActionModalProps {
     confirmTone?: "primary" | "danger";
     onConfirm: () => void | Promise<void>;
     onClose: () => void;
+    onCancel?: () => void;
 }
 
 export function ConfirmActionModal({
@@ -21,6 +22,7 @@ export function ConfirmActionModal({
     confirmTone = "primary",
     onConfirm,
     onClose,
+    onCancel,
 }: ConfirmActionModalProps) {
     const [visible, setVisible] = useState(false);
 
@@ -93,9 +95,10 @@ export function ConfirmActionModal({
                     style={{
                         padding: "32px 28px",
                         textAlign: "center",
-                        fontSize: 18,
+                        fontSize: 22,
                         lineHeight: 1.55,
-                        color: "#333",
+                        fontWeight: 600,
+                        color: "#000000ff",
                     }}
                 >
                     {message}
@@ -109,7 +112,7 @@ export function ConfirmActionModal({
                     }}
                 >
                     <button
-                        onClick={handleClose}
+                        onClick={onCancel ? () => { onCancel(); handleClose(); } : handleClose}
                         style={{
                             flex: 1,
                             padding: "16px 20px",
