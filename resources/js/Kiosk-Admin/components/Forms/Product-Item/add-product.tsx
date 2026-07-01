@@ -13,6 +13,7 @@ import { getVariations } from '@/Kiosk-Admin/services/variation/dropdownVariatio
 import ReusableSelect from '@/Kiosk-Admin/components/Buttons/dropdown';
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
+import PriceInput from '@/Kiosk-Admin/components/Inputs/PriceInput';
 
 
 const INPUT_SX = {
@@ -136,14 +137,12 @@ export default function AddProduct() {
 
           {/* Price + Quantity */}
           <Stack direction="row" spacing={2}>
-            <TextField
-              label="Price" type="number" fullWidth
-              value={price === 0 ? "" : price}
-              onChange={(e) => {
-                const value = e.target.value
-                setPrice(value === "" ? 0 : Number(value))
-              }}
-              error={!!errors.price} helperText={errors.price}
+            <PriceInput
+              label="Price"
+              value={price}
+              onChange={(val) => setPrice(val)}
+              error={!!errors.price}
+              helperText={errors.price}
               sx={INPUT_SX}
             />
             <TextField

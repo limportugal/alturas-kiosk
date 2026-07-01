@@ -22,6 +22,7 @@ import { getVariations } from '@/Kiosk-Admin/services/variation/dropdownVariatio
 
 import ImageUploader from '@/Kiosk-Admin/components/ImageUploader';
 import ColorVariantsEditor from '@/Kiosk-Admin/components/Forms/Product-Item/ColorVariantsEditor';
+import PriceInput from '@/Kiosk-Admin/components/Inputs/PriceInput';
 
 interface Props {
   product: (ProductItem & { images?: ProductImage[]; colorVariants?: ProductItem['color_variants'] }) | null;
@@ -171,15 +172,10 @@ export default function EditProduct({ product }: Props) {
 
           {/* Price + Quantity */}
           <Stack direction="row" spacing={2}>
-            <TextField
+            <PriceInput
               label="Price"
-              fullWidth
-              type="number"
-              value={productState.price === 0 ? "" : productState.price}
-              onChange={(e) => {
-                const value = e.target.value
-                productState.setPrice(value === "" ? 0 : Number(value))
-              }}
+              value={productState.price}
+              onChange={(val) => productState.setPrice(val)}
               error={!!errors.price}
               helperText={errors.price}
               sx={INPUT_SX}
