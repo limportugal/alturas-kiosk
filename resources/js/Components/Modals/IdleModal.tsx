@@ -47,7 +47,7 @@ function CountdownRing({ seconds, total }: { seconds: number; total: number }) {
 
 export function IdleModal({
     idleTimeoutMs,
-    countdownSeconds = 5,
+    countdownSeconds = 30,
     onResetSession,
     onAutoReturnToScreensaver,
 }: IdleModalProps) {
