@@ -58,7 +58,7 @@ export default function DataTable<T extends { id: number }>({
   defaultOrderBy = 'id' as keyof T,
   renderExpandedRow,
   groupBy,
-  hiddenColumns: defaultHiddenColumns = [],
+  hiddenColumns: defaultHiddenColumns,
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>(defaultOrder);
   const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
@@ -67,12 +67,12 @@ export default function DataTable<T extends { id: number }>({
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [expandedRowId, setExpandedRowId] = React.useState<number | null>(null);
   const [hiddenColumns, setHiddenColumns] = React.useState<string[]>(
-    defaultHiddenColumns
+    () => defaultHiddenColumns ?? []
   );
 
   React.useEffect(() => {
-  setHiddenColumns(defaultHiddenColumns);
-}, [defaultHiddenColumns]);
+    setHiddenColumns(defaultHiddenColumns ?? []);
+  }, [defaultHiddenColumns?.join('|')]);
 
   const handleRequestSort = (property: keyof T) => {
     const isAsc = orderBy === property && order === 'asc';
