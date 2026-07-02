@@ -97,8 +97,12 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
             // printReceipt(receiptContent);
 
             setOrdered(true);
-            onPlaceOrder?.();
-            setTimeout(handleClose, 1800);
+
+            if (onPlaceOrder) {
+                onPlaceOrder();
+            } else {
+                handleClose();
+            }
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const stockError = error.response?.data?.errors?.stock?.[0];
