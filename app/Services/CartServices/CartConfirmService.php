@@ -34,18 +34,22 @@ class CartConfirmService
             $cart->update(['status' => 'confirmed']);
             $confirmedCart = $cart->refresh();
 
-            if (config('printing.enabled')){
-            try{
-                ($this->receiptPrinter ?? app(ReceiptPrinterService::class))
-                    ->printConfirmedCart($confirmedCart);
-            } catch (\Throwable $e) {
-                 \Log::error('Confirmed cart print dispatch failed', [
-                    'cart_id' => $cart->id,
-                    'cart_number' => $cart->cart_number,
-                    'error' => $e->getMessage(),
-                ]);
+            if (config('printing.enabled')) {
+                DB::afterCommit(function () use ($confirmedCart) {
+                    app()->terminating(function () use ($confirmedCart) {
+                        try {
+                            ($this->receiptPrinter ?? app(ReceiptPrinterService::class))
+                                ->printConfirmedCart($confirmedCart);
+                        } catch (\Throwable $e) {
+                            \Log::error('Confirmed cart print dispatch failed', [
+                                'cart_id' => $confirmedCart->id,
+                                'cart_number' => $confirmedCart->cart_number,
+                                'error' => $e->getMessage(),
+                            ]);
+                        }
+                    });
+                });
             }
-        }
 
             return [
                 'message' => 'Cart confirmed successfully',
