@@ -4,6 +4,7 @@ import Screensaver from './components/Screensaver';
 import MainPage from '@/Kiosk/MainPage';
 import useDynamicQuery from '@/hooks/useDynamicQuery';
 import { KioskSettingsPublicService } from '@/Kiosk/services/settings/GetKioskSettingsServices';
+import { GetActiveCartService } from '@/Kiosk/services/cart/GetActiveCartService';
 
 import { ResumeSessionModal } from '@/Kiosk/modals/ResumeSessionModal';
 import { useCartStore } from '@/Kiosk/store/useCartStore';
@@ -22,6 +23,23 @@ function ScaledKiosk() {
     const [showResumeModal, setShowResumeModal] = useState(false);
     const cartItems = useCartStore((s) => s.cartItems);
     const { clearCart } = useCart();
+
+    // Poll active cart so tap check always uses fresh server data, not stale Zustand state
+    const { data: activeCartData } = useDynamicQuery(
+        ['active-cart'],
+        GetActiveCartService,
+        {
+            enabled: !started,           // only poll while on screensaver
+            staleTime: 0,
+            refetchInterval: 5000,
+            refetchOnWindowFocus: true,
+        }
+    );
+
+    // Merge: server cart items if available, otherwise fall back to Zustand store
+    const liveCartItems = activeCartData?.data?.cart_items?.length
+        ? activeCartData.data.cart_items
+        : cartItems;
 
     const { data: settings } = useDynamicQuery(
         ['kiosk-settings'],
@@ -50,7 +68,7 @@ function ScaledKiosk() {
     }, []);
 
     const handleScreenSaverTap = () => {
-        if(cartItems.length > 0) {
+        if (liveCartItems.length > 0) {
             setShowResumeModal(true);
         } else {
             setStarted(true);
