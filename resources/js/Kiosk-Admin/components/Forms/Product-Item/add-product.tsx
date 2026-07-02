@@ -139,7 +139,7 @@ export default function AddProduct() {
           <Stack direction="row" spacing={2}>
             <PriceInput
               label="Price"
-              value={price}
+              value={price ?? ''}
               onChange={(val) => setPrice(val)}
               error={!!errors.price}
               helperText={errors.price}

@@ -18,6 +18,7 @@ import { useCartStore } from "@/Kiosk/store/useCartStore";
 
 import { SubCategoriesPublicServices } from "@/Kiosk/services/sub-category/GetSubCategoriesListServices";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
+import { IMAGE_STANDARDS } from "@/Kiosk/utils/imageStandards";
 
 
 
@@ -195,7 +196,7 @@ export default function SubCategoryScreen({
                 label={sub.name}
                 active={isPressed}
                 onClick={() => handlePress(String(sub.id))}
-                imageHeight={300}
+                imageHeight={IMAGE_STANDARDS.subCategoryCard.displayHeight}
               />
                   <Badge value={getSubCategoryCartQty(String(sub.id))} show={getSubCategoryCartQty(String(sub.id)) > 0} />
             </div>

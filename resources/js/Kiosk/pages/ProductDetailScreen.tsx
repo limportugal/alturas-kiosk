@@ -16,6 +16,7 @@ import { Badge } from "@/Kiosk/components/UI/Badge";
 import { formatMoney } from "@/Kiosk/components/shared";
 import useDynamicQuery from "@/hooks/useDynamicQuery";
 import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListServices";
+import { IMAGE_STANDARDS } from "@/Kiosk/utils/imageStandards";
 
 import  AutoShrinkText  from "@/Kiosk/components/AutoShrinkText";
 
@@ -212,8 +213,8 @@ export default function ProductDetailScreen({
               image={img.image_path ? `/${img.image_path}` : "/images/placeholder.png"}
               active={activeImg === i}
               onClick={() => {setActiveImg(i); setUserPickedProductImg(true); }} //  onClick={() => {setActiveImg(i); setActiveColor(-1);}} auto select default when browsing side images , this only backup if wants to autoselect default
-              width={120}
-              height={120}
+              width={IMAGE_STANDARDS.productThumbnail.displayWidth}
+              height={IMAGE_STANDARDS.productThumbnail.displayHeight}
             />
           ))}
         </div>
@@ -290,8 +291,8 @@ export default function ProductDetailScreen({
                     alt="Default"
                     active={activeColor === -1}
                     onClick={() => { setActiveColor(-1); setActiveImg(0); }}
-                    width={150}
-                    height={100}
+                    width={IMAGE_STANDARDS.variantThumbnail.displayWidth}
+                    height={IMAGE_STANDARDS.variantThumbnail.displayHeight}
                   />
                 </SoldOutOverlay>
                   <Badge value={getCartQty(null)} show={getCartQty(null) > 0} />
@@ -324,8 +325,8 @@ export default function ProductDetailScreen({
                         alt={variant.color_name}
                         active={activeColor === i}
                         onClick={() => handleColorSelect(i)}
-                        width={150}
-                        height={100}
+                        width={IMAGE_STANDARDS.variantThumbnail.displayWidth}
+                        height={IMAGE_STANDARDS.variantThumbnail.displayHeight}
                       />
                     </SoldOutOverlay>
                      <Badge value={variantInCart} show={variantInCart > 0} />

@@ -23,6 +23,7 @@ import { Badge } from "@/Kiosk/components/UI/Badge";
 import { formatMoney } from "@/Kiosk/components/shared"
 
 import { PurpleBannerV2 } from "@/Kiosk/components/UI/PurpleBanner";
+import { IMAGE_STANDARDS } from "@/Kiosk/utils/imageStandards";
 
 
 export default function ProductScreen({
@@ -161,8 +162,8 @@ export default function ProductScreen({
             label={tab.name}
             active={activeTab === i}
             onClick={() => setActiveTab(activeTab === i ? null : i)}
-            width={183} 
-            imageHeight={120}
+            width={IMAGE_STANDARDS.variationTabCard.displayWidth}
+            imageHeight={IMAGE_STANDARDS.variationTabCard.displayHeight}
             labelFontSize={14} 
             showArrow={false}
           />

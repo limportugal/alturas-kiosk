@@ -174,7 +174,7 @@ export default function EditProduct({ product }: Props) {
           <Stack direction="row" spacing={2}>
             <PriceInput
               label="Price"
-              value={productState.price}
+              value={productState.price ?? ''}
               onChange={(val) => productState.setPrice(val)}
               error={!!errors.price}
               helperText={errors.price}

@@ -13,6 +13,7 @@ import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListSe
 
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { useCart } from "@/Kiosk/hooks/useCart";
+import { IMAGE_STANDARDS } from "@/Kiosk/utils/imageStandards";
 
 export default function HomeCategoryScreen({
   onSelect,
@@ -135,7 +136,7 @@ export default function HomeCategoryScreen({
                   label={cat.name}
                   active={isPressed}
                   onClick={() => handlePress(String(cat.id), cat.name)}
-                  imageHeight={320}
+                  imageHeight={IMAGE_STANDARDS.categoryCard.displayHeight}
                 />
                  <Badge value={getCategoryCartQty(String(cat.id))} show={getCategoryCartQty(String(cat.id)) > 0} />
               </div>
