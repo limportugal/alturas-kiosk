@@ -125,7 +125,7 @@ export default function ScreenSaverPage() {
 
     return (
         <div>
-            <h2 style={{ color: '#f0f0f5', marginBottom: 8 }}>Screen Saver Settings</h2>
+            <h2 style={{ color: '#f0f0f5', marginBottom: 8 }}>Timer</h2>
             <p style={{ color: '#888', marginBottom: 32, fontSize: 14 }}>
                 Set how long the kiosk waits before returning to the screen saver.
             </p>

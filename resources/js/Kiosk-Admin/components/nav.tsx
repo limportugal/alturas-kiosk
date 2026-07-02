@@ -41,7 +41,7 @@ const NAV_SECTIONS: NavSection[] = [
     label: ' 🛠️ Maintenance',
     items: [
       { icon: '🎬', label: 'Ads Management', href: route('ads'), badge: null, permission: 'manage ads' },
-      { icon: '🌙', label: 'Screen Saver', href: route('screen-saver'), badge: null, adminOnly: true },
+      { icon: '🌙', label: 'Timer', href: route('screen-saver'), badge: null, adminOnly: true },
       { icon: '👥', label: 'Users', href: route('users'), badge: null, adminOnly: true },
     ],
   },
