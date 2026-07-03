@@ -28,6 +28,8 @@ class ProductStoreService {
 
         return DB::transaction(function () use ($data){
 
+        $nextSortOrder = (ProductItemModel::max('sort_order') ?? 0) + 1;
+
         $this->duplicateCheckerService->check([
             'sku' => [
                 'model' => ProductItemModel::class,

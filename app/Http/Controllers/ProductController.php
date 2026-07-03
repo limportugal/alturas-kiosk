@@ -8,6 +8,8 @@ use Inertia\Inertia;
 //Validations 
 use App\Http\Requests\ProductStoreValidations;
 use App\Http\Requests\ProductUpdateValidations;
+use App\Http\Requests\ProductReOrderValidations;
+
 
 // Services
 use App\Services\ProductItemServices\ProductIndexService;
@@ -15,6 +17,7 @@ use App\Services\ProductItemServices\ProductListServices;
 use App\Services\ProductItemServices\ProductStoreService;
 use App\Services\ProductItemServices\ProductToggleStatusService;
 use App\Services\ProductItemServices\ProductUpdateService;
+use App\Services\ProductItemServices\ProductRowReorderingServices;
 
 class ProductController extends Controller {
 
@@ -55,5 +58,10 @@ class ProductController extends Controller {
         $updated = $service->update($request->validated(), $id);
         return response()->json([
             'updated' => $updated]);
+    }
+
+    public function reorderRow(ProductReOrderValidations $request, ProductRowReorderingServices $service){
+        $reorder = $service->reorderRows($request->validated('ids'));
+        return response()->json($reorder);
     }
 }

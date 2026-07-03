@@ -16,6 +16,7 @@ class ProductItemModel extends Model
     protected $fillable = [
         'item_code',
         'name',
+        'sort_order',
         'sku',
         'item_category_id',
         'sub_category_id',

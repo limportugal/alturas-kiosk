@@ -64,6 +64,7 @@ Route::middleware(['auth', 'permission:manage products'])->group(function () {
         Route::get('/product-item','index')->name('products');
         Route::get('/product-list','list')->name('product-list');
         Route::post('/store','storeProduct')->name('products.store');
+        Route::put('/product-reorder', 'reorderRow')->name('product.reorder');
         Route::put('/{productItemModel}/toggle-status', 'toggleStatus')->name('products.toggle-status');
         Route::put('/{id}/update-product','updateProduct')->name('product.update-item');
         Route::put('/{id}','update');

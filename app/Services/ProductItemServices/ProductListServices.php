@@ -16,6 +16,7 @@ class ProductListServices
                 'product_items.id',
                 'product_items.item_code',
                 'product_items.name',
+                'product_items.sort_order',
                 'product_items.sku',
                 'product_items.item_category_id',
                 'product_items.sub_category_id',
@@ -25,10 +26,10 @@ class ProductListServices
                 'product_items.quantity',
                 'product_items.item_description',
                 'product_items.variation_type_id',
-                
                 'product_items.status'
             )
-            ->latest('product_items.id')
+            ->orderByRaw('product_items.sort_order IS NULL, product_items.sort_order ASC')
+            ->orderBy('product_items.id')
             ->get();
     } 
 
@@ -42,6 +43,7 @@ class ProductListServices
                 'product_items.item_code',
                 'product_items.name',
                 'product_items.sku',
+                'product_items.sort_order',
                 'product_items.item_category_id',
                 'product_items.sub_category_id',
                 'item_categories.name as category_name',
@@ -52,7 +54,8 @@ class ProductListServices
                 'product_items.status'
             )
             ->where('product_items.status','Active')
-            ->latest('product_items.id')
+            ->orderByRaw('product_items.sort_order IS NULL, product_items.sort_order ASC')
+            ->orderBy('product_items.id')
             ->get();
     }
 }

@@ -21,6 +21,7 @@ class SubCategoryListServices
         return SubCategoryModel::query()
             ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
             ->where('status', 'Active')
+            ->with('category:id,name')
             ->orderByRaw('sort_order IS NULL, sort_order ASC')
             ->orderBy('id')
             ->get();

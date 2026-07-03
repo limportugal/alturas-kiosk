@@ -25,6 +25,7 @@ export interface ProductItem {
   id: number;
   item_code: string;
   name: string;
+  sort_order?:number;
   sku: string;
   item_category_id: number;
   sub_category_id?: number | null;
