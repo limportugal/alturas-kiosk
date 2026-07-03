@@ -33,6 +33,7 @@ class CategoryStoreServices {
         return DB::transaction(function() use ($data) {
 
             $imagePath = null;
+            $nextSortOrder = (ItemCategoryModel::max('sort_order') ?? 0) + 1;
 
             //check if image exists 
             if (isset($data['image_path']) && $data['image_path']){ 
@@ -45,6 +46,7 @@ class CategoryStoreServices {
 
             $category = ItemCategoryModel::create([
                 'name' => $data['name'],
+                'sort_order' => $nextSortOrder,
                 'description' => $data['description'],
                 'image_path' => $imagePath,
                 'status' => $data['status'] ?? 'Active',

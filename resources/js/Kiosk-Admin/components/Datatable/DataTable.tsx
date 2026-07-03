@@ -15,6 +15,22 @@ import { Box } from  '@mui/material';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from '@dnd-kit/core';
+
+import {
+  SortableContext,
+  arrayMove,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
+import SortableTableRow from '@/Kiosk-Admin/components/Datatable/SortableTable';
 import TableSearch from '@/Kiosk-Admin/components/Datatable/TableSearch';
 import ColumnSelector from '@/Kiosk-Admin/components/Datatable/columnSelector';
 
@@ -31,6 +47,9 @@ interface Props<T> {
   renderExpandedRow?: (row: T) => React.ReactNode;
   groupBy?: (row: T) => string;
   hiddenColumns?: string[];
+  enableRowReordering?:boolean; // This part weather Enable or Disable
+  onRowsReorder?: (rows: T[]) => void | Promise<void>; // This part will call after dragging the row and from here it will send data to backend
+
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -48,7 +67,7 @@ function getComparator<Key extends keyof any>(
     : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 }
 
-export default function DataTable<T extends { id: number }>({
+export default function DataTable<T extends { id: number, sort_order?: number }>({
   rows,
   columns,
   title,
@@ -59,6 +78,8 @@ export default function DataTable<T extends { id: number }>({
   renderExpandedRow,
   groupBy,
   hiddenColumns: defaultHiddenColumns,
+  enableRowReordering = false,
+  onRowsReorder, 
 }: Props<T>) {
   const [order, setOrder] = React.useState<Order>(defaultOrder);
   const [orderBy, setOrderBy] = React.useState<keyof T>(defaultOrderBy);
@@ -69,6 +90,42 @@ export default function DataTable<T extends { id: number }>({
   const [hiddenColumns, setHiddenColumns] = React.useState<string[]>(
     () => defaultHiddenColumns ?? []
   );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
+  const canReorder = enableRowReordering && !search;
+  
+  const handleDragEnd = async (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if(!over || active.id === over.id) return;
+
+    const oldIndex = rows.findIndex((row) => row.id === active.id);
+    const newIndex  = rows.findIndex((row) => row.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    // Block cross-group moves when groupBy is active
+    if (groupBy) {
+      const activeGroup = groupBy(rows[oldIndex]);
+      const overGroup   = groupBy(rows[newIndex]);
+      if (activeGroup !== overGroup) return;
+    }
+
+    const reorderRows = arrayMove(rows, oldIndex, newIndex).map(
+      (row, index) => ({
+        ...row,
+        sort_order: index + 1,
+      }),
+    );
+    await onRowsReorder?.(reorderRows);
+  };
 
   React.useEffect(() => {
     setHiddenColumns(defaultHiddenColumns ?? []);
@@ -94,8 +151,19 @@ export default function DataTable<T extends { id: number }>({
   }, [rows, columns, search]);
 
   const visibleRows = React.useMemo(() => {
-    return [...fillterRows]
-      .sort((a, b) => {
+    const preparedRows =  [...fillterRows];
+
+    if(canReorder){
+      preparedRows.sort((a, b) => {
+        // When groupBy is active, sort by group first, then sort_order within group
+        if (groupBy) {
+          const groupCompare = groupBy(a).localeCompare(groupBy(b));
+          if (groupCompare !== 0) return groupCompare;
+        }
+        return Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0);
+      });
+    } else {
+      preparedRows.sort((a, b) => {
         if (groupBy) {
           const groupCompare = groupBy(a).localeCompare(groupBy(b));
 
@@ -105,12 +173,13 @@ export default function DataTable<T extends { id: number }>({
         }
 
         return getComparator(order, orderBy)(a, b);
-      })
-      .slice(
+      });
+    }
+     return preparedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       );
-  }, [fillterRows, groupBy, order, orderBy, page, rowsPerPage]);
+  }, [fillterRows, groupBy, order, orderBy, page, rowsPerPage, canReorder]);
 
   let currentGroup = '';
   const hasExpandedRows = typeof renderExpandedRow === 'function';
@@ -219,124 +288,182 @@ export default function DataTable<T extends { id: number }>({
         </Box>
         )}
      
-      <TableContainer
-         sx={{
-            width: '100%',
-            flex: 1,
-            overflowX: 'auto',
-          }}
-
-          >
-        <Table
-            // size="small"
-            stickyHeader
+      <DndContext
+        sensors={canReorder ? sensors : undefined}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <TableContainer
            sx={{
-            width: '100%',
-          }}
+              width: '100%',
+              flex: 1,
+              overflowX: 'auto',
+            }}
         >
-          <TableHead>
-            <TableRow>
-              {/* {hasExpandedRows && <TableCell sx={{ width: 56 }} />} */}
-              {visibleColumns.map((column) => (
-                <TableCell
-                  key={String(column.id)}
-                  align={column.numeric ? 'right' : 'left'}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.id}
-                    direction={
-                      orderBy === column.id ? order : 'asc'
-                    }
-                    onClick={() =>
-                      handleRequestSort(column.id)
-                    }
+          <Table
+              stickyHeader
+             sx={{
+              width: '100%',
+            }}
+          >
+            <TableHead>
+              <TableRow>
+                {/* {hasExpandedRows && <TableCell sx={{ width: 56 }} />} */}
+                {canReorder && <TableCell sx={{ width: 48 }} />}
+
+                {visibleColumns.map((column) => (
+                  <TableCell
+                    key={String(column.id)}
+                    align={column.numeric ? 'right' : 'left'}
                   >
-                    {column.label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
+                    <TableSortLabel
+                      active={!enableRowReordering && orderBy === column.id}
+                      direction={orderBy === column.id ? order : 'asc'}
+                      disabled={enableRowReordering}
+                      onClick={() =>{
+                        if (enableRowReordering) return;
+                        handleRequestSort(column.id);
+                      }}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
+        
+              </TableRow>
+            </TableHead>
 
-          <TableBody>
+            <TableBody>
+              {canReorder ? (
+                <SortableContext
+                  items={visibleRows.map((row) => row.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {(() => {
+                    let currentSortGroup = '';
+                    return visibleRows.map((row) => {
+                      const isExpanded = expandedRowId === row.id;
+                      const groupName       = groupBy?.(row) ?? '';
+                      const showGroupHeader = !!groupBy && groupName !== currentSortGroup;
+                      if (showGroupHeader) currentSortGroup = groupName;
 
-            {visibleRows.map((row) => {
-              const isExpanded = expandedRowId === row.id;
-              const groupName = groupBy?.(row) ?? '';
-              const showGroupHeader = !!groupBy && groupName !== currentGroup;
+                      return (
+                        <React.Fragment key={row.id}>
+                          {showGroupHeader && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={visibleColumns.length + 1}
+                                sx={{
+                                  backgroundColor: '#f3eef8',
+                                  color: '#5a2d82',
+                                  fontWeight: 800,
+                                  letterSpacing: 1,
+                                  py: 0.5,
+                                  pointerEvents: 'none',
+                                }}
+                              >
+                                {groupName || 'No Group'}
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          <SortableTableRow
+                            id={row.id}
+                            onClick={(event) => handleRowClick(event, row.id)}
+                            cursor={hasExpandedRows ? 'pointer' : 'default'}
+                          >
+                            {visibleColumns.map((column) => (
+                              <TableCell
+                                key={String(column.id)}
+                                align={column.numeric ? 'right' : 'left'}
+                              >
+                                {column.render
+                                  ? column.render(row)
+                                  : String(row[column.id])}
+                              </TableCell>
+                            ))}
+                          </SortableTableRow>
 
-              if (showGroupHeader) {
-                currentGroup = groupName;
-              }
+                          {hasExpandedRows && isExpanded && (
+                            <TableRow>
+                              <TableCell
+                                colSpan={visibleColumns.length + 1}
+                                sx={{ backgroundColor: '#faf8fc', py: 2 }}
+                              >
+                                {renderExpandedRow?.(row)}
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
+                      );
+                    });
+                  })()}
+                </SortableContext>
+              ) : (
+                visibleRows.map((row) => {
+                  const isExpanded = expandedRowId === row.id;
+                  const groupName = groupBy?.(row) ?? '';
+                  const showGroupHeader = !!groupBy && groupName !== currentGroup;
 
-              return (
-                <React.Fragment key={row.id}>
-                  {showGroupHeader && (
-                    <TableRow>
-                      <TableCell
-                        colSpan={visibleColumns.length + (hasExpandedRows ? 1 : 0)}
+                  if (showGroupHeader) {
+                    currentGroup = groupName;
+                  }
+
+                  return (
+                    <React.Fragment key={row.id}>
+                      {showGroupHeader && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={visibleColumns.length + (canReorder ? 1 : 0)}
+                            sx={{
+                              backgroundColor: '#f3eef8',
+                              color: '#5a2d82',
+                              fontWeight: 800,
+                              letterSpacing: 1,
+                              py: 0.5,
+                            }}
+                          >
+                            {groupName || 'No Sub Category'}
+                          </TableCell>
+                        </TableRow>
+                      )}
+
+                      <TableRow
+                        hover={hasExpandedRows}
+                        onClick={(event) => handleRowClick(event, row.id)}
                         sx={{
-                          backgroundColor: '#f3eef8',
-                          color: '#5a2d82',
-                          fontWeight: 800,
-                          letterSpacing: 1,
-                          py:0.5
+                          cursor: hasExpandedRows ? 'pointer' : 'default',
                         }}
                       >
-                        {groupName || 'No Sub Category'}
-                      </TableCell>
-                    </TableRow>
-                  )}
+                        {visibleColumns.map((column) => (
+                          <TableCell
+                            key={String(column.id)}
+                            align={column.numeric ? 'right' : 'left'}
+                          >
+                            {column.render
+                              ? column.render(row)
+                              : String(row[column.id])}
+                          </TableCell>
+                        ))}
+                      </TableRow>
 
-                  <TableRow
-                    hover={hasExpandedRows}
-                    onClick={(event) => handleRowClick(event, row.id)}
-                    sx={{
-                      cursor: hasExpandedRows ? 'pointer' : 'default',
-                    }}
-                  >
-                    {/* {hasExpandedRows && (
-                      <TableCell sx={{ width: 56 }}>
-                        <IconButton
-                          size="small"
-                          onClick={() => toggleExpandedRow(row.id)}
-                          aria-label={isExpanded ? 'Hide variants' : 'Show variants'}
-                        >
-                          {isExpanded ? (
-                            <KeyboardArrowUpOutlinedIcon fontSize="small" />
-                          ) : (
-                            <KeyboardArrowDownOutlinedIcon fontSize="small" />
-                          )}
-                        </IconButton>
-                      </TableCell>
-                    )} */}
-                    {visibleColumns.map((column) => (
-                      <TableCell
-                        key={String(column.id)}
-                        align={
-                          column.numeric ? 'right' : 'left'
-                        }
-                      >
-                        {column.render
-                          ? column.render(row)
-                          : String(row[column.id])}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-
-                  {hasExpandedRows && isExpanded && (
-                    <TableRow>
-                      <TableCell colSpan={visibleColumns.length} sx={{ backgroundColor: '#faf8fc', py: 2 }}>
-                        {renderExpandedRow?.(row)}
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                      {hasExpandedRows && isExpanded && (
+                        <TableRow>
+                          <TableCell
+                            colSpan={visibleColumns.length}
+                            sx={{ backgroundColor: '#faf8fc', py: 2 }}
+                          >
+                            {renderExpandedRow?.(row)}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DndContext>
     
       <TablePagination
         component="div"

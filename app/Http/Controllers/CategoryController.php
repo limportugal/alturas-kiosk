@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 //Validations
 use App\Http\Requests\CategoryStoreValidations;
 use App\Http\Requests\CategoryUpdateValidations;
+use App\Http\Requests\CategoryReOrderValidations;
 
 // Services
 use App\Services\CategoryItemServices\CategoryIndexServices;
@@ -17,6 +18,7 @@ use App\Services\CategoryItemServices\CategoryDropDownServices;
 use App\Services\CategoryItemServices\CategoryToggleStatusServices;
 use App\Services\CategoryItemServices\CategoryStoreServices;
 use App\Services\CategoryItemServices\CategoryUpdateServices;
+use App\Services\CategoryItemServices\CategoryRowReorderingServices;
 
 
 
@@ -65,6 +67,12 @@ class CategoryController extends Controller{
     // ]);
 
         $category = $service->update($request->validated(), $id);
+        return response()->json($category);
+    }
+
+    
+    public function rowReordering(CategoryReOrderValidations $request, CategoryRowReorderingServices $service){
+        $category = $service->reorderRows($request->validated()['ids']);
         return response()->json($category);
     }
 }

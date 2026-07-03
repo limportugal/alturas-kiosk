@@ -31,4 +31,4 @@ return new class extends Migration
             $table->string('status')->default('active')->change();
         });
     }
-};
+}; 

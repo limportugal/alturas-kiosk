@@ -11,6 +11,7 @@ class ItemCategoryModel extends Model
 
     protected $fillable = [
         'name',
+        'sort_order',
         'description',
         'image_path',
         'status',  

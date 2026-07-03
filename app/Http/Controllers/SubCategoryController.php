@@ -8,6 +8,8 @@ use Inertia\Inertia;
 // Validations
 use App\Http\Requests\SubCategoryStoreValidations;
 use App\Http\Requests\SubCategoryUpdateValidations;
+use App\Http\Requests\SubCategoryReOrderValidations;
+
 
 // Services
 use App\Services\SubItemCategoryServices\SubCategoryIndexServices;
@@ -16,6 +18,7 @@ use App\Services\SubItemCategoryServices\SubCategoryDropDownServices;
 use App\Services\SubItemCategoryServices\SubCategoryToggleStatusServices;
 use App\Services\SubItemCategoryServices\SubCategoryStoreServices;
 use App\Services\SubItemCategoryServices\SubCategoryUpdateServices;
+use App\Services\SubItemCategoryServices\SubCategoryRowReorderingServices;
 
 class SubCategoryController extends Controller
 {
@@ -62,6 +65,11 @@ class SubCategoryController extends Controller
     public function updateSubCategory(SubCategoryUpdateValidations $request, SubCategoryUpdateServices $service, $id)
     {
         $subcategory = $service->update($request->validated(), $id);
+        return response()->json($subcategory);
+    }
+
+    public function reOrderingRow(SubCategoryReOrderValidations $request, SubCategoryRowReorderingServices $service) {
+        $subcategory = $service->reorderRows($request->validated()['ids']);
         return response()->json($subcategory);
     }
 }

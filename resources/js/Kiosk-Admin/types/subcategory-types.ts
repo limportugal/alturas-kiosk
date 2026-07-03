@@ -4,6 +4,7 @@ export interface SubCategoryList {
     name: string;
     image_path?: string;
     status: string;
+    sort_order?: number;
     category?: { id: number; name: string };
     actions?: string;
 }

@@ -9,12 +9,13 @@ class CategoryListServices{
             ->select([
                 'id',
                 'name',
+                'sort_order',
                 'description',
                 'image_path',
                 'status'
         ])
-            
-            ->latest('id')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->paginate(10);
     }
 
@@ -23,12 +24,14 @@ class CategoryListServices{
             ->select([
                 'id',
                 'name',
+                'sort_order',
                 'description',
                 'image_path',
                 'status'
         ])
             ->where('status','Active')
-            ->latest('id')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->get();
     }
 }

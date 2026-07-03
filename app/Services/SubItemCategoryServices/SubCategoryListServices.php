@@ -9,9 +9,10 @@ class SubCategoryListServices
     public function getSubCategoryList()
     {
         return SubCategoryModel::query()
-            ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
+            ->select(['id', 'item_category_id', 'name', 'sort_order', 'image_path', 'status'])
             ->with('category:id,name')
-            ->latest('id')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->get();
     }
 
@@ -20,8 +21,8 @@ class SubCategoryListServices
         return SubCategoryModel::query()
             ->select(['id', 'item_category_id', 'name', 'image_path', 'status'])
             ->where('status', 'Active')
-            ->with('category:id,name') 
-            ->latest('id')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->get();
     } 
 }

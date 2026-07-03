@@ -81,6 +81,7 @@ Route::middleware(['auth', 'permission:manage categories'])->group(function () {
         Route::put('/{id}/category-update', 'updateCategory')->name('category-update');
         Route::put('/{id}/category-status', 'CatToggleStatus')->name('category-status');
         Route::post('/store', 'storeCategory')->name('category.store');
+        Route::put('/category-reorder', 'rowReordering')->name('category.reorder');
         Route::get('/{id}/edit', 'edit');
         Route::put('/{id}', 'update');
         Route::delete('/{id}', 'destroy');
@@ -97,6 +98,7 @@ Route::middleware(['auth', 'permission:manage sub categories'])->group(function 
         Route::post('/sub-category-store',         'saveSubCategory')->name('sub-category-store');
         Route::put('/{id}/sub-category-update',    'updateSubCategory')->name('sub-category-update');
         Route::put('/{id}/sub-category-status',    'SubCatToggleStatus')->name('sub-category-status');
+        Route::put('/sub-category-reorder', 'reOrderingRow')->name('sub-category.reorder');
     });
 });
 

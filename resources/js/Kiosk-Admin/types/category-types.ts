@@ -7,6 +7,7 @@ export interface DropdownCategory
 export interface CategoryList { 
     id: number;
     name: string;
+    sort_order?: number;
     description: string;
     image_path?: string;
     status: string;

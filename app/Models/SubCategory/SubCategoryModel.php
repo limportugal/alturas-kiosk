@@ -13,6 +13,7 @@ class SubCategoryModel extends Model
     protected $fillable = [
         'item_category_id',
         'name',
+        'sort_order',
         'image_path',
         'status',
     ];
