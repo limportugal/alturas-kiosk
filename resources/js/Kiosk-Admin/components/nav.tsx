@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
+import { typography } from '@/Kiosk/utils/typography';
 import { useAuthorization } from '@/Kiosk-Admin/hooks/auth/useAuthorization';
 
 interface NavItem {
@@ -201,10 +202,8 @@ export default function SideNavDrawer({ children, auth }: Props) {
               {section.label && open && (
                 <div
                   style={{
+                    ...typography.navigationBarLabel,
                     padding: '10px 18px 4px',
-                    fontSize: 12,
-                    fontWeight: 700,
-                    color: '#444',
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
                     whiteSpace: 'nowrap',
@@ -230,6 +229,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
                       }
                     }}
                     style={{
+                      ...typography.navigationBartext,
                       width: '100%',
                       display: 'flex',
                       alignItems: 'center',
@@ -244,7 +244,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
                       borderTop: 'none',
                       borderBottom: 'none',
                       borderRadius: '0 8px 8px 0',
-                      color: active ? '#a89fff' : '#888',
+                      color:   '#f1f1f1ff',
                       cursor: 'pointer',
                       fontSize: 13,
                       fontWeight: active ? 600 : 400,
@@ -255,13 +255,13 @@ export default function SideNavDrawer({ children, auth }: Props) {
                     onMouseEnter={(e) => {
                       if (!active) {
                         (e.currentTarget as HTMLAnchorElement).style.background = '#18181e';
-                        (e.currentTarget as HTMLAnchorElement).style.color = '#ccc';
+                        (e.currentTarget as HTMLAnchorElement).style.color = '#f5f5f5ff';
                       }
                     }}
                     onMouseLeave={(e) => {
                       if (!active) {
                         (e.currentTarget as HTMLAnchorElement).style.background = 'transparent';
-                        (e.currentTarget as HTMLAnchorElement).style.color = '#888';
+                        (e.currentTarget as HTMLAnchorElement).style.color = '#ccccccff';
                       }
                     }}
                   >
