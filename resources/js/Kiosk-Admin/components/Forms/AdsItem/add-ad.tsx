@@ -52,10 +52,10 @@ export default function AddAd() {
                     <TextField label="Title" value={title} onChange={(e) => setTitle(e.target.value)}
                         error={!!errors.title} helperText={errors.title} sx={INPUT_SX} />
 
-                    <TextField label="Sort Order" type="number" value={sort_order}
+                    {/* <TextField label="Sort Order" type="number" value={sort_order}
                         onChange={(e) => setSortOrder(Number(e.target.value))}
                         error={!!errors.sort_order} helperText={errors.sort_order} sx={INPUT_SX}
-                        slotProps={{ htmlInput: { min: 0 } }} />
+                        slotProps={{ htmlInput: { min: 0 } }} /> */}
 
                     <TextField label="Duration (seconds)" type="number" value={duration}
                         onChange={(e) => setDuration(Number(e.target.value))}

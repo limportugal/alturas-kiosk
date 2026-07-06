@@ -132,6 +132,7 @@ Route::middleware(['auth', 'permission:manage ads'])->group(function () {
         Route::post('/ads-store',         'store')->name('ads-store');
         Route::put('/{id}/ads-update',    'update')->name('ads-update');
         Route::put('/{id}/ads-status',    'toggleStatus')->name('ads-status');
+        Route::put('/ads-reorder', 'reorderRow')->name('ads-reorder');
         Route::delete('/{id}/ads-delete', 'destroy')->name('ads-delete');
     });
 

@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
+use App\Http\Requests\AdsReOrderValidations;
+
+use App\Services\AdsServices\AdsRowReorderingServices;
+
 class AdsController extends Controller
 {
     /** Admin page */
@@ -18,8 +22,13 @@ class AdsController extends Controller
     /** Paginated list for admin table */
     public function index()
     {
-        $ads = Ad::orderBy('sort_order')->paginate(15);
-        return response()->json($ads);
+        $ads = Ad::query()
+        ->orderByRaw('sort_order IS NULL, sort_order ASC')
+        ->orderBy('sort_order', 'asc')
+        ->orderBy('id', 'asc')
+        ->paginate(15);
+       
+        return response()->json($ads); 
     }
 
     /** Active ads for the kiosk screensaver (public) */
@@ -32,8 +41,7 @@ class AdsController extends Controller
     }
 
     /** Store a new ad */
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $data = $request->validate([
             'title'      => ['required', 'string', 'max:255'],
             'file_path'  => ['required', 'file', 'mimes:jpg,jpeg,png,webp,avif,mp4,webm', 'max:51200'],
@@ -48,11 +56,12 @@ class AdsController extends Controller
         $fileName = time() . '_' . uniqid() . '.' . $ext;
         $file->move(public_path('ads'), $fileName);
 
+        $nextSortOrder = (Ad::max('sort_order') ?? 0) + 1;
         $ad = Ad::create([
             'title'      => $data['title'],
             'file_path'  => 'ads/' . $fileName,
             'type'       => $type,
-            'sort_order' => $data['sort_order'],
+            'sort_order' => $nextSortOrder,
             'duration'   => $data['duration'],
             'status'     => $data['status'],
         ]);
@@ -109,5 +118,10 @@ class AdsController extends Controller
         }
         $ad->delete();
         return response()->json(['deleted' => true]);
+    }
+
+    public function reorderRow(AdsReOrderValidations $request, AdsRowReorderingServices $service) {
+        $ad = $service->reorderRows($request->validated('ids'));
+        return response()->json($ad);
     }
 }

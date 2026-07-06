@@ -318,7 +318,7 @@ export const AdsItem: Column<AdsList>[] = [
   },
   { id: 'title',      label: 'Title' },
   { id: 'type',       label: 'Type' },
-  { id: 'sort_order', label: 'Order' },
+  // { id: 'sort_order', label: 'Order' },
   { id: 'duration',   label: 'Duration (s)' },
   {
     id: 'actions',

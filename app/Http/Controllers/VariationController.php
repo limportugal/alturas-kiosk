@@ -17,7 +17,7 @@ class VariationController extends Controller
     /**
      * Render the Variations admin page.
      */
-    public function page()
+    public function page() 
     {
         return Inertia::render('Admin/Variations');
     }
