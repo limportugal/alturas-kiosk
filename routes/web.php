@@ -112,6 +112,7 @@ Route::middleware(['auth', 'permission:manage variations'])->group(function () {
         Route::post('/variation-store',        'store')->name('variation-store');
         Route::put('/{id}/variation-update',   'update')->name('variation-update');
         Route::put('/{id}/variation-status',   'toggleStatus')->name('variation-status');
+        Route::put('/variations-reorder', 'reorderRow')->name('variations-reorder');
     });
 });
 

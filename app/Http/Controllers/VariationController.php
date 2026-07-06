@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
+use App\Http\Requests\VariationsReOrderValidations;
+
+use App\Services\VariationsServices\VariationsRowReorderingServices;
+
 class VariationController extends Controller
 {
     /**
@@ -24,7 +28,8 @@ class VariationController extends Controller
     public function index()
     {
         $variations = ProductVariations::with('subCategory:id,name')
-            ->orderBy('name')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->paginate(15);
         return response()->json($variations);
     }
@@ -35,14 +40,15 @@ class VariationController extends Controller
     public function dropdown()
     {
         $variations = ProductVariations::where('status', 'Active')
-            ->orderBy('name')
+            ->orderByRaw('sort_order IS NULL, sort_order ASC')
+            ->orderBy('id')
             ->get(['id', 'name', 'image_path']);
 
         return response()->json($variations);
     }
 
     /**
-     * Store a new variation type.
+     * Store a new variation type. 
      */
     public function store(Request $request)
     {
@@ -54,6 +60,7 @@ class VariationController extends Controller
         ]);
 
         $imagePath = null;
+        $nextSortOrder = (ProductVariations::max('sort_order') ?? 0) + 1;
         if ($request->hasFile('image_path')) {
             $file     = $request->file('image_path');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
@@ -64,6 +71,7 @@ class VariationController extends Controller
         $variation = ProductVariations::create([
             'sub_category_id' => $data['sub_category_id'] ?? null,
             'name'            => $data['name'],
+            'sort_order'      => $nextSortOrder,
             'image_path'      => $imagePath,
             'status'          => $data['status'],
         ]);
@@ -121,5 +129,11 @@ class VariationController extends Controller
         $variation->save();
 
         return response()->json(['toggled' => $variation]);
+    }
+
+
+    public function reorderRow(VariationsReOrderValidations $request, VariationsRowReorderingServices $service ){
+        $variation = $service->reorderRows($request->validated('ids'));
+        return response()->json($variation);
     }
 }

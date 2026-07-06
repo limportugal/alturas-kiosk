@@ -2,6 +2,7 @@ export interface VariationList {
     id: number;
     sub_category_id?: number | null;
     name: string;
+    sort_order?: number;
     image_path?: string | null;
     status: string;
     actions?: string;

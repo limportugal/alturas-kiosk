@@ -12,6 +12,7 @@ class ProductVariations extends Model
     protected $fillable = [
         'sub_category_id',
         'name',
+        'sort_order',
         'image_path',
         'status',
     ];
