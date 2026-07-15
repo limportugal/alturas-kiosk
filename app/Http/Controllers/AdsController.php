@@ -8,8 +8,10 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 use App\Http\Requests\AdsReOrderValidations;
+use App\Http\Requests\AdsStoreRequestValidations;
 
 use App\Services\AdsServices\AdsRowReorderingServices;
+use App\Services\AdsServices\AdsStoreServices;
 
 class AdsController extends Controller
 {
@@ -41,32 +43,11 @@ class AdsController extends Controller
     }
 
     /** Store a new ad */
-    public function store(Request $request){
-        $data = $request->validate([
-            'title'      => ['required', 'string', 'max:255'],
-            'file_path'  => ['required', 'file', 'mimes:jpg,jpeg,png,webp,avif,mp4,webm', 'max:51200'],
-            'sort_order' => ['required', 'integer', 'min:0'],
-            'duration'   => ['required', 'integer', 'min:3', 'max:120'],
-            'status'     => ['required', Rule::in(['Active', 'Inactive'])],
-        ]);
-
-        $file     = $request->file('file_path');
-        $ext      = $file->getClientOriginalExtension();
-        $type     = in_array(strtolower($ext), ['mp4', 'webm']) ? 'video' : 'image';
-        $fileName = time() . '_' . uniqid() . '.' . $ext;
-        $file->move(public_path('ads'), $fileName);
-
-        $nextSortOrder = (Ad::max('sort_order') ?? 0) + 1;
-        $ad = Ad::create([
-            'title'      => $data['title'],
-            'file_path'  => 'ads/' . $fileName,
-            'type'       => $type,
-            'sort_order' => $nextSortOrder,
-            'duration'   => $data['duration'],
-            'status'     => $data['status'],
-        ]);
-
-        return response()->json(['created' => $ad], 201);
+    public function store(AdsStoreRequestValidations $request, AdsStoreServices $service)
+    {
+        $validated = $request->validated();
+        $result    = $service->store($validated, $request->file('file_path'));
+        return response()->json($result, 201);
     }
 
     /** Update an existing ad */

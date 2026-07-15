@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\CartStoreRequestValidations;
+use App\Http\Requests\CartUpdateRequestValidations;
 use App\Services\CartServices\CartStoreService;
 use App\Services\CartServices\CartUpdateService;
 use App\Services\CartServices\CartConfirmService;
@@ -40,16 +42,16 @@ class CartController extends Controller
         'cart_items.*.subtotal'   => ['required', 'numeric'],
     ];
 
-    public function store(Request $request, CartStoreService $service)
+    public function store(CartStoreRequestValidations $request, CartStoreService $service)
     {
-        $validated = $request->validate($this->storeRules);
+        $validated = $request->validated();
         $result = $service->store($validated);
         return response()->json($result);
     }
 
-    public function update(Request $request, CartUpdateService $service, $id)
+    public function update(CartUpdateRequestValidations $request, CartUpdateService $service, $id)
     {
-        $validated = $request->validate($this->updateRules);
+        $validated = $request->validated();
         $result = $service->update($validated, (int) $id);
         return response()->json($result);
     }
