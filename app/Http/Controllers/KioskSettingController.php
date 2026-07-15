@@ -6,8 +6,20 @@ use App\Models\KioskSetting;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use App\Http\Requests\KiokSettingsUpdateValidations;
+
+
+use App\Services\KioskSettings\KioskUpdateServices;
+
 class KioskSettingController extends Controller
 {
+    
+    /** Admin page */
+    public function page()
+    {
+        return Inertia::render('Admin/ScreenSaver');
+    }
+
     /** Public — kiosk reads the idle timeout */
     public function show()
     {
@@ -20,26 +32,12 @@ class KioskSettingController extends Controller
         ]);
     }
 
-    /** Auth — admin updates the idle timeout */
-    public function update(Request $request)
-    {
-        $data = $request->validate([
-            'idle_timeout_seconds' => ['required', 'integer', 'min:10', 'max:3600'],
-            'idle_enabled' => ['required', 'boolean'],
+    public function kioskUpdate(KiokSettingsUpdateValidations $request, KioskUpdateServices $service) {
+        $kiosk = $service->update($request->validated());
+        return response()->json([        
+            'updated' => $kiosk 
         ]);
-
-        KioskSetting::set('idle_timeout_seconds', $data['idle_timeout_seconds']);
-        KioskSetting::set('idle_enabled', $data['idle_enabled']);
-
-        return response()->json([
-            'idle_timeout_seconds' => (int) $data['idle_timeout_seconds'],
-            'idle_enabled' => (bool) $data['idle_enabled'],
-        ]);
+        
     }
 
-    /** Admin page */
-    public function page()
-    {
-        return Inertia::render('Admin/ScreenSaver');
-    }
 }

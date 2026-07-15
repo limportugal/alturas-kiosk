@@ -17,7 +17,7 @@ class VariationController extends Controller
     /**
      * Render the Variations admin page.
      */
-    public function page() 
+    public function page()
     {
         return Inertia::render('Admin/Variations');
     }
@@ -53,16 +53,16 @@ class VariationController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name'            => ['required', 'string', 'max:255', 'unique:product_variations,name'],
+            'name' => ['required', 'string', 'max:255', 'unique:product_variations,name'],
             'sub_category_id' => ['nullable', 'integer', 'exists:sub_categories,id'],
-            'image_path'      => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
-            'status'          => ['required', Rule::in(['Active', 'Inactive'])],
+            'image_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+            'status' => ['required', Rule::in(['Active', 'Inactive'])],
         ]);
 
         $imagePath = null;
         $nextSortOrder = (ProductVariations::max('sort_order') ?? 0) + 1;
         if ($request->hasFile('image_path')) {
-            $file     = $request->file('image_path');
+            $file = $request->file('image_path');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('variations'), $fileName);
             $imagePath = 'variations/' . $fileName;
@@ -70,16 +70,16 @@ class VariationController extends Controller
 
         $variation = ProductVariations::create([
             'sub_category_id' => $data['sub_category_id'] ?? null,
-            'name'            => $data['name'],
-            'sort_order'      => $nextSortOrder,
-            'image_path'      => $imagePath,
-            'status'          => $data['status'],
+            'name' => $data['name'],
+            'sort_order' => $nextSortOrder,
+            'image_path' => $imagePath,
+            'status' => $data['status'],
         ]);
 
         return response()->json(['created' => $variation], 201);
     }
 
-    /**
+    /** 
      * Update an existing variation type.
      */
     public function update(Request $request, $id)
@@ -87,11 +87,11 @@ class VariationController extends Controller
         $variation = ProductVariations::findOrFail($id);
 
         $data = $request->validate([
-            'name'            => ['sometimes', 'string', 'max:255', Rule::unique('product_variations', 'name')->ignore($id)],
+            'name' => ['sometimes', 'string', 'max:255', Rule::unique('product_variations', 'name')->ignore($id)],
             'sub_category_id' => ['nullable', 'integer', 'exists:sub_categories,id'],
-            'image_path'      => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
-            'status'          => ['sometimes', Rule::in(['Active', 'Inactive'])],
-            'remove_image'    => ['sometimes', 'boolean'],
+            'image_path' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,avif', 'max:2048'],
+            'status' => ['sometimes', Rule::in(['Active', 'Inactive'])],
+            'remove_image' => ['sometimes', 'boolean'],
         ]);
 
         // Remove old image if flagged
@@ -106,7 +106,7 @@ class VariationController extends Controller
                 unlink(public_path($variation->image_path));
             }
 
-            $file     = $request->file('image_path');
+            $file = $request->file('image_path');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('variations'), $fileName);
             $data['image_path'] = 'variations/' . $fileName;
@@ -132,7 +132,8 @@ class VariationController extends Controller
     }
 
 
-    public function reorderRow(VariationsReOrderValidations $request, VariationsRowReorderingServices $service ){
+    public function reorderRow(VariationsReOrderValidations $request, VariationsRowReorderingServices $service)
+    {
         $variation = $service->reorderRows($request->validated('ids'));
         return response()->json($variation);
     }

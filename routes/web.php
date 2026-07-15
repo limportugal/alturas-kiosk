@@ -120,7 +120,7 @@ Route::middleware(['auth', 'permission:manage variations'])->group(function () {
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('kiosk-settings')->controller(KioskSettingController::class)->group(function () {
         Route::get('/screen-saver',  'page')->name('screen-saver');
-        Route::put('/update',        'update')->name('kiosk.settings.update');
+        Route::put('/update',        'kioskUpdate')->name('kiosk.settings.update');
     });
 });
 

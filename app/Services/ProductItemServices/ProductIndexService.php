@@ -4,8 +4,9 @@ namespace App\Services\ProductItemServices;
 
 use App\Models\ProductItem\ProductItemModel;
 
-class ProductIndexService{
-    
+class ProductIndexService
+{
+
     public function index()
     {
         return ProductItemModel::all();
