@@ -22,7 +22,7 @@ export default function VariationsPage() {
     );
 
     React.useEffect(() => {
-        setVariationRows(variations_data?.data ?? []);
+        setVariationRows(variations_data ?? []);
     }, [variations_data]);
 
         if (isPending_variations) {

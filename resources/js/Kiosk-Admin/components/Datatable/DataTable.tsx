@@ -101,6 +101,8 @@ export default function DataTable<T extends { id: number, sort_order?: number }>
   const canReorder = enableRowReordering && !search;
   
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (!canReorder) return;
+    
     const { active, over } = event;
 
     if(!over || active.id === over.id) return;
@@ -288,7 +290,7 @@ export default function DataTable<T extends { id: number, sort_order?: number }>
         )}
      
       <DndContext
-        sensors={canReorder ? sensors : undefined}
+        sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
       >
