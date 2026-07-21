@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ad;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 use App\Http\Requests\AdsReOrderValidations;
@@ -12,9 +10,11 @@ use App\Http\Requests\AdsStoreRequestValidations;
 use App\Http\Requests\AdsUpdateValidations;
 
 use App\Services\AdsServices\AdsIndexServices;
+use App\Services\AdsServices\AdsPublicListServices;
 use App\Services\AdsServices\AdsRowReorderingServices;
 use App\Services\AdsServices\AdsStoreServices;
 use App\Services\AdsServices\AdsUpdateServices;
+use App\Services\AdsServices\AdsToggleStatusServices;
 
 class AdsController extends Controller
 {
@@ -24,29 +24,14 @@ class AdsController extends Controller
         return Inertia::render('Admin/Ads');
     }
 
-    /** Paginated list for admin table */
-    // public function index()
-    // {
-    //     $ads = Ad::query()
-    //         ->orderByRaw('sort_order IS NULL, sort_order ASC')
-    //         ->orderBy('sort_order', 'asc')
-    //         ->orderBy('id', 'asc')
-    //         ->paginate(15);
-
-    //     return response()->json($ads);
-    // }
-
     public function index(AdsIndexServices $service) {
         $ads = $service->adminList();
         return response()->json($ads);
     }
 
     /** Active ads for the kiosk screensaver (public) */
-    public function publicList()
-    {
-        $ads = Ad::where('status', 'Active')
-            ->orderBy('sort_order')
-            ->get(['id', 'title', 'file_path', 'type', 'duration', 'sort_order']);
+    public function publicList(AdsPublicListServices $service){
+        $ads = $service->PubList();
         return response()->json(['data' => $ads]);
     }
 
@@ -66,13 +51,10 @@ class AdsController extends Controller
     }
 
     /** Toggle Active / Inactive */
-    public function toggleStatus($id)
-    {
-        $ad = Ad::findOrFail($id);
-        $ad->status = $ad->status === 'Active' ? 'Inactive' : 'Active';
-        $ad->save();
-        return response()->json(['toggled' => $ad]);
-    }
+     public function toggleStatus(AdsToggleStatusServices $service, $id){
+        $ad = $service->Status($id);
+        return response()->json($ad, 200);
+     }
 
     /** Delete an ad and its file */
     public function destroy($id)
