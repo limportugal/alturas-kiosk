@@ -38,8 +38,7 @@ class VariationController extends Controller
     /**
      * Return all active variations for dropdowns.
      */
-    public function dropdown()
-    {
+    public function dropdown() {
         $variations = ProductVariations::where('status', 'Active')
             ->orderByRaw('sort_order IS NULL, sort_order ASC')
             ->orderBy('id')
@@ -67,8 +66,7 @@ class VariationController extends Controller
     /*
      * Toggle Active/Inactive status.
      */
-    public function toggleStatus($id)
-    {
+    public function toggleStatus($id) {
         $variation = ProductVariations::findOrFail($id);
         $variation->status = $variation->status === 'Active' ? 'Inactive' : 'Active';
         $variation->save();
@@ -77,8 +75,7 @@ class VariationController extends Controller
     }
 
 
-    public function reorderRow(VariationsReOrderValidations $request, VariationsRowReorderingServices $service)
-    {
+    public function reorderRow(VariationsReOrderValidations $request, VariationsRowReorderingServices $service) {
         $variation = $service->reorderRows($request->validated('ids'));
         return response()->json($variation);
     }

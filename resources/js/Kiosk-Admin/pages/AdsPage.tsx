@@ -15,7 +15,7 @@ export default function AdsPage() {
     const { data: ads_data, isPending } = useDynamicQuery(['ads-list'], GetAdListServices);
 
      React.useEffect(() => {
-        setAdRows(ads_data?.data ?? []);
+        setAdRows(ads_data ??[]);
         }, [ads_data]);
 
      if (isPending) {
