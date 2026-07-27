@@ -81,7 +81,7 @@ export default function HomeCategoryScreen({
           onClick={() => setConfirmOpen(true)}
           style={{ display: "inline-block", cursor: "pointer" }}
         >
-            <img src="/images/H&F-Logo.png" alt="H&F Department Store" style={{ width: 420, height: "auto" }} />
+            <img src="/images/LegacyFurniture-removebg-preview(1).png" alt="Legacy Furniture" style={{ height: 195, width: "auto" }} />
         </div>
       </div>
 

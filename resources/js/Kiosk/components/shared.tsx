@@ -23,9 +23,9 @@ export function HFHeader({ small }: { small?: boolean }) {
       }}
     >
       <img
-        src="/images/H&F-Logo.png"
-        alt="H&F Department Store"
-        style={{ width: small ? 220 : 420, height: "auto" }}
+        src="/images/LegacyFurniture-removebg-preview(1).png"
+        alt="Legacy Furniture"
+        style={{ height: small ? 195 : 195, width: "auto" }}
       />
     </div>
   );
