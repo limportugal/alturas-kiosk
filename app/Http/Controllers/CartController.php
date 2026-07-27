@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\CartStoreRequestValidations;
 use App\Http\Requests\CartUpdateRequestValidations;
+use App\Http\Requests\CheckStockValidations;
+
 use App\Services\CartServices\CartStoreService;
 use App\Services\CartServices\CartUpdateService;
 use App\Services\CartServices\CartConfirmService;
@@ -74,18 +76,29 @@ class CartController extends Controller
         return response()->json(['data' => $cart]);
     }
 
-    public function checkStock(Request $request, StockCheckService $service){
+    // public function checkStock(Request $request, StockCheckService $service){
         
-        $validated = $request->validate([
-        'product_id' => ['required', 'integer'],
-        'color'      => ['nullable', 'string'],
-    ]);
+    //     $validated = $request->validate([
+    //     'product_id' => ['required', 'integer'],
+    //     'color'      => ['nullable', 'string'],
+    // ]);
 
-    $result = $service->check(
-        product_id: $validated['product_id'],
-        color:      $validated['color'] ?? null,
-    );
+    // $result = $service->check(
+    //     product_id: $validated['product_id'],
+    //     color:      $validated['color'] ?? null,
+    // );
 
-    return response()->json($result);
+    // return response()->json($result);
+    // }
+
+
+    public function checkStock(CheckStockValidations $request, StockCheckService $service){
+        $result = $service->check(
+            product_id: $request->validated('product_id'),
+            color:      $request->validated('color') ?? null,
+        );
+
+        return response()->json($result);
     }
+
 }

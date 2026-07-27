@@ -263,6 +263,15 @@ class ReceiptPrinterService
         $printer->setTextSize(1, 1);
         $printer->feed();
 
+        // ===== BARCODE =====
+        $printer->setBarcodeHeight(80);
+        $printer->setBarcodeTextPosition(Printer::BARCODE_TEXT_NONE);
+        $printer->setJustification(Printer::JUSTIFY_CENTER);
+        $printer->barcode($receiptData['orderSlipNo'], Printer::BARCODE_CODE128);
+        $printer->setJustification(Printer::JUSTIFY_LEFT);
+        $printer->feed();
+        // =========================
+
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->text($this->formatLine('DATE', $receiptData['dateTime']));
         $printer->text($this->formatLine('STATUS', $receiptData['status']));
