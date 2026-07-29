@@ -170,7 +170,7 @@ export default function ProductDetailScreen({
           ⚠ Stock just updated — please review your selection
         </div>
       )} */}
-      {/* <div style={{  
+      {/* <div style={{
           background: "#5a2d82", 
           padding: "16px 48px", 
           textAlign: "center", 
@@ -219,7 +219,7 @@ export default function ProductDetailScreen({
           ))}
         </div>
         {/* Main image */}
-        <div style={{ flex: 1, background: colors.surface, borderRadius: 12, overflow: "hidden", aspectRatio: "1/1" }}>
+        <div style={{ flex: 1, height: 700, background: colors.surface, borderRadius: 12, overflow: "hidden" }}>
           <img src={mainDisplayImage} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block", padding: 24, boxSizing: "border-box", transition: "opacity 0.25s ease" }} />
         </div>
       </div>
@@ -352,7 +352,7 @@ export default function ProductDetailScreen({
                 );
               })}
             </div>
-        </div>
+          </div>
       </div>
 
       <div style={{ flex: 1 }} />

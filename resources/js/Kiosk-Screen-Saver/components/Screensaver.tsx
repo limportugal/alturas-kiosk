@@ -124,9 +124,12 @@ export default function Screensaver({ onStart, onProductSelect }: ScreensaverPro
 
 function TapPrompt() {
     return (
-        <div className="absolute inset-x-0 top-[68%] flex justify-center" style={{ pointerEvents: 'none' }}>
-            <div className="rounded-full border border-white/25 bg-white/10 px-8 py-4 text-xl font-semibold tracking-[0.2em] text-white backdrop-blur-sm">
-                TAP ANYWHERE TO START
+        <div
+            className="absolute inset-x-0 flex justify-center"
+            style={{ top: '68%', zIndex: 20, pointerEvents: 'none' }}
+        >
+            <div className="touch-start-prompt">
+                TOUCH TO START!
             </div>
         </div>
     );
