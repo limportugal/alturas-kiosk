@@ -267,7 +267,9 @@ class ReceiptPrinterService
         $printer->setBarcodeHeight(80);
         $printer->setBarcodeTextPosition(Printer::BARCODE_TEXT_NONE);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
-        $printer->barcode($receiptData['orderSlipNo'], Printer::BARCODE_CODE128);
+        // Code 39 is supported by the printer's ESC/POS profile and accepts
+        // the uppercase letters, digits, and hyphens in our CART-* numbers.
+        $printer->barcode($receiptData['orderSlipNo'], Printer::BARCODE_CODE39);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
         $printer->feed();
         // =========================
