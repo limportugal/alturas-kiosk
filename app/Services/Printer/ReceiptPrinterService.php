@@ -265,6 +265,7 @@ class ReceiptPrinterService
 
         // ===== BARCODE =====
         $printer->setBarcodeHeight(80);
+        $printer->setBarcodeWidth(2);
         $printer->setBarcodeTextPosition(Printer::BARCODE_TEXT_NONE);
         $printer->setJustification(Printer::JUSTIFY_CENTER);
         // Code 39 is supported by the printer's ESC/POS profile and accepts
