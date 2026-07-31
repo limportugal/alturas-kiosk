@@ -146,10 +146,10 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                 onClick={(e) => e.stopPropagation()}
                 style={{
                     background: "#fff",
-                    borderRadius: 20,
-                    width: 720,
-                    maxWidth: "92vw",
-                    maxHeight: "86vh",
+                    borderRadius: 24,
+                    width: 920,
+                    maxWidth: "94vw",
+                    maxHeight: "88vh",
                     display: "flex",
                     flexDirection: "column",
                     overflow: "hidden",
@@ -160,21 +160,21 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                 }}
             >
                 {/* ── Header ── */}
-                <div style={{ background: colors.primary, padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <div style={{ background: colors.primary, padding: "26px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
                             <line x1="3" y1="6" x2="21" y2="6"/>
                             <path d="M16 10a4 4 0 01-8 0"/>
                         </svg>
-                        <span style={{ color: "#fff", fontSize: 18, fontWeight: 700, letterSpacing: 2 }}>ORDER SUMMARY</span>
-                        <span style={{ background: "rgba(255,255,255,0.25)", color: "#fff", borderRadius: 20, fontSize: 13, fontWeight: 700, padding: "2px 12px" }}>
+                        <span style={{ color: "#fff", fontSize: 26, fontWeight: 700, letterSpacing: 2 }}>ORDER SUMMARY</span>
+                        <span style={{ background: "rgba(255,255,255,0.25)", color: "#fff", borderRadius: 24, fontSize: 18, fontWeight: 700, padding: "4px 16px" }}>
                             {totalCount} {totalCount === 1 ? "item" : "items"}
                         </span>
                     </div>
                     <button
                         onClick={handleClose} 
-                        style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 36, height: 36, cursor: "pointer", color: "#fff", fontSize: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
+                        style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 50, height: 50, cursor: "pointer", color: "#fff", fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center" }}
                     >×</button>
                 </div>
 
@@ -201,23 +201,23 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                     {/* ── Group header ── */}
                                     <div style={{
                                         display: "flex", alignItems: "center", justifyContent: "space-between",
-                                        padding: "10px 32px 8px",
+                                        padding: "16px 40px 14px",
                                         background: "rgba(107,47,160,0.05)",
                                         borderTop: "1px solid #f0ede8",
                                         borderBottom: "1px solid rgba(107,47,160,0.1)",
                                     }}>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                            <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: 1.5, color: colors.primary }}>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                            <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: 1.5, color: colors.primary }}>
                                                 {productName}
                                             </span>
                                             {hasMultipleColors && (
-                                                <span style={{ background: colors.primary, color: "#fff", fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>
+                                                <span style={{ background: colors.primary, color: "#fff", fontSize: 14, fontWeight: 700, padding: "4px 12px", borderRadius: 20 }}>
                                                     {variants.length} colors
                                                 </span>
                                             )}
                                         </div>
                                         {hasMultipleColors && (
-                                            <span style={{ fontSize: 12, fontWeight: 700, color: colors.primary }}>
+                                            <span style={{ fontSize: 20, fontWeight: 700, color: colors.primary }}>
                                                 Subtotal: {formatMoney(groupSubtotal)}
                                             </span>
                                         )}
@@ -229,98 +229,91 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                             const canIncrease = item.stock == null || item.quantity < item.stock;
 
                                             return (
-                                        <div
-                                            key={`${item.product_id}-${item.color ?? "none"}`}
-                                            style={{
-                                                display: "flex", gap: 20,
-                                                padding: "16px 32px",
-                                                borderBottom: idx < variants.length - 1 ? "1px solid #f9f7f5" : "none",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            {/* Image */}
-                                            {item.image ? (
-                                                <img
-                                                    src={`/${item.image}`}
-                                                    alt={item.name}
-                                                    style={{ width: 64, height: 64, borderRadius: 10, objectFit: "cover", flexShrink: 0, background: "#f5f3f0" }}
-                                                />
-                                            ) : (
-                                                <div style={{ width: 64, height: 64, borderRadius: 10, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24 }}>🛋️</div>
-                                            )}
+                                                <div
+                                                    key={`${item.product_id}-${item.color ?? "none"}`}
+                                                    style={{
+                                                        display: "flex", gap: 30,
+                                                        padding: "24px 40px",
+                                                        borderBottom: idx < variants.length - 1 ? "1px solid #f9f7f5" : "none",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    {/* Image */}
+                                                    {item.image ? (
+                                                        <img
+                                                            src={`/${item.image}`}
+                                                            alt={item.name}
+                                                            style={{ width: 100, height: 100, borderRadius: 14, objectFit: "cover", flexShrink: 0, background: "#f5f3f0" }}
+                                                        />
+                                                    ) : (
+                                                        <div style={{ width: 100, height: 100, borderRadius: 14, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🛋️</div>
+                                                    )}
 
-                                            {/* Info */}
-                                            <div style={{ flex: 1 }}>
-                                                {item.color ? (
-                                                    <p style={{ fontSize: 13, color: "#555", margin: "0 0 4px", display: "flex", alignItems: "center", gap: 6 }}>
-                                                        {/* <span style={{
-                                                            display: "inline-block", width: 12, height: 12, borderRadius: "50%",
-                                                            background: item.color.toLowerCase(),
-                                                            border: "1.5px solid rgba(0,0,0,0.15)",
-                                                            flexShrink: 0,
-                                                        }} /> */}
-                                                        {item.color}
+                                                    {/* Info */}
+                                                    <div style={{ flex: 1 }}>
+                                                        {item.color ? (
+                                                            <p style={{ fontSize: 22, color: "#333", margin: "0 0 6px", display: "flex", alignItems: "center", gap: 8, fontWeight: 700 }}>
+                                                                {item.color}
+                                                            </p>
+                                                        ) : (
+                                                            <p style={{ fontSize: 24, fontWeight: 700, color: "#1a1a1a", margin: "0 0 6px" }}>{item.name}</p>
+                                                        )}
+                                                        <p style={{ fontSize: 24, fontWeight: 600, color: colors.primary, margin: 0 }}>{formatMoney(item.price)} each</p>
+                                                    </div>
+
+                                                    {/* Quantity controls */}
+                                                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                                                        <button
+                                                            onClick={() => {
+                                                                if (item.quantity - 1 <= 0) {
+                                                                    removeItem(item.product_id, item.color ?? null);
+                                                                } else {
+                                                                    updateQty(item.product_id, item.color ?? null, item.quantity - 1);
+                                                                }
+                                                            }}
+                                                            disabled={item.quantity <= 1}
+                                                            style={{
+                                                                width: 56, height: 56, borderRadius: 12,
+                                                                border: `2px solid ${item.quantity <= 1 ? "#ddd" : colors.primary}`,
+                                                                background: "#fff",
+                                                                color: item.quantity <= 1 ? "#ddd" : colors.primary,
+                                                                fontSize: 26, fontWeight: 700,
+                                                                cursor: item.quantity <= 1 ? "not-allowed" : "pointer",
+                                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                                            }}
+                                                        >−</button>
+                                                        <span style={{ fontSize: 26, fontWeight: 700, minWidth: 40, textAlign: "center" }}>{item.quantity}</span>
+                                                        <button
+                                                            disabled={!canIncrease}
+                                                            onClick={() => canIncrease && handleIncrease(item)}
+                                                            style={{
+                                                                width: 56, height: 56, borderRadius: 12,
+                                                                border: `2px solid ${canIncrease ? colors.primary : "#ddd"}`,
+                                                                background: "#fff", color: canIncrease ? colors.primary : "#ddd",
+                                                                fontSize: 26, fontWeight: 700, cursor: canIncrease ? "pointer" : "not-allowed",
+                                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                                            }}
+                                                        >+</button>
+                                                    </div>
+
+                                                    {/* Line total */}
+                                                    <p style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", minWidth: 150, textAlign: "right", margin: 0 }}>
+                                                        {formatMoney(item.subtotal)}
                                                     </p>
-                                                ) : (
-                                                    <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a1a", margin: "0 0 4px" }}>{item.name}</p>
-                                                )}
-                                                <p style={{ fontSize: 20, fontWeight: 600, color: colors.primary, margin: 0 }}>{formatMoney(item.price)} each</p>
-                                                {/* <p style={{ fontSize: 11, color: "#aaa", margin: "2px 0 0" }}>SKU: {item.sku}</p> */}
-                                            </div>
 
-                                            {/* Quantity controls */}
-                                            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                                                <button
-                                                    onClick={() => {
-                                                        if (item.quantity - 1 <= 0) {
-                                                            removeItem(item.product_id, item.color ?? null);
-                                                        } else {
-                                                            updateQty(item.product_id, item.color ?? null, item.quantity - 1);
-                                                        }
-                                                    }}
-                                                    disabled={item.quantity <= 1}
-                                                    style={{
-                                                        width: 36, height: 36, borderRadius: 8,
-                                                        border: `1.5px solid ${item.quantity <= 1 ? "#ddd" : colors.primary}`,
-                                                        background: "#fff",
-                                                        color: item.quantity <= 1 ? "#ddd" : colors.primary,
-                                                        fontSize: 18, fontWeight: 700,
-                                                        cursor: item.quantity <= 1 ? "not-allowed" : "pointer",
-                                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                                    }}
-                                                >−</button>
-                                                <span style={{ fontSize: 20, fontWeight: 700, minWidth: 24, textAlign: "center" }}>{item.quantity}</span>
-                                                <button
-                                                    disabled={!canIncrease}
-                                                    onClick={() => canIncrease && handleIncrease(item)}
-                                                    style={{
-                                                        width: 36, height: 36, borderRadius: 8,
-                                                        border: `1.5px solid ${canIncrease ? colors.primary : "#ddd"}`,
-                                                        background: "#fff", color: canIncrease ? colors.primary : "#ddd",
-                                                        fontSize: 18, fontWeight: 700, cursor: canIncrease ? "pointer" : "not-allowed",
-                                                        display: "flex", alignItems: "center", justifyContent: "center",
-                                                    }}
-                                                >+</button>
-                                            </div>
-
-                                            {/* Line total */}
-                                            <p style={{ fontSize: 20, fontWeight: 800, color: "#1a1a1a", minWidth: 90, textAlign: "right", margin: 0 }}>
-                                                {formatMoney(item.subtotal)}
-                                            </p>
-
-                                            {/* Remove */}
-                                            <button
-                                                onClick={() => setRemoveTarget({ product_id: item.product_id, color: item.color ?? null, name: item.name })}
-                                                style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 0, display: "flex", alignItems: "center" }}
-                                                aria-label={`Remove ${item.name} ${item.color ?? ""}`}
-                                            >
-                                                <RemoveIcon
-                                                    filled
-                                                    color="#ef4444"
-                                                    size={35}                   
-                                                 />
-                                            </button>
-                                        </div>
+                                                    {/* Remove */}
+                                                    <button
+                                                        onClick={() => setRemoveTarget({ product_id: item.product_id, color: item.color ?? null, name: item.name })}
+                                                        style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 0, display: "flex", alignItems: "center" }}
+                                                        aria-label={`Remove ${item.name} ${item.color ?? ""}`}
+                                                    >
+                                                        <RemoveIcon
+                                                            filled
+                                                            color="#ef4444"
+                                                            size={48}                   
+                                                        />
+                                                    </button>
+                                                </div>
                                             );
                                         })()
                                     ))}
@@ -332,44 +325,43 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
                 {/* ── Footer ── */}
                 {cartItems.length > 0 && (
-                    <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 32px", background: "#faf9f7", flexShrink: 0 }}>
+                    <div style={{ borderTop: "1px solid #f0ede8", padding: "36px 48px", background: "#faf9f7", flexShrink: 0 }}>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                            <div style={{ display: "flex", gap: 12 }}>
+                            <div style={{ display: "flex", gap: 20 }}>
                                 <button
                                     onClick={() => setPlaceConfirmOpen(true)}
                                     disabled={ordered || placingOrder}
                                     style={{
                                         background: ordered ? "#22c55e" : colors.primary,
-                                        color: "#fff", border: "none", borderRadius: 12, 
-                                        padding: "14px 40px", fontSize: 15, fontWeight: 700,
+                                        color: "#fff", border: "none", borderRadius: 16, 
+                                        padding: "22px 50px", fontSize: 22, fontWeight: 700,
                                         letterSpacing: 1.5, cursor: ordered || placingOrder ? "default" : "pointer",
                                         transition: "background 0.25s ease",
-                                        display: "flex", alignItems: "center", gap: 8,
+                                        display: "flex", alignItems: "center", gap: 10,
                                     }}
                                 >
                                     {ordered ? "✓ ORDER PLACED!" : "PLACE ORDER"}
                                 </button>
-                                  <button
+                                <button
                                     onClick={() => setClearConfirmOpen(true)}
-                                    style={{ padding: "14px 24px", borderRadius: 12, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 14, fontWeight: 600, cursor: "pointer" }}
+                                    style={{ padding: "22px 36px", borderRadius: 16, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 20, fontWeight: 600, cursor: "pointer" }}
                                 >
                                     Clear All
                                 </button>
-                                 </div>
+                            </div>
 
-	                                <div style={{marginLeft: 48}}>
-	                                    <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>TOTAL AMOUNT</p>
-	                                    <p style={{ fontSize: 32, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(totalPrice)}</p>
-	                                </div>
-	                           
-	                        </div>
-                            {placeOrderError && (
-                                <p style={{ margin: "14px 0 0", color: "#dc2626", fontSize: 14, fontWeight: 600 }}>
-                                    {placeOrderError}
-                                </p>
-                            )}
-	                    </div>
-	                )}
+                            <div style={{ marginLeft: 48, textAlign: "right" }}>
+                                <p style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 700, color: "#666", letterSpacing: 1.5 }}>TOTAL AMOUNT</p>
+                                <p style={{ fontSize: 46, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(totalPrice)}</p>
+                            </div>
+                        </div>
+                        {placeOrderError && (
+                            <p style={{ margin: "14px 0 0", color: "#dc2626", fontSize: 14, fontWeight: 600 }}>
+                                {placeOrderError}
+                            </p>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
 

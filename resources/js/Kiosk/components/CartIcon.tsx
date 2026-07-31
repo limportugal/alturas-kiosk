@@ -87,7 +87,7 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
             }}
         >
             <CartIconSvg color={foreground} size={36} />
-            <Badge value={totalCount} show={totalCount > 0} style={{ top: -6, right: -6, fontSize: 18 }} />
+             <Badge value={totalCount} show={totalCount > 0} style={{ top: -6, right: -6, fontSize: 18 }} />
         </button>
     );
 

@@ -67,10 +67,10 @@ export function ConfirmActionModal({
             <div
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                    width: 560,
-                    maxWidth: "88vw",
+                    width: 760,
+                    maxWidth: "92vw",
                     background: "#fff",
-                    borderRadius: 18,
+                    borderRadius: 24,
                     overflow: "hidden",
                     boxShadow: "0 28px 70px rgba(0,0,0,0.24)",
                     transform: visible ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
@@ -81,8 +81,8 @@ export function ConfirmActionModal({
                     style={{
                         background: colors.primary,
                         color: "#fff",
-                        padding: "18px 24px",
-                        fontSize: 20,
+                        padding: "26px 36px",
+                        fontSize: 28,
                         fontWeight: 800,
                         letterSpacing: 1.5,
                         textAlign: "center",
@@ -93,9 +93,9 @@ export function ConfirmActionModal({
 
                 <div
                     style={{
-                        padding: "32px 28px",
+                        padding: "48px 40px",
                         textAlign: "center",
-                        fontSize: 22,
+                        fontSize: 28,
                         lineHeight: 1.55,
                         fontWeight: 600,
                         color: "#000000ff",
@@ -107,20 +107,20 @@ export function ConfirmActionModal({
                 <div
                     style={{
                         display: "flex",
-                        gap: 14,
-                        padding: "0 28px 28px",
+                        gap: 20,
+                        padding: "0 40px 40px",
                     }}
                 >
                     <button
                         onClick={onCancel ? () => { onCancel(); handleClose(); } : handleClose}
                         style={{
                             flex: 1,
-                            padding: "16px 20px",
-                            borderRadius: 12,
+                            padding: "22px 28px",
+                            borderRadius: 16,
                             border: "2px solid #d4d4d4",
                             background: "#fff",
                             color: "#555",
-                            fontSize: 16,
+                            fontSize: 22,
                             fontWeight: 700,
                             cursor: "pointer",
                         }}
@@ -131,12 +131,12 @@ export function ConfirmActionModal({
                         onClick={handleConfirm}
                         style={{
                             flex: 1,
-                            padding: "16px 20px",
-                            borderRadius: 12,
+                            padding: "22px 28px",
+                            borderRadius: 16,
                             border: "none",
                             background: confirmBackground,
                             color: "#fff",
-                            fontSize: 16,
+                            fontSize: 22,
                             fontWeight: 800,
                             letterSpacing: 1,
                             cursor: "pointer",
