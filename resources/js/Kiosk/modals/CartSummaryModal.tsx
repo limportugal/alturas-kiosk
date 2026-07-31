@@ -326,26 +326,26 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
                 {/* ── Footer ── */}
                 {cartItems.length > 0 && (
-                    <div style={{ borderTop: "1px solid #f0ede8", padding: "36px 48px", background: "#faf9f7", flexShrink: 0 }}>
+                    <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 36px", background: "#faf9f7", flexShrink: 0 }}>
                         {/* Row 1: Total Amount */}
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 28 }}>
-                            <span style={{ fontSize: 24, fontWeight: 700, color: "#666", letterSpacing: 2 }}>TOTAL AMOUNT</span>
-                            <span style={{ fontSize: 56, fontWeight: 800, color: colors.primary, whiteSpace: "nowrap" }}>{formatMoney(totalPrice)}</span>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                            <span style={{ fontSize: 20, fontWeight: 700, color: "#666", letterSpacing: 2 }}>TOTAL AMOUNT</span>
+                            <span style={{ fontSize: 48, fontWeight: 800, color: colors.primary, whiteSpace: "nowrap" }}>{formatMoney(totalPrice)}</span>
                         </div>
 
                         {/* Row 2: Action Buttons */}
-                        <div style={{ display: "flex", gap: 20 }}>
+                        <div style={{ display: "flex", gap: 16 }}>
                             <button
                                 onClick={() => setPlaceConfirmOpen(true)}
                                 disabled={ordered || placingOrder}
                                 style={{
                                     flex: 2,
                                     background: ordered ? "#22c55e" : colors.primary,
-                                    color: "#fff", border: "none", borderRadius: 20, 
-                                    padding: "26px 40px", fontSize: 26, fontWeight: 700,
+                                    color: "#fff", border: "none", borderRadius: 14, 
+                                    padding: "18px 36px", fontSize: 22, fontWeight: 700,
                                     letterSpacing: 1.5, cursor: ordered || placingOrder ? "default" : "pointer",
                                     transition: "background 0.25s ease",
-                                    display: "flex", alignItems: "center", justifyContent: "center", gap: 14,
+                                    display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
                                     whiteSpace: "nowrap",
                                 }}
                             >
@@ -353,13 +353,13 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                             </button>
                             <button
                                 onClick={() => setClearConfirmOpen(true)}
-                                style={{ flex: 1, padding: "26px 30px", borderRadius: 20, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 22, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+                                style={{ flex: 1, padding: "18px 24px", borderRadius: 14, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 20, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
                             >
                                 Clear All
                             </button>
                         </div>
                         {placeOrderError && (
-                            <p style={{ margin: "20px 0 0", color: "#dc2626", fontSize: 20, fontWeight: 600 }}>
+                            <p style={{ margin: "14px 0 0", color: "#dc2626", fontSize: 16, fontWeight: 600 }}>
                                 {placeOrderError}
                             </p>
                         )}
