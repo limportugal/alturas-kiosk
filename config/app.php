@@ -123,4 +123,7 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    // Hide cursor (for touch screen)
+    'hide_cursor' => env('HIDE_CURSOR', false),
+
 ];

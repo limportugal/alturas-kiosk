@@ -23,6 +23,14 @@
         @endif
         @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
         @inertiaHead
+        
+        @if(config('app.hide_cursor'))
+            <style>
+                body {
+                    cursor: none !important;
+                }
+            </style>
+        @endif
     </head>
     <body class="font-sans antialiased">
         @inertia

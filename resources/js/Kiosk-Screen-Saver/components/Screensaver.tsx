@@ -64,10 +64,16 @@ export default function Screensaver({ onStart, onProductSelect }: ScreensaverPro
 
     return (
         <main
-            className="relative h-full w-full overflow-hidden bg-black"
             onClick={onStart}
             onTouchStart={onStart}
-            style={{ position: 'absolute', inset: 0 }}
+            style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                overflow: 'hidden',
+                backgroundColor: '#000',
+            }}
         >
             {ads.map((ad, i) => (
                 <div
@@ -84,20 +90,9 @@ export default function Screensaver({ onStart, onProductSelect }: ScreensaverPro
                     }}
                 >
                     {ad.type === 'video' ? (
-                        <video
+                        <ScreensaverVideo
                             src={`/${ad.file_path}`}
-                            autoPlay={i === currentIndex}
-                            muted
-                            loop
-                            playsInline
-                            style={{
-                                position:   'absolute',
-                                top:        0,
-                                left:       0,
-                                width:      '100%',
-                                height:     '100%',
-                                objectFit:  'cover',
-                            }}
+                            isActive={i === currentIndex}
                         />
                     ) : (
                         <img
@@ -116,21 +111,109 @@ export default function Screensaver({ onStart, onProductSelect }: ScreensaverPro
                 </div>
             ))}
 
-            <div className="absolute inset-0 bg-black/10" />
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.1)',
+                pointerEvents: 'none',
+                zIndex: 10,
+            }} />
             <TapPrompt />
         </main>
+    );
+}
+
+function ScreensaverVideo({ src, isActive }: { src: string; isActive: boolean }) {
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        if (isActive) {
+            video.currentTime = 0;
+            video.play().catch((err) => {
+                console.warn("Failed to play video automatically:", err);
+            });
+        } else {
+            video.pause();
+        }
+    }, [isActive]);
+
+    return (
+        <video
+            ref={videoRef}
+            src={src}
+            autoPlay={isActive}
+            muted
+            loop
+            playsInline
+            style={{
+                position:   'absolute',
+                top:        0,
+                left:       0,
+                width:      '100%',
+                height:     '100%',
+                objectFit:  'cover',
+            }}
+        />
     );
 }
 
 function TapPrompt() {
     return (
         <div
-            className="absolute inset-x-0 flex justify-center"
-            style={{ top: '68%', zIndex: 20, pointerEvents: 'none' }}
+            style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                display: 'flex',
+                justifyContent: 'center',
+                top: '68%',
+                zIndex: 20,
+                pointerEvents: 'none',
+            }}
         >
             <div className="touch-start-prompt">
                 TOUCH TO START!
             </div>
+            <style>{`
+                .touch-start-prompt {
+                    padding: 22px 46px;
+                    border: 3px solid rgba(255, 255, 255, 0.95);
+                    border-radius: 9999px;
+                    background: linear-gradient(135deg, rgba(90, 45, 130, 0.96), rgba(31, 22, 43, 0.96));
+                    color: #fff;
+                    font-family: Arial, sans-serif;
+                    font-size: 28px;
+                    font-weight: 800;
+                    line-height: 1;
+                    letter-spacing: 0.18em;
+                    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.65);
+                    backdrop-filter: blur(8px);
+                    animation: touchPromptPulse 1.8s ease-in-out infinite;
+                    will-change: transform, box-shadow;
+                }
+
+                @keyframes touchPromptPulse {
+                    0%, 100% {
+                        transform: scale(1);
+                        box-shadow:
+                            0 0 0 7px rgba(255, 255, 255, 0.14),
+                            0 12px 30px rgba(0, 0, 0, 0.55);
+                    }
+
+                    50% {
+                        transform: scale(1.07);
+                        box-shadow:
+                            0 0 0 13px rgba(255, 255, 255, 0.24),
+                            0 16px 42px rgba(0, 0, 0, 0.7);
+                    }
+                }
+            `}</style>
         </div>
     );
 }
+
+
+
