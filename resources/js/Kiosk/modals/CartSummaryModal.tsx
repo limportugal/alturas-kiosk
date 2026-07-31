@@ -148,6 +148,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                     background: "#fff",
                     borderRadius: 24,
                     width: 920,
+                    height: 1100,
                     maxWidth: "94vw",
                     maxHeight: "88vh",
                     display: "flex",
