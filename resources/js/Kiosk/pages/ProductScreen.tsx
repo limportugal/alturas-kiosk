@@ -110,7 +110,7 @@ export default function ProductScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
       <div style={{ position: "relative"}}>
-      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={68}>
+      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={190}>
         <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
         <span>{subcat?.category?.name.toUpperCase() ??  "No Subcategory"}</span>
         {subcat &&(
@@ -137,6 +137,17 @@ export default function ProductScreen({
                  }}>
                    <ArrowIcon direction="left" size={35} label="BACK" />
             </KioskButton>
+            <CartIcon 
+              onClick={onViewOrder} 
+              hideWhenEmpty 
+              style={{ 
+                position: "absolute", 
+                right: 32, 
+                top: "50%", 
+                transform: "translateY(-50%)", 
+                zIndex: 10,
+              }} 
+            />
     </div>
       <MainMenuBtn onClick={onHome} />
       {/* <PurpleBanner small>{subcat?.name.toUpperCase() ?? subId.toUpperCase()}</PurpleBanner> */}
@@ -295,7 +306,7 @@ export default function ProductScreen({
         <KioskButton onClick={onBack}>← BACK</KioskButton>
       </div> */}
 
-             <CartIcon onClick={onViewOrder} style={{ flex: 1}} hideWhenEmpty />
+
     </div>
   );
 }

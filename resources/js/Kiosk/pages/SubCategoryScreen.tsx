@@ -100,6 +100,17 @@ export default function SubCategoryScreen({
                         }}>
                           <ArrowIcon direction="left" size={35} label="BACK" />
                     </KioskButton>
+        <CartIcon 
+          onClick={onViewOrder} 
+          hideWhenEmpty 
+          style={{ 
+            position: "absolute", 
+            right: 32, 
+            top: "50%", 
+            transform: "translateY(-50%)", 
+            zIndex: 10,
+          }} 
+        />
     </div>
 
       <MainMenuBtn onClick={onBack} />
@@ -203,7 +214,7 @@ export default function SubCategoryScreen({
           );
         })}
       </ScrollableGrid>
-      <CartIcon onClick={onViewOrder} hideWhenEmpty />
+
     </div>
 
   );

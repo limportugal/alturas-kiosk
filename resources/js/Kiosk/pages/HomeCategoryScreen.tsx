@@ -86,7 +86,18 @@ export default function HomeCategoryScreen({
       </div>
 
       {/* Banner */}
-      <div style={{ background: colors.primary, padding: "28px 0", textAlign: "center", flexShrink: 0 }}>
+      <div style={{ position: "relative", background: colors.primary, padding: "28px 0", textAlign: "center", flexShrink: 0 }}>
+        <CartIcon 
+          onClick={onViewOrder} 
+          hideWhenEmpty 
+          style={{ 
+            position: "absolute", 
+            right: 32, 
+            top: "50%", 
+            transform: "translateY(-50%)", 
+            zIndex: 10,
+          }} 
+        />
         <span style={{ ...typography.heading, color: colors.surface, letterSpacing: 5 }}>
           PLEASE CHOOSE A CATEGORY BELOW
         </span>
@@ -143,7 +154,7 @@ export default function HomeCategoryScreen({
             );
           })} 
       </div>
-      <CartIcon onClick={onViewOrder} hideWhenEmpty />
+
 
       <ConfirmActionModal
         open={ConfirmOpen}

@@ -4,7 +4,7 @@ import { CartSummaryModal } from "@/Kiosk/modals/CartSummaryModal";
 
 import { Badge } from "@/Kiosk/components/UI/Badge";
 
-function CartBagSvg({ color, size = 28 }: { color: string; size?: number }) {
+function CartIconSvg({ color, size = 28 }: { color: string; size?: number }) {
     return (
         <svg
             width={size}
@@ -17,9 +17,9 @@ function CartBagSvg({ color, size = 28 }: { color: string; size?: number }) {
             strokeLinejoin="round"
             aria-hidden
         >
-            <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <path d="M16 10a4 4 0 01-8 0" />
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
         </svg>
     );
 }
@@ -47,8 +47,8 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
     const isEmpty = totalCount === 0;
     const isGrayEmpty = isEmpty && grayWhenEmpty;
     const isDisabled = isEmpty && grayWhenEmpty;
-    const background = isGrayEmpty ? "#e8e8e8" : "#5a2d82";
-    const foreground = isGrayEmpty ? "#888888" : "#ffffff";
+    const background = isGrayEmpty ? "rgba(255, 255, 255, 0.15)" : "#ffffff";
+    const foreground = isGrayEmpty ? "rgba(255, 255, 255, 0.45)" : "#5a2d82";
 
     const handleClick = () => {
         if(isEmpty && grayWhenEmpty) {
@@ -69,71 +69,31 @@ export function CartIcon({ style, onClick, hideWhenEmpty = false, grayWhenEmpty 
             style={{
                 position: "relative",
                 background,
-                border: isGrayEmpty ? "2px solid #cccccc" : "none",
-                borderRadius: 12,
-                padding: "20px 32px",
-                cursor: isDisabled ? "not-allowed" :"pointer",
+                border: isGrayEmpty ? "2px dashed rgba(255, 255, 255, 0.3)" : "none",
+                borderRadius: "50%",
+                width: 76,
+                height: 76,
+                cursor: isDisabled ? "not-allowed" : "pointer",
                 opacity: isDisabled ? 0.7 : 1,
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
-                color: foreground,
-                fontSize: 20,
-                fontWeight: 700,
-                letterSpacing: 2,
-                fontFamily: "Arial, sans-serif",
-                flex: 1,
                 justifyContent: "center",
+                color: foreground,
+                boxShadow: isGrayEmpty ? "none" : "0 4px 12px rgba(90, 45, 130, 0.25)",
+                transition: "all 0.2s ease",
+                padding: 0,
+                flexShrink: 0,
                 ...style,
             }}
         >
-            <CartBagSvg color={foreground} />
-            VIEW ORDER
-            {/* {totalCount > 0 && (
-                <span
-                    style={{
-                        position: "absolute",
-                        top: -8,
-                        right: -8,
-                        background: "#ef4444",
-                        color: "#fff",
-                        borderRadius: "50%",
-                        width: 28,
-                        height: 28,
-                        fontSize: 13,
-                        fontWeight: 800,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        border: "2px solid #fff",
-                    }}
-                >
-                    {totalCount > 99 ? "99+" : totalCount}
-                </span>
-            )} */}
-            <Badge value={totalCount} show={totalCount > 0} />
+            <CartIconSvg color={foreground} size={36} />
+            <Badge value={totalCount} show={totalCount > 0} style={{ top: -6, right: -6, fontSize: 18 }} />
         </button>
     );
 
     return (
         <>
-            {hideWhenEmpty ? (
-                <div
-                    style={{
-                        background: "#fff",
-                        borderTop: "1px solid #e0dbd5",
-                        padding: "24px 48px",
-                        flexShrink: 0,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
-                    {button}
-                </div>
-            ) : (
-                button
-            )}
+            {button}
 
             {!onClick && <CartSummaryModal open={open} onClose={() => setOpen(false)} />}
         </>

@@ -141,7 +141,7 @@ export default function ProductDetailScreen({
     <div style={KIOSK_STYLE}>
       <HFHeader small />
         <div style={{ position: "relative"}}>
-      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={68}>
+      <PurpleBannerV2 marquee marqueeInsetLeft={190} marqueeInsetRight={190}>
           <div style={{display: "flex", alignItems: "center", justifyContent: "center", gap: 12}}>
         {variationTypeName.toUpperCase()}
         </div>
@@ -159,9 +159,19 @@ export default function ProductDetailScreen({
                   justifyContent: "center",
                   gap: 6,
                   }}>
-                      <ArrowIcon direction="left" size={35} label="BACK" />
-                    
+                    <ArrowIcon direction="left" size={35} label="BACK" />
               </KioskButton>
+            <CartIcon 
+              onClick={onViewOrder} 
+              grayWhenEmpty 
+              style={{ 
+                position: "absolute", 
+                right: 32, 
+                top: "50%", 
+                transform: "translateY(-50%)", 
+                zIndex: 10,
+              }} 
+            />
       </div>
       <MainMenuBtn onClick={onHome} />
       {/* ── Stock dropped warning ── */}
@@ -357,11 +367,9 @@ export default function ProductDetailScreen({
 
       <div style={{ flex: 1 }} />
 
-      {/* Bottom buttons */}
       <div style={{ background: colors.surface, borderTop: "2px solid #e0dbd5", padding: "28px 48px", display: "flex", gap: 24, flexShrink: 0 }}>
         {/* <KioskButton onClick={onBack} style={{ flex: 1 }}>BACK</KioskButton> */}
-        <KioskButton onClick={handleOpenCart} disabled={isSelectedSoldOut}>ADD TO CART</KioskButton>
-          <CartIcon onClick={onViewOrder} grayWhenEmpty />
+        <KioskButton onClick={handleOpenCart} disabled={isSelectedSoldOut} style={{ flex: 1 }}>ADD TO CART</KioskButton>
       </div>
       
       <ConfirmOrderModal
