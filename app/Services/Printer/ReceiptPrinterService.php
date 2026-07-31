@@ -272,7 +272,7 @@ class ReceiptPrinterService
         // the uppercase letters, digits, and hyphens in our CART-* numbers.
         $printer->barcode($receiptData['orderSlipNo'], Printer::BARCODE_CODE39);
         $printer->setJustification(Printer::JUSTIFY_LEFT);
-        $printer->feed();
+        $printer->feed(); 
         // =========================
 
         $printer->setJustification(Printer::JUSTIFY_LEFT);
