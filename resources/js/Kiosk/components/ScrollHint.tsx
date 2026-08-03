@@ -1,0 +1,124 @@
+
+import { colors } from "@/Kiosk/utils/colors";
+import { ReactNode, useEffect, useRef, useState } from "react";
+
+interface ScrollHintProps {
+    children: ReactNode;
+    text?: string;
+}
+
+export function ScrollHint({
+    children,
+    text = "Scroll for more",
+}: ScrollHintProps) {
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [showHint, setShowHint] = useState(false);
+
+    const checkScroll = () => {
+        const element = scrollRef.current;
+
+        if (!element) return;
+
+        const hasScrollableContent =
+            element.scrollHeight > element.clientHeight;
+
+        const isAtBottom =
+            element.scrollTop + element.clientHeight >=
+            element.scrollHeight - 5;
+
+        setShowHint(hasScrollableContent && !isAtBottom);
+    };
+
+    useEffect(() => {
+        checkScroll();
+
+        const element = scrollRef.current;
+        if (!element) return;
+
+        element.addEventListener("scroll", checkScroll);
+        window.addEventListener("resize", checkScroll);
+
+        const observer = new ResizeObserver(checkScroll);
+        observer.observe(element);
+
+        return () => {
+            element.removeEventListener("scroll", checkScroll);
+            window.removeEventListener("resize", checkScroll);
+            observer.disconnect();
+        };
+    }, [children]);
+
+    return (
+        <div
+            style={{
+                position: "relative",
+                flex: 1,
+                minHeight: 0,
+                overflow: "hidden",
+            }}
+        >
+            <div
+                ref={scrollRef}
+                style={{
+                    height: "100%",
+                    overflowY: "auto",
+                }}
+            >
+                {children}
+            </div>
+
+            {showHint && (
+                <div
+                    style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        display: "flex",
+                        justifyContent: "center",
+                        padding: "32px 0 10px",
+                        pointerEvents: "none",
+                        background:
+                            "linear-gradient(to bottom, transparent, rgba(255,255,255,0.98) 65%)",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            color: "#6b2fa0",
+                            fontSize: 11,
+                            fontWeight: 700,
+                        }}
+                    >
+                        <span>{text}</span>
+                        <span
+                            style={{
+                                fontSize: 16,
+                                lineHeight: 1,
+                                animation: "scrollHint 1.2s infinite",
+                            }}
+                        >
+                            ↓
+                        </span>
+                    </div>
+                </div>
+            )}
+
+            <style>
+                {`
+                    @keyframes scrollHint {
+                        0%, 100% {
+                            transform: translateY(0);
+                        }
+
+                        50% {
+                            transform: translateY(4px);
+                        }
+                    }
+                `}
+            </style>
+        </div>
+    );
+}

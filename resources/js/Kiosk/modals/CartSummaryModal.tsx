@@ -7,6 +7,7 @@ import { CartItem } from "@/Kiosk/types/cart-types";
 import { RemoveIcon } from "@/Kiosk/components/UI/RemoveIcon";
 import { formatMoney } from "@/Kiosk/components/shared"
 import { typography } from "@/Kiosk/utils/typography";
+import { ScrollHint } from "@/Kiosk/components/ScrollHint";
 // import { generateReceiptFromCart, printReceipt } from "@/Kiosk/utils/receiptPrinter";
  
 
@@ -38,6 +39,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
     const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
     const [removeTarget, setRemoveTarget] = useState<{ product_id: number; color: string | null; name: string } | null>(null);
     const [placeConfirmOpen, setPlaceConfirmOpen] = useState(false);
+
    
 
     const totalCount = cartItems.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
@@ -148,7 +150,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                     background: "#fff",
                     borderRadius: 24,
                     width: 920,
-                    height: 1100,
+                    height: 1300,
                     maxWidth: "94vw",
                     maxHeight: "88vh",
                     display: "flex",
@@ -180,6 +182,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                 </div>
 
                 {/* ── Items list ── */}
+                <ScrollHint>
                 <div style={{ flex: 1, overflowY: "auto", padding: cartItems.length > 0 ? 0 : "48px 32px" }}>
                     {cartItems.length === 0 ? (
                         <div style={{ textAlign: "center" }}>
@@ -196,6 +199,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                         grouped.map(([productName, variants]) => {
                             const groupSubtotal     = variants.reduce((s: number, i: CartItem) => s + i.subtotal, 0);
                             const hasMultipleColors = variants.length > 1;
+                            const ColorExist = variants.some((i: CartItem) => i.color !== null);
 
                             return (
                                 <div key={productName}>
@@ -208,20 +212,23 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                         borderBottom: "1px solid rgba(107,47,160,0.1)",
                                     }}>
                                         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                                            <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: 1.5, color: colors.primary }}>
+                                            {ColorExist && (
+                                               <span style={{ fontSize: 20, fontWeight: 700, letterSpacing: 1.5, color: colors.primary }}>
                                                 {productName}
                                             </span>
+                                            )}
+                                         
                                             {hasMultipleColors && (
                                                 <span style={{ background: colors.primary, color: "#fff", fontSize: 14, fontWeight: 700, padding: "4px 12px", borderRadius: 20 }}>
                                                     {variants.length} colors
                                                 </span>
                                             )}
                                         </div>
-                                        {hasMultipleColors && (
+                                        {/* {hasMultipleColors && (
                                             <span style={{ fontSize: 20, fontWeight: 700, color: colors.primary }}>
                                                 Subtotal: {formatMoney(groupSubtotal)}
                                             </span>
-                                        )}
+                                        )} */}
                                     </div>
 
                                     {/* ── Variant rows ── */}
@@ -323,6 +330,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                         })
                     )}
                 </div>
+                </ScrollHint>
 
                 {/* ── Footer ── */}
                 {cartItems.length > 0 && (
