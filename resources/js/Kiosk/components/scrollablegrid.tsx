@@ -18,7 +18,7 @@ interface ScrollableGridProps {
 
 export function ScrollableGrid({
   children,
-  columns = 3,
+  columns = 3, 
   gap = 28,
   padding = "36px 48px",
   maxHeight = "100%",
