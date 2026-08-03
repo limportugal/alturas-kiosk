@@ -1,13 +1,17 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+﻿import { CSSProperties, ReactNode, useEffect, useRef, useState } from "react";
 
 interface ScrollHintProps {
     children: ReactNode;
     text?: string;
+    wrapperStyle?: CSSProperties;
+    scrollAreaStyle?: CSSProperties;
 }
 
 export function ScrollHint({
     children,
     text = "Scroll for more",
+    wrapperStyle,
+    scrollAreaStyle,
 }: ScrollHintProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showHint, setShowHint] = useState(false);
@@ -53,6 +57,7 @@ export function ScrollHint({
                 flex: 1,
                 minHeight: 0,
                 overflow: "hidden",
+                ...wrapperStyle,
             }}
         >
             <div
@@ -60,6 +65,7 @@ export function ScrollHint({
                 style={{
                     height: "100%",
                     overflowY: "auto",
+                    ...scrollAreaStyle,
                 }}
             >
                 {children}
@@ -93,8 +99,9 @@ export function ScrollHint({
                         <span>{text}</span>
                         <span
                             style={{
-                                fontSize: 16,
+                                fontSize: 18,
                                 lineHeight: 1,
+                                
                                 animation: "scrollHint 1.2s infinite",
                             }}
                         >
@@ -120,3 +127,5 @@ export function ScrollHint({
         </div>
     );
 }
+
+

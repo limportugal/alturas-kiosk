@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+﻿import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { colors } from "@/Kiosk/utils/colors";
@@ -18,7 +18,7 @@ interface CartSummaryModalProps {
     onPlaceOrder?: () => void;
 }
 
-// ─── Trash icon ───────────────────────────────────────────────────────────────
+// Trash icon
 const TrashIcon = () => (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -28,7 +28,7 @@ const TrashIcon = () => (
     </svg>
 );
 
-// ─── Component ────────────────────────────────────────────────────────────────
+// Component
 export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryModalProps) {
     const { cartItems, getTotalAmount, removeItem, updateQty, confirmCart, clearCart } = useCart();
 
@@ -45,8 +45,8 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
     const totalCount = cartItems.reduce((sum: number, i: CartItem) => sum + i.quantity, 0);
     const totalPrice = getTotalAmount();
 
-    // ── Group items by product name ───────────────────────────────────────────
-    // Same product, different colors → grouped under one header
+    // Group items by product name
+    // Same product, different colors are grouped under one header
     const grouped = useMemo(() => {
         const map = new Map<string, CartItem[]>();
         cartItems.forEach((item: CartItem) => {
@@ -162,7 +162,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                     boxShadow: "0 32px 80px rgba(0,0,0,0.25)",
                 }}
             >
-                {/* ── Header ── */}
+                {/* Header */}
                 <div style={{ background: colors.primary, padding: "26px 40px", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -178,12 +178,11 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                     <button
                         onClick={handleClose} 
                         style={{ background: "rgba(255,255,255,0.2)", border: "none", borderRadius: "50%", width: 50, height: 50, cursor: "pointer", color: "#fff", fontSize: 30, display: "flex", alignItems: "center", justifyContent: "center" }}
-                    >×</button>
+                    >X</button>
                 </div>
 
-                {/* ── Items list ── */}
-                <ScrollHint>
-                <div style={{ flex: 1, overflowY: "auto", padding: cartItems.length > 0 ? 0 : "48px 32px" }}>
+                {/* Items list */}
+                <ScrollHint scrollAreaStyle={{ flex: 1, padding: cartItems.length > 0 ? 0 : "48px 32px" }}>
                     {cartItems.length === 0 ? (
                         <div style={{ textAlign: "center" }}>
                             <div style={{ marginBottom: 16, display: "flex", justifyContent: "center" }}>
@@ -203,7 +202,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
 
                             return (
                                 <div key={productName}>
-                                    {/* ── Group header ── */}
+                                    {/* Group header */}
                                     <div style={{
                                         display: "flex", alignItems: "center", justifyContent: "space-between",
                                         padding: "16px 40px 14px",
@@ -231,7 +230,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                         )} */}
                                     </div>
 
-                                    {/* ── Variant rows ── */}
+                                    {/* Variant rows */}
                                     {variants.map((item, idx) => (
                                         (() => {
                                             const canIncrease = item.stock == null || item.quantity < item.stock;
@@ -254,7 +253,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                             style={{ width: 100, height: 100, borderRadius: 14, objectFit: "cover", flexShrink: 0, background: "#f5f3f0" }}
                                                         />
                                                     ) : (
-                                                        <div style={{ width: 100, height: 100, borderRadius: 14, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36 }}>🛋️</div>
+                                                        <div style={{ width: 100, height: 100, borderRadius: 14, background: "#f0ede8", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, fontWeight: 700, color: "#777" }}>NO IMAGE</div>
                                                     )}
 
                                                     {/* Info */}
@@ -289,7 +288,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                                 cursor: item.quantity <= 1 ? "not-allowed" : "pointer",
                                                                 display: "flex", alignItems: "center", justifyContent: "center",
                                                             }}
-                                                        >−</button>
+                                                        >-</button>
                                                         <span style={{ fontSize: 26, fontWeight: 700, minWidth: 40, textAlign: "center" }}>{item.quantity}</span>
                                                         <button
                                                             disabled={!canIncrease}
@@ -329,10 +328,9 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                             );
                         })
                     )}
-                </div>
                 </ScrollHint>
 
-                {/* ── Footer ── */}
+                {/* Footer */}
                 {cartItems.length > 0 && (
                     <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 36px", background: "#faf9f7", flexShrink: 0 }}>
                         {/* Row 1: Total Amount */}
@@ -357,7 +355,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                     whiteSpace: "nowrap",
                                 }}
                             >
-                                {ordered ? "✓ ORDER PLACED!" : "PLACE ORDER"}
+                                {ordered ? "ORDER PLACED!" : "PLACE ORDER"}
                             </button>
                             <button
                                 onClick={() => setClearConfirmOpen(true)}
@@ -390,7 +388,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
             onClose={() => setPlaceConfirmOpen(false)}
         />
 
-        {/* ── Clear All confirmation ── */}
+        {/* Clear All confirmation */}
         <ConfirmActionModal
             open={clearConfirmOpen}
             title="Clear Cart"
@@ -406,7 +404,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
             onClose={() => setClearConfirmOpen(false)}
         />
 
-        {/* ── Remove item confirmation ── */}
+        {/* Remove item confirmation */}
         <ConfirmActionModal
             open={removeTarget !== null}
             title="Remove Item"
@@ -420,3 +418,5 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
         </>
     );
 }
+
+
