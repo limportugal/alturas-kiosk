@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
@@ -24,7 +24,7 @@
         @vite(['resources/js/app.tsx', "resources/js/Pages/{$page['component']}.tsx"])
         @inertiaHead
         
-        @if(config('app.hide_cursor'))
+        @if(config('app.hide_cursor') && (request()->routeIs('kiosk-screen-saver') || request()->is('kiosk') || request()->is('kiosk/*')))
             <style>
                 body {
                     cursor: none !important;
@@ -36,3 +36,4 @@
         @inertia
     </body>
 </html>
+

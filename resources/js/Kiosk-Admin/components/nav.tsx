@@ -11,6 +11,7 @@ interface NavItem {
   badge: string | null;
   permission?: string | string[];
   adminOnly?: boolean;
+  superAdminOnly?: boolean;
 }
 
 interface NavSection {
@@ -41,6 +42,7 @@ const NAV_SECTIONS: NavSection[] = [
   {
     label: ' 🛠️ Maintenance',
     items: [
+      { icon: '🎨', label: 'Logo Settings', href: route('logos'), badge: null, superAdminOnly: true },
       { icon: '🎬', label: 'Ads Management', href: route('ads'), badge: null, permission: 'manage ads' },
       { icon: '🌙', label: 'Timer', href: route('screen-saver'), badge: null, adminOnly: true },
       { icon: '👥', label: 'Users', href: route('users'), badge: null, adminOnly: true },
@@ -64,7 +66,8 @@ const NAV_SECTIONS: NavSection[] = [
 export default function SideNavDrawer({ children, auth }: Props) {
   const [open, setOpen] = useState(true);
   const { canAccess } = useAuthorization();
-  const { url } = usePage();
+  const { url, props } = usePage<any>();
+  const appLogo = props?.app?.logo ?? null;
 
   const userName = auth?.user?.name ?? 'User';
   const userRole = auth?.user?.role ?? 'Admin';
@@ -89,6 +92,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
         canAccess({
           permission: item.permission,
           adminOnly: item.adminOnly,
+          superAdminOnly: item.superAdminOnly,
         }),
       ),
     }))
@@ -168,16 +172,25 @@ export default function SideNavDrawer({ children, auth }: Props) {
               width: 34,
               height: 34,
               borderRadius: 8,
-              background: 'linear-gradient(135deg, #5d56ddff, #dadedfff)',
+              background: appLogo ? 'transparent' : 'linear-gradient(135deg, #5d56ddff, #dadedfff)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: 16,
               flexShrink: 0,
+              overflow: 'hidden',
               boxShadow: '0 0 12px rgba(108,99,255,0.35)',
             }}
           >
-            📦
+            {appLogo ? (
+              <img
+                src={appLogo}
+                alt="App Logo"
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              />
+            ) : (
+              '📦'
+            )}
           </div>
           <span
             style={{

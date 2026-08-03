@@ -17,7 +17,10 @@ class UsersStoreServices {
                 'status'   => $data['status'] ?? 'Active',
             ]);
 
-            if ($data['role'] === 'admin') {
+            if ($data['role'] === 'super-admin') {
+                $user->syncRoles(['super-admin']);
+                $user->syncPermissions([]);
+            } elseif ($data['role'] === 'admin') {
                 $user->syncRoles(['admin']);
                 $user->syncPermissions([]);
             } else {

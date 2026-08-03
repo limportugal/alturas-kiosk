@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+﻿import { Head, useForm } from '@inertiajs/react';
 import { Icon, icons } from '@/Kiosk-Admin/utils/icon';
 
 export default function Login({
@@ -120,3 +120,4 @@ export default function Login({
         </>
     );
 }
+

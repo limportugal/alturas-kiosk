@@ -17,7 +17,7 @@ class UserStoreValidations extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
-            'role' => ['required', 'in:admin,staff'],
+            'role' => ['required', 'in:super-admin,admin,staff'],
             'status' => ['required', 'in:Active,Inactive'],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['string', 'exists:permissions,name'],

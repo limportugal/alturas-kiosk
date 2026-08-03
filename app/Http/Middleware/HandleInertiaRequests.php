@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\KioskSetting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -29,8 +30,13 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $logoPath = KioskSetting::get('app_logo');
+
         return [
             ...parent::share($request),
+            'app' => [
+                'logo' => $logoPath ? asset('storage/' . $logoPath) : null,
+            ],
             'auth' => [
                 'user' => $request->user()
                 ? [

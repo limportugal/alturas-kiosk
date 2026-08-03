@@ -21,22 +21,33 @@ import EditAd from '@/Kiosk-Admin/components/Forms/AdsItem/edit-ad';
 import ImagePreviewCell from '@/Kiosk-Admin/components/Buttons/ImagePreviewCell';
 import MultiplePreviewImage from '@/Kiosk-Admin/components/Buttons/MultiplePreviewImage';
 
-export const userColumns: Column<UserListItem>[] = [
+import { LogoList } from '@/Kiosk-Admin/types/logo-types';
+import LogoToggleStatus from '@/Kiosk-Admin/components/LogoToggleStatus';
+import EditLogo from '@/Kiosk-Admin/components/Forms/LogoItem/edit-logo';
+
+import EditUser from '@/Kiosk-Admin/components/Forms/UsersItem/edit-user';
+import CanAccess from '@/Kiosk-Admin/components/auth/CanAccess';
+
+export const getUserColumns = (permissions: string[] = []): Column<UserListItem>[] => [
   { id: 'name', label: 'Name' },
   { id: 'email', label: 'Email' },
   {
     id: 'role',
     label: 'Role',
-    render: (row) => <span style={{ textTransform: 'capitalize' }}>{row.role ?? '—'}</span>,
+    render: (row) => (
+      <span style={{ textTransform: 'capitalize', fontWeight: row.role === 'super-admin' ? 600 : 400 }}>
+        {row.role === 'super-admin' ? 'Super Admin' : row.role ?? '—'}
+      </span>
+    ),
   },
   {
     id: 'permissions',
     label: 'Permissions',
     render: (row) => (
       <span>
-        {row.role === 'admin'
+        {row.role === 'super-admin' || row.role === 'admin'
           ? 'All Access'
-          : row.permissions.length
+          : row.permissions?.length
             ? row.permissions.join(', ')
             : '—'}
       </span>
@@ -47,18 +58,29 @@ export const userColumns: Column<UserListItem>[] = [
     label: 'Created At',
     render: (row) => <span>{row.created_at ?? '—'}</span>,
   },
-    { 
+  { 
     id: 'status', 
     label: 'Status',
-     render: (row) => (
+    render: (row) => (
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <UserToggleStatus id={row.id} status={row.status === 'active'} />
-        {/* <EditProduct product={row} /> */}
+        <UserToggleStatus id={row.id} status={row.status.toLowerCase() === 'active'} />
       </div>
     ),
-  
+  },
+  {
+    id: 'actions',
+    label: 'Actions',
+    render: (row) => (
+      <CanAccess superAdminOnly>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <EditUser user={row} permissions={permissions} />
+        </div>
+      </CanAccess>
+    ),
   },
 ];
+
+export const userColumns: Column<UserListItem>[] = getUserColumns([]);
 
 export const Proditem: Column<ProductItem>[] = [
   {
@@ -339,4 +361,37 @@ export const UsersLogs: Column<ActivityLog>[] = [
   { id: 'action', label: 'Action' },
   // { id: 'module', label: 'Table' },
   { id: 'description', label: 'Description' },
+];
+
+export const LogoItem: Column<LogoList>[] = [
+  {
+    id: 'image_path',
+    label: 'Image',
+    render: (row) => (
+      <ImagePreviewCell
+        imagePath={row.image_path.startsWith('/') ? row.image_path : `/${row.image_path}`}
+        alt={row.name}
+      />
+    ),
+  },
+  { id: 'name', label: 'Logo Title' },
+  {
+    id: 'specs',
+    label: 'Required Size / Specs',
+    render: () => (
+      <span style={{ fontSize: 12, color: '#6b7280', fontWeight: 500 }}>
+        512 × 512 px (1:1 Ratio, PNG/SVG, Max 2MB)
+      </span>
+    ),
+  },
+  {
+    id: 'actions',
+    label: 'Actions',
+    render: (row) => (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <LogoToggleStatus id={row.id} status={row.status === 'Active'} />
+        <EditLogo logo={row} />
+      </div>
+    ),
+  },
 ];

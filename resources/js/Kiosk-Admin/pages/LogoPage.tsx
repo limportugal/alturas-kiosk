@@ -1,17 +1,14 @@
 import useDynamicQuery from '@/hooks/useDynamicQuery';
+import * as React from 'react';
 import DataTable from '@/Kiosk-Admin/components/Datatable/DataTable';
-import { getUserColumns } from '@/Kiosk-Admin/components/Datatable/column';
-import AddUser from '@/Kiosk-Admin/components/Forms/UsersItem/add-user';
+import { GetLogosListServices } from '@/Kiosk-Admin/services/logo/GetLogosListServices';
+import { LogoItem } from '@/Kiosk-Admin/components/Datatable/column';
+import AddLogo from '@/Kiosk-Admin/components/Forms/LogoItem/add-logo';
 import AdminTableSkeleton from '@/Kiosk-Admin/components/Skeletons/AdminTableSkeleton';
 import CanAccess from '@/Kiosk-Admin/components/auth/CanAccess';
-import { GetUsersListServices } from '@/Kiosk-Admin/services/users/GetUsersListServices';
 
-interface UsersPageProps {
-    permissions: string[];
-}
-
-export default function UsersPage({ permissions }: UsersPageProps) {
-    const { data: usersData, isPending } = useDynamicQuery(['user-list'], GetUsersListServices);
+export default function LogoPage() {
+    const { data: logo_data, isPending } = useDynamicQuery(['logo-list'], GetLogosListServices);
 
     if (isPending) {
         return (
@@ -21,17 +18,15 @@ export default function UsersPage({ permissions }: UsersPageProps) {
         );
     }
 
-    const columns = getUserColumns(permissions);
-
     return (
         <div className="m-4">
             <DataTable
-                title="USERS"
-                rows={usersData?.data ?? []}
-                columns={columns}
+                title="LOGO MANAGEMENT"
+                rows={logo_data?.data ?? []}
+                columns={LogoItem}
                 actions={(
                     <CanAccess superAdminOnly>
-                        <AddUser permissions={permissions} />
+                        <AddLogo />
                     </CanAccess>
                 )}
                 searchable={true}

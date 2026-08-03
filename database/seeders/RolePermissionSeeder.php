@@ -34,9 +34,11 @@ class RolePermissionSeeder extends Seeder {
 
 
     
+    $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
     $adminRole = Role::firstOrCreate(['name' => 'admin']);
     $staffRole = Role::firstOrCreate(['name' => 'staff']);
 
+    $superAdminRole->givePermissionTo(Permission::all());
     $adminRole->givePermissionTo(Permission::all());
     
     $staffRole->givePermissionTo([

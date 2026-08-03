@@ -7,20 +7,30 @@ export const useAuthorization = () => {
     const role = props.auth?.user?.role ?? null;
     const permissions = props.auth?.user?.permission ?? [];
 
+    const isSuperAdmin = role === 'super-admin';
+    const isAdmin = role === 'admin' || isSuperAdmin;
+
     const hasRole = (expectedRole: string) => role === expectedRole;
 
     const hasPermission = (permission: string) =>
-        role === 'admin' || permissions.includes(permission);
+        isSuperAdmin || isAdmin || permissions.includes(permission);
 
     const canAccess = (options?: {
         permission?: PermissionInput;
         adminOnly?: boolean;
+        superAdminOnly?: boolean;
         requireAll?: boolean;
     }) => {
         if (!options) return true;
 
+        if (isSuperAdmin) return true;
+
+        if (options.superAdminOnly) {
+            return isSuperAdmin;
+        }
+
         if (options.adminOnly) {
-            return role === 'admin';
+            return isAdmin;
         }
 
         if (!options.permission) {
@@ -35,7 +45,7 @@ export const useAuthorization = () => {
             return true;
         }
 
-        if (role === 'admin') {
+        if (isAdmin) {
             return true;
         }
 
@@ -52,6 +62,7 @@ export const useAuthorization = () => {
         hasRole,
         hasPermission,
         canAccess,
-        isAdmin: role === 'admin',
+        isSuperAdmin,
+        isAdmin,
     };
 };

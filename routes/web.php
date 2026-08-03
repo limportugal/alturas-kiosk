@@ -10,6 +10,8 @@ use App\Http\Controllers\KioskSettingController;
 use App\Http\Controllers\AdsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\LogoSettingController;
+use App\Http\Controllers\LogoController;
 
 
 use Illuminate\Foundation\Application;
@@ -29,6 +31,7 @@ Route::get('/kiosk/product-variations', [VariationController::class, 'index'])->
 Route::get('/kiosk/stock/check', [CartController::class, 'checkStock'])->name('cart.check-stock');
 Route::get('/kiosk/settings', [KioskSettingController::class, 'show'])->name('kiosk.settings.show');
 Route::get('/kiosk/ads', [AdsController::class, 'publicList'])->name('ads.public-list');
+Route::get('/kiosk/active-logo', [LogoController::class, 'publicActiveLogo'])->name('kiosk.active-logo');
 
 // Cart routes (no auth required)
 Route::get('/kiosk/cart/active', [CartController::class, 'getActiveCart'])->name('cart.active');
@@ -117,10 +120,31 @@ Route::middleware(['auth', 'permission:manage variations'])->group(function () {
 });
 
     // Kiosk Settings
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:super-admin|admin'])->group(function () {
     Route::prefix('kiosk-settings')->controller(KioskSettingController::class)->group(function () {
         Route::get('/screen-saver',  'page')->name('screen-saver');
         Route::put('/update',        'kioskUpdate')->name('kiosk.settings.update');
+    });
+});
+
+    // Logo Settings (Super Admin Only)
+Route::middleware(['auth', 'role:super-admin'])->group(function () {
+    Route::prefix('logo-settings')->controller(LogoSettingController::class)->group(function () {
+        Route::get('/page',   'page')->name('logo-settings');
+        Route::get('/show',   'show')->name('logo-settings.show');
+        Route::post('/update', 'update')->name('logo-settings.update');
+        Route::delete('/reset', 'reset')->name('logo-settings.reset');
+    });
+});
+
+    // Logo Management (Super Admin Only)
+Route::middleware(['auth', 'role:super-admin'])->group(function () {
+    Route::prefix('logo')->controller(LogoController::class)->group(function () {
+        Route::get('/page',         'page')->name('logos');
+        Route::get('/list',         'list')->name('logos.list');
+        Route::post('/store',       'store')->name('logos.store');
+        Route::put('/{id}/update',  'update')->name('logos.update');
+        Route::patch('/{id}/status', 'toggle')->name('logos.status');
     });
 });
 
@@ -139,19 +163,24 @@ Route::middleware(['auth', 'permission:manage ads'])->group(function () {
 });
 
   // Users Management
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:super-admin|admin'])->group(function () {
     Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::get('/page', 'index')->name('users');
         Route::get('/list', 'list')->name('users.list');
+    });
+});
+
+Route::middleware(['auth', 'role:super-admin'])->group(function () {
+    Route::prefix('users')->controller(UserController::class)->group(function () {
         Route::post('/store', 'store')->name('users.store');
         Route::put('/{id}/update', 'update')->name('users.update');
         Route::patch('/{id}/toggle', 'toggle')->name('user.toggle');
     });
 });
 
-// Activiy Logs
+// Activity Logs
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:super-admin|admin'])->group(function () {
     Route::prefix('activity-log')->controller(ActivityLogController::class)->group(function () {
         Route::get('/page', 'page')->name('activity-log');
         Route::get('/list', 'list')->name('activity-log.list');

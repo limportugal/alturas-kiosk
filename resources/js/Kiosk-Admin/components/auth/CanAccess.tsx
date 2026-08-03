@@ -6,6 +6,7 @@ interface CanAccessProps {
     fallback?: ReactNode;
     permission?: string | string[];
     adminOnly?: boolean;
+    superAdminOnly?: boolean;
     requireAll?: boolean;
 }
 
@@ -14,11 +15,12 @@ export default function CanAccess({
     fallback = null,
     permission,
     adminOnly = false,
+    superAdminOnly = false,
     requireAll = false,
 }: CanAccessProps) {
     const { canAccess } = useAuthorization(); 
 
-    if (!canAccess({ permission, adminOnly, requireAll })) {
+    if (!canAccess({ permission, adminOnly, superAdminOnly, requireAll })) {
         return <>{fallback}</>;
     }
 

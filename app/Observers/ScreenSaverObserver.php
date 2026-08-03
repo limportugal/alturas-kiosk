@@ -21,9 +21,10 @@ class ScreenSaverObserver {
             //Make the Description readable 
             $description = match($key) {
                 'idle_timeout_seconds' => "Screen saver idle timeout changed : {$old}s -> {$new}s",
-                'idle_enabled'         => "Screen saver status changed : " . ($old == '1' ? 'enable' : 'disabled') .
+                'idle_enabled'         => "Screen saver status changed : " . ($old == '1' ? 'enabled' : 'disabled') .
                                             " -> " . 
                                             ($new == '1' ? 'enabled' : 'disabled'),
+                'app_logo'             => "Application logo updated: {$new}",
                 default                =>  "Kiosk Setting '{$key}' changed: '{$old}' -> '{$new}'",
             };
 

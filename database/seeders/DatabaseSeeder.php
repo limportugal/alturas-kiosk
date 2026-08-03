@@ -22,12 +22,24 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
         ]);
 
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'superadmin@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('@dmin05/04/26'),
+            ]
+        );
+
+        if (!$superAdmin->hasRole('super-admin')) {
+            $superAdmin->assignRole('super-admin');
+        }
+
         $admin = User::firstOrCreate(
             ['name' => 'admin'],
             ['email' => 'admin@gmail.com',
             'password' => Hash::make('@dmin05/04/26')],
         
-    );
+        );
 
         if(! $admin->hasRole('admin')) {
             $admin->assignRole('admin');

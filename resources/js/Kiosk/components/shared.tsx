@@ -8,7 +8,13 @@ export function Stars({ rating, size = 20 }: { rating: number; size?: number }) 
   );
 }
 
+import useDynamicQuery from "@/hooks/useDynamicQuery";
+import { PublicActiveLogoService } from "@/Kiosk-Admin/services/logo/PublicActiveLogoService";
+
 export function HFHeader({ small }: { small?: boolean }) {
+  const { data } = useDynamicQuery(["kiosk-active-logo"], PublicActiveLogoService);
+  const logoUrl = data?.logo_url ?? "/images/LegacyFurniture-removebg-preview(1).png";
+
   return (
     <div
       style={{
@@ -23,9 +29,9 @@ export function HFHeader({ small }: { small?: boolean }) {
       }}
     >
       <img
-        src="/images/LegacyFurniture-removebg-preview(1).png"
-        alt="Legacy Furniture"
-        style={{ height: small ? 195 : 195, width: "auto" }}
+        src={logoUrl}
+        alt="Kiosk Brand Logo"
+        style={{ maxHeight: small ? 160 : 185, maxWidth: 600, width: "auto", height: "auto", objectFit: "contain" }}
       />
     </div>
   );

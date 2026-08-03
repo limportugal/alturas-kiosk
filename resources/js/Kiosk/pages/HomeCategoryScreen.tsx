@@ -14,6 +14,7 @@ import { ProductPublicServices } from "@/Kiosk/services/product/GetProductListSe
 import { ConfirmActionModal } from "@/Kiosk/modals/ConfirmActionModal";
 import { useCart } from "@/Kiosk/hooks/useCart";
 import { IMAGE_STANDARDS } from "@/Kiosk/utils/imageStandards";
+import { PublicActiveLogoService } from "@/Kiosk-Admin/services/logo/PublicActiveLogoService";
 
 export default function HomeCategoryScreen({
   onSelect,
@@ -64,6 +65,12 @@ export default function HomeCategoryScreen({
     setTimeout(() => { setPressed(null); onSelect(id, name); }, 220);
   };
 
+  const { data: logoData } = useDynamicQuery(
+    ["kiosk-active-logo"],
+    PublicActiveLogoService
+  );
+  const logoUrl = logoData?.logo_url ?? "/images/LegacyFurniture-removebg-preview(1).png";
+
   return (
     <div style={KIOSK_STYLE}>
       {/* Header */}
@@ -81,7 +88,11 @@ export default function HomeCategoryScreen({
           onClick={() => setConfirmOpen(true)}
           style={{ display: "inline-block", cursor: "pointer" }}
         >
-            <img src="/images/LegacyFurniture-removebg-preview(1).png" alt="Legacy Furniture" style={{ height: 195, width: "auto" }} />
+            <img
+              src={logoUrl}
+              alt="Kiosk Brand Logo"
+              style={{ maxHeight: 185, maxWidth: 600, width: "auto", height: "auto", objectFit: "contain" }}
+            />
         </div>
       </div>
 

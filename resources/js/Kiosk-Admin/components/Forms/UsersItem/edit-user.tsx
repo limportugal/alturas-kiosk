@@ -5,15 +5,18 @@ import {
     Checkbox,
     FormControlLabel,
     FormGroup,
+    IconButton,
     MenuItem,
     Stack,
     TextField,
     Typography,
+    Tooltip,
 } from '@mui/material';
-import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import BaseModal from '@/Kiosk-Admin/components/modals/BaseModal';
-import { useCreateUser } from '@/Kiosk-Admin/hooks/users/useCreateUser';
+import { useUpdateUser } from '@/Kiosk-Admin/hooks/users/useUpdateUser';
+import { UserListItem } from '@/Kiosk-Admin/types/user-types';
 
 const INPUT_SX = {
     '& .MuiOutlinedInput-root': { '&.Mui-focused fieldset': { borderColor: '#7e22ce' } },
@@ -25,13 +28,15 @@ const BTN_SX = {
     '&:hover': { backgroundColor: '#6d28d9' },
 };
 
-interface AddUserProps {
-    permissions: string[];
+interface EditUserProps {
+    user: UserListItem;
+    permissions?: string[];
 }
 
-export default function AddUser({ permissions }: AddUserProps) {
+export default function EditUser({ user, permissions = [] }: EditUserProps) {
     const [open, setOpen] = useState(false);
-    const { form, errors, setField, togglePermission, handleSubmit, isPending, isSuccess } = useCreateUser();
+    const { form, errors, setField, togglePermission, handleSubmit, isPending, isSuccess } =
+        useUpdateUser(user);
 
     const handleClose = () => {
         setOpen(false);
@@ -45,16 +50,23 @@ export default function AddUser({ permissions }: AddUserProps) {
 
     return (
         <div>
-            <Button
-                variant="contained"
-                sx={BTN_SX}
-                startIcon={<AddBoxOutlinedIcon />}
-                onClick={() => setOpen(true)}
-            >
-                Add User
-            </Button>
+            <Tooltip title="Edit User">
+                <IconButton
+                    onClick={() => setOpen(true)}
+                    size="small"
+                    sx={{
+                        color: '#7e22ce',
+                        border: '1px solid #e9d5ff',
+                        borderRadius: 1.5,
+                        p: '4px',
+                        '&:hover': { backgroundColor: '#f3e8ff' },
+                    }}
+                >
+                    <EditOutlinedIcon fontSize="small" />
+                </IconButton>
+            </Tooltip>
 
-            <BaseModal open={open} onClose={handleClose} title="Add New User" width={640}>
+            <BaseModal open={open} onClose={handleClose} title={`Edit User: ${user.name}`} width={640}>
                 <Stack spacing={2} sx={{ mt: 1 }}>
                     <TextField
                         label="Full Name"
@@ -76,7 +88,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                     />
 
                     <TextField
-                        label="Password"
+                        label="New Password (leave blank to keep current)"
                         type="password"
                         value={form.password}
                         onChange={(e) => setField('password', e.target.value)}
@@ -89,7 +101,9 @@ export default function AddUser({ permissions }: AddUserProps) {
                         select
                         label="Role"
                         value={form.role}
-                        onChange={(e) => setField('role', e.target.value as 'super-admin' | 'admin' | 'staff')}
+                        onChange={(e) =>
+                            setField('role', e.target.value as 'super-admin' | 'admin' | 'staff')
+                        }
                         error={!!errors.role}
                         helperText={errors.role}
                         sx={INPUT_SX}
@@ -99,7 +113,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                         <MenuItem value="staff">Staff</MenuItem>
                     </TextField>
 
-                    {/* <TextField
+                    <TextField
                         select
                         label="Status"
                         value={form.status}
@@ -110,7 +124,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                     >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="Inactive">Inactive</MenuItem>
-                    </TextField> */}
+                    </TextField>
 
                     {form.role === 'staff' ? (
                         <Box
@@ -146,7 +160,9 @@ export default function AddUser({ permissions }: AddUserProps) {
                         </Box>
                     ) : (
                         <Typography variant="body2" sx={{ color: '#6b7280' }}>
-                            Admin users automatically receive full access.
+                            {form.role === 'super-admin'
+                                ? 'Super Admin users automatically receive full access to all system features.'
+                                : 'Admin users automatically receive full access.'}
                         </Typography>
                     )}
 
@@ -157,7 +173,7 @@ export default function AddUser({ permissions }: AddUserProps) {
                         disabled={isPending}
                         sx={BTN_SX}
                     >
-                        {isPending ? 'Adding...' : 'Add User'}
+                        {isPending ? 'Saving...' : 'Save Changes'}
                     </Button>
                 </Stack>
             </BaseModal>
