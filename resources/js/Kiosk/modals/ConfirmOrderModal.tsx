@@ -105,6 +105,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                     background: "#fff",
                     borderRadius: 20,
                     width: 680,
+                    zoom: 1.5,
                     maxWidth: "90vw",
                     overflow: "hidden",
                     transform: visible ? "translateY(0) scale(1)" : "translateY(40px) scale(0.97)",
