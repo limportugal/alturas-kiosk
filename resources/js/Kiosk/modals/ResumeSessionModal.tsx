@@ -45,7 +45,8 @@ export function ResumeSessionModal({
                 style={{
                     background:   "#fff",
                     borderRadius: 20,
-                    width:        620,
+                    width:        720,
+                    zoom: 1.5,
                     maxWidth:     "90vw",
                     overflow:     "hidden",
                     boxShadow:    "0 28px 70px rgba(0,0,0,0.28)",
