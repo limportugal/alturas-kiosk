@@ -1,5 +1,3 @@
-
-import { colors } from "@/Kiosk/utils/colors";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 interface ScrollHintProps {
@@ -88,7 +86,7 @@ export function ScrollHint({
                             flexDirection: "column",
                             alignItems: "center",
                             color: "#6b2fa0",
-                            fontSize: 11,
+                            fontSize: 22,
                             fontWeight: 700,
                         }}
                     >
