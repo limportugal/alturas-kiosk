@@ -71,7 +71,7 @@ export function ResumeSessionModal({
                     </p>
                 </div>
 
-                <ScrollHint scrollAreaStyle={{ maxHeight: 360, padding: "14px 0" }}>
+                <ScrollHint scaleCompensation={1.5} scrollAreaStyle={{ maxHeight: 360, padding: "14px 0" }}>
                     {cartItems.map((item, index) => (
                         <div
                             key={`${item.product_id}-${item.color ?? "none"}-${index}`}
@@ -191,3 +191,4 @@ export function ResumeSessionModal({
         </div>
     );
 }
+

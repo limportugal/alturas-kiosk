@@ -5,6 +5,7 @@ interface ScrollHintProps {
     text?: string;
     wrapperStyle?: CSSProperties;
     scrollAreaStyle?: CSSProperties;
+    scaleCompensation?: number;
 }
 
 export function ScrollHint({
@@ -12,9 +13,15 @@ export function ScrollHint({
     text = "Scroll for more",
     wrapperStyle,
     scrollAreaStyle,
+    scaleCompensation = 1,
 }: ScrollHintProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [showHint, setShowHint] = useState(false);
+
+    const hintFontSize = 22 / scaleCompensation;
+    const arrowFontSize = 22 / scaleCompensation;
+    const hintPaddingTop = 32 / scaleCompensation;
+    const hintPaddingBottom = 5 / scaleCompensation;
 
     const checkScroll = () => {
         const element = scrollRef.current;
@@ -80,7 +87,7 @@ export function ScrollHint({
                         right: 0,
                         display: "flex",
                         justifyContent: "center",
-                        padding: "32px 0 10px",
+                        padding: `${hintPaddingTop}px 0 ${hintPaddingBottom}px`,
                         pointerEvents: "none",
                         background:
                             "linear-gradient(to bottom, transparent, rgba(255,255,255,0.98) 65%)",
@@ -92,16 +99,15 @@ export function ScrollHint({
                             flexDirection: "column",
                             alignItems: "center",
                             color: "#6b2fa0",
-                            fontSize: 22,
+                            fontSize: hintFontSize,
                             fontWeight: 700,
                         }}
                     >
                         <span>{text}</span>
                         <span
                             style={{
-                                fontSize: 18,
+                                fontSize: arrowFontSize,
                                 lineHeight: 1,
-                                
                                 animation: "scrollHint 1.2s infinite",
                             }}
                         >
@@ -127,5 +133,3 @@ export function ScrollHint({
         </div>
     );
 }
-
-
