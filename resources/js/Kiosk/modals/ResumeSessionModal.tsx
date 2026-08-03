@@ -140,7 +140,7 @@ export function ResumeSessionModal({
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
-                        padding: "16px 28px",
+                        padding: "6px 20px",
                         background: "#faf9f7",
                         borderTop: "1px solid #f0ede8",
                         borderBottom: "1px solid #f0ede8",
