@@ -1,6 +1,7 @@
 import { useDynamicMutation } from '@/hooks/useDynamicMutation';
 import { useToast } from '@/hooks/use-toast';
 import { UpdateLogoService } from '@/Kiosk-Admin/services/logo/UpdateLogoServices';
+import { router } from '@inertiajs/react'; 
 
 interface UseUpdateLogoMutationsProps {
     onSuccess?: () => void;
@@ -14,6 +15,8 @@ export const useUpdateLogoMutation = (options?: UseUpdateLogoMutationsProps) => 
         mutationKey: ['logo-list'],
         onSuccess: () => {
             showToast({ message: 'Logo updated successfully', type: 'success' });
+
+            router.reload({only:['app']})
             options?.onSuccess?.();
         },
         onError: (error: any) => {

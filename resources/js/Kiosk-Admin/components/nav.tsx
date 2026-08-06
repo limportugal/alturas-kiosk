@@ -68,6 +68,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
   const { canAccess } = useAuthorization();
   const { url, props } = usePage<any>();
   const appLogo = props?.app?.logo ?? null;
+  const appName = props?.app?.name ?? 'Please Enter a Name'; // Default for non existing name
 
   const userName = auth?.user?.name ?? 'User';
   const userRole = auth?.user?.role ?? 'Admin';
@@ -172,7 +173,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
               width: 34,
               height: 34,
               borderRadius: 8,
-              background: appLogo ? 'transparent' : 'linear-gradient(135deg, #5d56ddff, #dadedfff)',
+              background: appLogo ? 'linear-gradient(135deg, #5d56ddff, #dadedfff)' : 'transparent',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -205,7 +206,7 @@ export default function SideNavDrawer({ children, auth }: Props) {
               overflow: 'hidden',
             }}
           >
-            ALTURAS
+           {appName.toUpperCase()}
           </span>
         </div>
 
