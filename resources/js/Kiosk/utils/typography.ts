@@ -10,6 +10,7 @@ export const typography = {
 
   // ORDER AND SUMMARY
   amountFields : {fontSize: 26, fontWeight: 800, color: "#1a1a1a", textAlign: "right" } as const,
+  quantity: {fontSize: 22, fontWeight: 800, color: "#1a1a1a" } as const,
   
 
   // TO PRODUCT SCREEN

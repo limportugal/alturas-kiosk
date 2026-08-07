@@ -179,7 +179,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
 
                         {/* Quantity */}
                         <div>
-                            <p style={{ ...typography.amountFields, letterSpacing: 1.5, margin: "0 0 8px" }}>QUANTITY</p>
+                         
                             <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
                                 <button
                                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -191,22 +191,25 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                                     disabled={quantity >= maxQty}
                                     style={{ width: 40, height: 40, borderRadius: 8, border: `2px solid ${colors.primary}`, background: quantity >= maxQty ? "#eee" : "#fff", color: colors.primary, fontSize: 22, fontWeight: 700, cursor: quantity >= maxQty ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
                                 >+</button>
-                                <span style={{ ...typography.amountFields}}>{maxQty} in stock</span>
+                                <span style={{ ...typography.quantity}}>{maxQty} in stock</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Footer */}
-                <div style={{ borderTop: "1px solid #f0ede8", padding: "20px 32px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#faf9f7" }}>
-                    <div>
+                <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 32px",  background: "#faf9f7", flexShrink: 0}}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
                         <p style={{ ...typography.amountFields, margin: "0 0 2px", letterSpacing: 1 }}>SUBTOTAL</p>
                         <p style={{ fontSize: 28, fontWeight: 800, color: colors.primary, margin: 0 }}>{formatMoney(subtotal)}</p>
                     </div>
+
+                        <div style={{ display: "flex", gap: 16 }}>
                     <button
                         onClick={handleAddToCart}
                         disabled={added || loading || maxQty === 0}
                         style={{
+                            flex: 1,
                             background: added ? "#22c55e" : maxQty === 0 ? "#aaa" : colors.primary,
                             color: "#fff", border: "none", borderRadius: 12,
                             padding: "16px 40px", fontSize: 15, fontWeight: 700,
@@ -214,7 +217,8 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                             transition: "background 0.25s ease, transform 0.15s ease",
                             transform: added ? "scale(0.97)" : "scale(1)",
                             opacity: loading ? 0.85 : 1,
-                            display: "flex", alignItems: "center", gap: 10,
+                            display: "flex", alignItems: "center", justifyContent:"center", gap: 10,
+                            whiteSpace: "nowrap",   
                         }}
                     >
                         {loading ? (
@@ -224,6 +228,7 @@ export function ConfirmOrderModal({ product, selectedColor, onClose, onConfirmed
                             </>
                         ) : added ? "✓ ADDED TO CART" : maxQty === 0 ? "MAX STOCK REACHED" : "ADD TO CART"}
                     </button>
+                        </div>
                     <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
                 </div>
             </div>

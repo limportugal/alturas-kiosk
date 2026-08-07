@@ -3,6 +3,7 @@ import { colors } from "@/Kiosk/utils/colors";
 import { CartItem } from "@/Kiosk/types/cart-types";
 import { formatMoney } from "@/Kiosk/components/shared";
 import { ScrollHint } from "@/Kiosk/components/ScrollHint";
+import { typography } from "@/Kiosk/utils/typography";
 
 interface ResumeSessionModalProps {
     open: boolean;
@@ -146,29 +147,13 @@ export function ResumeSessionModal({
                         borderBottom: "1px solid #f0ede8",
                     }}
                 >
-                    <span style={{ fontSize: 16, fontWeight: 700, color: "#888", letterSpacing: 1 }}>TOTAL</span>
+                    <span style={typography.amountFields}>TOTAL</span>
                     <span style={{ fontSize: 26, fontWeight: 800, color: colors.primary, whiteSpace: "nowrap" }}>
                         {formatMoney(total)}
                     </span>
                 </div>
 
                 <div style={{ display: "flex", gap: 16, padding: "20px 28px" }}>
-                    <button
-                        onClick={onNew}
-                        style={{
-                            flex: 1,
-                            padding: "16px 0",
-                            borderRadius: 12,
-                            border: "2px solid #e0dbd5",
-                            background: "#fff",
-                            color: "#555",
-                            fontSize: 18,
-                            fontWeight: 600,
-                            cursor: "pointer",
-                        }}
-                    >
-                        Start New
-                    </button>
                     <button
                         onClick={onResume}
                         style={{
@@ -186,6 +171,24 @@ export function ResumeSessionModal({
                     >
                         Continue Shopping
                     </button>
+                    <button
+                        onClick={onNew}
+                        style={{
+                            flex: 1,
+                            padding: "18px 24px",
+                            borderRadius: 12,
+                            border: "2px solid #e0dbd5",
+                            background: "#fff",
+                            color: "#000000ff",
+                            fontSize: 22,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        Start New
+                    </button>
+                  
                 </div>
             </div>
         </div>
