@@ -304,7 +304,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                                                     </div>
 
                                                     {/* Line total */}
-                                                    <p style={{ fontSize: 26, fontWeight: 800, color: "#1a1a1a", minWidth: 150, textAlign: "right", margin: 0, whiteSpace: "nowrap" }}>
+                                                    <p style={{ ...typography.amountFields,  minWidth: 150, whiteSpace: "nowrap" }}>
                                                         {formatMoney(item.subtotal)}
                                                     </p>
 
@@ -335,7 +335,7 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                     <div style={{ borderTop: "1px solid #f0ede8", padding: "24px 36px", background: "#faf9f7", flexShrink: 0 }}>
                         {/* Row 1: Total Amount */}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-                            <span style={{ fontSize: 20, fontWeight: 700, color: "#666", letterSpacing: 2 }}>TOTAL AMOUNT</span>
+                            <span style={{ fontSize: 32, fontWeight: 800, color: "#000000ff", letterSpacing: 2 }}>TOTAL AMOUNT</span>
                             <span style={{ fontSize: 48, fontWeight: 800, color: colors.primary, whiteSpace: "nowrap" }}>{formatMoney(totalPrice)}</span>
                         </div>
 
@@ -359,9 +359,9 @@ export function CartSummaryModal({ open, onClose, onPlaceOrder }: CartSummaryMod
                             </button>
                             <button
                                 onClick={() => setClearConfirmOpen(true)}
-                                style={{ flex: 1, padding: "18px 24px", borderRadius: 14, border: "2px solid #ddd", background: "#fff", color: "#666", fontSize: 20, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" }}
+                                style={{ flex: 1, padding: "18px 24px", borderRadius: 14, border: "2px solid #ddd", background: "#fff", color: "#000000ff", fontSize: 22, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}
                             >
-                                Clear All
+                                CLEAR ALL
                             </button>
                         </div>
                         {placeOrderError && (
