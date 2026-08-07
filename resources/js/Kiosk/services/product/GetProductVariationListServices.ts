@@ -1,9 +1,10 @@
 import api from '@/lib/axios';
 import { relativeRoute } from '@/lib/relativeRoute';
-import { VariationList , PaginatedResponse} from '@/Kiosk-Admin/types/variation-types';
+import { VariationList } from '@/Kiosk-Admin/types/variation-types';
 
-export const ProductVariationsPublicServices = async():Promise<PaginatedResponse<VariationList>> => {
+export const ProductVariationsPublicServices = async():Promise<VariationList[]> => {
     const response = await api.get(relativeRoute('product-variations-public-list'));
     return response.data;
 };
+
  

@@ -68,7 +68,7 @@ export default function ProductScreen({
   const [activeTab, setActiveTab] = useState<number | null>(null);
   const [mounted, setMounted]     = useState(false);
 
-  const visibleTabs = (variationsData?.data?? []).filter(
+  const visibleTabs = (variationsData ?? []).filter(
     (tab) => String(tab.sub_category_id) === subId
   );
 
